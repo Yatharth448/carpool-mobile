@@ -1,0 +1,89 @@
+import React from 'react'
+import { Text, View, Image, TouchableOpacity } from 'react-native'
+import { AppColors } from '../../components/constants/AppColor'
+import { TextInput } from 'react-native-paper'
+import OTPInputView from '@twotalltotems/react-native-otp-input'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+export default function OTPScreen({ navigation }) {
+  const [otp, setOtp] = React.useState("");
+
+  const validateOTP = (otp)=> {
+
+    if ((!(otp) == '') && (otp.length == 6)) {
+
+      // this.hitApiToConfirmOtp(otpNumber)
+
+    }
+    else {
+
+      // Toast.show(themes.appCustomTexts.InvalidOTPText);
+    }
+
+
+  }
+
+
+  return (
+    <View style={{ flex: 1, backgroundColor: AppColors.themesWhiteColor, justifyContent: 'center' }}>
+
+      <View style={{ width: '100%', height: '48%', alignItems: 'center' }}>
+        <Image source={require('../../assets/otp.png')} style={{ width: '60%', marginTop: '30%', resizeMode: 'contain' }} />
+      </View>
+
+      <View style={{ width: '100%', justifyContent: 'flex-start', alignItems: 'center', height: '30%' }}>
+        <Text style={{ fontSize: 26, fontWeight: 'bold', color: AppColors.themeBlackColor  }}>
+          {'Verification code'}
+        </Text>
+        <Text style={{ fontSize: 18, fontWeight: '300', textAlign: 'center', marginTop: 30, width: '70%', color: AppColors.themeBlackColor }}>
+          {'Enter the code sent to'}
+        </Text>
+        <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginTop: 0, width: '70%', color: AppColors.themeBlackColor }}>
+          {'+918810561414'}
+        </Text>
+
+        <View style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
+          <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
+            {/* <Image source={require('../../assets/indFlag.png')} style={{ marginRight: 5, width: 30, resizeMode: 'contain' }} />
+            <Image source={require('../../assets/downArrow.png')} style={{ marginRight: -45, width: 10, resizeMode: 'contain' }} /> */}
+            <OTPInputView
+              style={{ width: '50%', height: 40 }}
+              pinCount={4}
+              autoFocusOnLoad
+              textContentType={'oneTimeCode'}
+              onCodeChanged={(otpNumber) => setOtp(otpNumber)}
+              codeInputFieldStyle={{ borderWidth: 0, borderBottomWidth: 1.5, height: 50, marginRight: 8, color: AppColors.themeBlackColor, fontSize: 20, borderBottomColor: AppColors.themeTextGrayColor, }}
+              codeInputHighlightStyle={{ borderBottomWidth: 1.5, borderBottomColor: AppColors.themePrimaryColor, }}
+              keyboardType="numeric"
+              code={otp}
+              // clearInputs={this.state.clearOTP}
+              onCodeFilled={(otpNumber => {
+                if (otpNumber.length == 6) {
+                  validateOTP(otpNumber)
+                }
+                // console.log(`Code is ${otpNumber}, you are good to go!`)
+              })}
+            />
+          </View>
+          <View style={{alignItems: 'center', marginTop: 40}}>
+            <Text style={{ fontSize: 14, fontWeight: '400', textAlign: 'center', color: AppColors.themeTextGrayColor }}>
+              {"Didn't you receive the OTP?" }
+              <Text style={{ fontSize: 14, fontWeight: '600', textAlign: 'center', color: AppColors.themePrimaryColor }}>
+                {" Resend OTP"}
+              </Text>
+            </Text>
+
+          </View>
+        </View>
+      </View>
+
+
+      <View style={{ width: '100%', alignItems: 'center', marginTop: '13%', height: '22%' }}>
+        <TouchableOpacity onPress={() => navigation.navigate('AcccountSetupScreen')} style={{ backgroundColor: AppColors.themePrimaryColor, width: '55%', height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ fontSize: 18, fontWeight: '600', color: AppColors.themesWhiteColor }}>{'Verify'}</Text>
+        </TouchableOpacity>
+      </View>
+
+
+    </View>
+  )
+}
