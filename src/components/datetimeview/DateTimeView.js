@@ -30,7 +30,7 @@ console.log(date, 'date')
             {/* <Text style={{ fontSize: 16, fontWeight: '400',marginBottom: 5 , color: AppColors.themeBlackColor}}>{'Date of birth'}</Text> */}
 
             <TouchableOpacity onPress={openDatePicker} style={{ flexDirection: 'row',  alignItems: 'center', width: '100%', height: 30, backgroundColor: AppColors.themesWhiteColor, justifyContent: 'flex-start' }}>
-                <Image source={mode == 'date' ? require('../../assets/calendar.png') : require('../../assets/timer.png')} style={{ tintColor: AppColors.themePrimaryColor, marginRight: 20, width: 32, resizeMode: 'contain' }} />
+                <Image source={mode == 'date' ? require('../../assets/calendar.png') : require('../../assets/timer.png')} style={{ tintColor: AppColors.themePrimaryColor, marginRight: 0, width: 32, resizeMode: 'contain' }} />
                 <Text style={{ fontSize: 16, fontWeight: '400', width: '96%', color: selectedDate == 'Select ride date' || 'Select ride time' ? AppColors.themeTextGrayColor : AppColors.themeBlackColor }}>
                     {selectedDate}
                 </Text>

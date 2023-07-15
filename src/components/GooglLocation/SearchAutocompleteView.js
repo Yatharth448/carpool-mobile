@@ -37,24 +37,32 @@ export const SearchAutocompleteView = (headerText, isLoading, closePopup, select
 
                             style={{ width: '100%', }}
                             styles={{
-                                textInput: { fontSize: 16, borderColor: AppColors.themeCardBorderColor, borderWidth: 5, height: 50, padding: 1 }, row: {
+                                textInput: { color: AppColors.themeBlackColor, fontSize: 16, borderColor: AppColors.themeCardBorderColor, borderWidth: 5, height: 50, padding: 1 }, 
+                                row: {
                                     backgroundColor: '#FFFFFF',
                                     padding: 13,
                                     height: 60,
                                     fontSize: 16,
                                     flexDirection: 'row',
+                                    color: AppColors.themeBlackColor,
                                 },
                                 separator: {
                                     height: 0.5,
                                     backgroundColor: '#c8c7cc',
                                 },
                                 description: {
+                                    color: AppColors.themeBlackColor,
                                     fontSize: 16
-                                }
+                                },
                             }}
+                            textInputProps={{
+                                placeholderTextColor: AppColors.themeText2Color,
+                                returnKeyType: "search"
+                              }}
                             // width={300}
                             borderColor={AppColors.themeCardBorderColor}
                             placeholder="Type a place"
+                            color = {AppColors.themeBlackColor}
                             fontSize={18}
                             backgroundColor={AppColors.themeTextGrayColor}
                             onPress={(data, details = null) => selectLocation(data.description)}

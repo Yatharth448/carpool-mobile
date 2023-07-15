@@ -67,7 +67,7 @@ export default function DropDownList(type, label, selectedId) {
                 }}
                 renderItem={renderItem}
                 renderLeftIcon={() => 
-                     <Image source={require('../../assets/profile.png')} style={{ tintColor: AppColors.themePrimaryColor, marginLeft: 0, marginRight: 10, width: 25, resizeMode: 'contain' }} />
+                     <Image source={require('../../assets/profile.png')} style={{ tintColor: AppColors.themePrimaryColor, marginLeft: 0, marginRight: 20, width: 25, resizeMode: 'contain' }} />
                     }
             />
         )

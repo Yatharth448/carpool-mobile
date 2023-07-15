@@ -12,6 +12,7 @@ console.log(date, 'date')
 
             <DatePicker
                 modal={true}
+                mode='date'
                 open={open}
                 date={date}
                 onConfirm={(date)=> onConfirm(date)}

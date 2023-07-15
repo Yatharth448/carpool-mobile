@@ -351,7 +351,8 @@ export default function FindRide({ navigation }) {
                             onChangeText={text => setSeatPrice(text)}
                             value={seatPrice}
                             placeholder={AppTexts.Rupee_Symbol + " price"}
-                            style={{ marginLeft: 20, width: '20%', fontSize: 16, textAlign: 'center', fontWeight: '700' }}
+                            placeholderTextColor={AppColors.themeText2Color}
+                            style={{ color: AppColors.themeBlackColor, marginLeft: 20, width: '20%', fontSize: 16, textAlign: 'center', fontWeight: '700' }}
                         />
                     </View>
 

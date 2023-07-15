@@ -35,7 +35,7 @@ export default function AcccountSetupScreen({ navigation }) {
   const openDatePicker = (date) => {
 
     setOpen(true)
-    console.log(date, 'date')
+    // console.log(date, 'date')
   }
 
   const saveAndContinue = async () => {
