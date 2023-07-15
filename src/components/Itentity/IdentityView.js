@@ -7,7 +7,7 @@ export default function IdentityView(label, open, selectedId) {
 
 const [on, setOn] = React.useState(false)
     const handlePress = () => setOn(!on);
-    const docTypeData = [{ "back": true, "enable": true, "front": true, "label": "Aadhaar Card", "value": "aadhaar" }, { "back": true, "enable": true, "front": true, "label": "Pan Card", "value": "pan" }]
+    const docTypeData = [{ "back": true, "enable": true, "front": true, "label": "Aadhaar Card", "value": "aadhaar" }, { "back": true, "enable": true, "front": true, "label": "Driving License", "value": "license" }]
 
     const renderItem =(item) =>{
         return (
@@ -36,7 +36,7 @@ const [on, setOn] = React.useState(false)
 
     const iD = () => {
 
-        console.log( 'date')
+        // console.log( 'date')
         return (
 
             <Dropdown
@@ -52,10 +52,11 @@ const [on, setOn] = React.useState(false)
                 labelField="label"
                 valueField="value"
                 activeColor={AppColors.themePrimaryColor}
-                placeholder="Select Document"
+                placeholder={label == 'Identity' ? 'Select' : label}
                 searchPlaceholder="Search..."
                 onChange={item => {
                     console.log(item)
+                    selectedId(item.label)
                     // item.enable === true ?
                     //     this.setState({ selectedValue: item.label, selectedKey: item.value, frontImageRequired: item.front, backImageRequired: item.back })
                     //     : this.reloadList()
@@ -69,7 +70,7 @@ const [on, setOn] = React.useState(false)
     return (
         <View style={{ width: '100%', marginTop: 20 }}>
 
-            <Text style={{ fontSize: 16, fontWeight: '400', marginBottom: 5, color: AppColors.themeBlackColor }}>{label}</Text>
+            <Text style={{ fontSize: 16, fontWeight: '400', marginBottom: 10, color: AppColors.themeBlackColor }}>{'Identity'}</Text>
 
             {/* <TouchableOpacity onPress={()=> handlePress()} style={{ borderRadius: 10, alignItems: 'center', width: '100%',  backgroundColor: AppColors.themesWhiteColor, borderWidth: 1, borderColor: AppColors.themeCardBorderColor, justifyContent: 'center' }}>
                 <Text style={{ fontSize: 16, height: 40, fontWeight: '400', width: '96%', color: AppColors.themeTextGrayColor }}>
@@ -87,10 +88,10 @@ const styles = StyleSheet.create({
     dropdown: {
         width: "100%",
         // margin: 14,
-        height: 45,
-        borderColor: '#B1B1B1',
-        borderWidth: 0.45,
-        borderRadius: 5
+        height: 50,
+        borderColor: AppColors.themeTextGrayColor,
+        borderWidth: 1,
+        borderRadius: 10
     },
 
     icon: {
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
 
     placeholderStyle: {
         marginLeft: 5,
-        color: AppColors.themeTextGrayColor,
+        color: AppColors.themeBlackColor,
         fontSize: 14,
     },
 

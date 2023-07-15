@@ -25,7 +25,7 @@ const selectImage = {
                 // cropping: true,
             });
 
-            console.log(image.size, 'image size camera')
+            console.log(image, image.size, 'image size camera')
 
             if (image.size > 5242880){
                 const err = new Error('File size cannot exceed 5MB');
@@ -50,7 +50,7 @@ const selectImage = {
                 // cropping: true
                 forceJpg: false
             });
-            console.log(image, 'gallery data')
+            console.log(image, image.size, 'gallery data')
 
             if (image.size > 5242880){
                 const err = new Error('File size cannot exceed 5MB');

@@ -4,18 +4,32 @@ import { AppColors } from '../../components/constants/AppColor'
 import { TextInput } from 'react-native-paper'
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-export default function OTPScreen({ navigation }) {
+import Toast from 'react-native-simple-toast'
+import { useRoute } from '@react-navigation/native'
+import { hitApiForVerifyOTP } from './otpModal'
+import Storage from '../../components/localStorage/storage'
+import { AppKeys } from '../../components/constants/AppKeys'
+export default function OTPScreen({ navigation, route }) {
   const [otp, setOtp] = React.useState("");
+  console.log(route.params, 'route')
+  const { mobile, secret } = route.params;
 
-  const validateOTP = (otp)=> {
+  const validateOTP = async (otp) => {
 
-    if ((!(otp) == '') && (otp.length == 6)) {
+    if ((!(otp) == '') && (otp.length == 4)) {
 
-      // this.hitApiToConfirmOtp(otpNumber)
+    const result = await hitApiForVerifyOTP(mobile, otp, secret)
+    console.log(result, 'otp result')
+    if (result.status)
+    {
+      Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
+      navigation.navigate('AcccountSetupScreen')
+    }
 
     }
     else {
 
+      Toast.showWithGravity('Invalid otp', 2, Toast.TOP);
       // Toast.show(themes.appCustomTexts.InvalidOTPText);
     }
 
@@ -31,7 +45,7 @@ export default function OTPScreen({ navigation }) {
       </View>
 
       <View style={{ width: '100%', justifyContent: 'flex-start', alignItems: 'center', height: '30%' }}>
-        <Text style={{ fontSize: 26, fontWeight: 'bold', color: AppColors.themeBlackColor  }}>
+        <Text style={{ fontSize: 26, fontWeight: 'bold', color: AppColors.themeBlackColor }}>
           {'Verification code'}
         </Text>
         <Text style={{ fontSize: 18, fontWeight: '300', textAlign: 'center', marginTop: 30, width: '70%', color: AppColors.themeBlackColor }}>
@@ -57,16 +71,16 @@ export default function OTPScreen({ navigation }) {
               code={otp}
               // clearInputs={this.state.clearOTP}
               onCodeFilled={(otpNumber => {
-                if (otpNumber.length == 6) {
+                if (otpNumber.length == 4) {
                   validateOTP(otpNumber)
                 }
                 // console.log(`Code is ${otpNumber}, you are good to go!`)
               })}
             />
           </View>
-          <View style={{alignItems: 'center', marginTop: 40}}>
+          <View style={{ alignItems: 'center', marginTop: 40 }}>
             <Text style={{ fontSize: 14, fontWeight: '400', textAlign: 'center', color: AppColors.themeTextGrayColor }}>
-              {"Didn't you receive the OTP?" }
+              {"Didn't you receive the OTP?"}
               <Text style={{ fontSize: 14, fontWeight: '600', textAlign: 'center', color: AppColors.themePrimaryColor }}>
                 {" Resend OTP"}
               </Text>
@@ -78,7 +92,7 @@ export default function OTPScreen({ navigation }) {
 
 
       <View style={{ width: '100%', alignItems: 'center', marginTop: '13%', height: '22%' }}>
-        <TouchableOpacity onPress={() => navigation.navigate('AcccountSetupScreen')} style={{ backgroundColor: AppColors.themePrimaryColor, width: '55%', height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
+        <TouchableOpacity onPress={() => validateOTP()} style={{ backgroundColor: AppColors.themePrimaryColor, width: '55%', height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ fontSize: 18, fontWeight: '600', color: AppColors.themesWhiteColor }}>{'Verify'}</Text>
         </TouchableOpacity>
       </View>

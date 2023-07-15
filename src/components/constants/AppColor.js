@@ -9,5 +9,6 @@ export const AppColors = {
     themeTextGrayColor: '#B9B9B9',
     themeText2Color: '#74788D',
     themeIdentityBgColor: '#f4f4f4',
+    themePickupDropSearchBg: '#eef1ff'
 
 }
