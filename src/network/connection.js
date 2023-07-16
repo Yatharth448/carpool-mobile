@@ -37,7 +37,7 @@ const apiCaller = async (method, url, params = {}, headerOptions = {}, onUploadP
             options.headers['authorization'] = "Bearer "+authToken
         }
 
-        console.log('header token', options.headers.authorization, "Bearer "+authToken);
+        // console.log('header token', options.headers.authorization, "Bearer "+authToken);
         // Sending Version and Platform of App
         // options.headers['app-version'] = DeviceInfo.getVersion();
         // options.headers['api-version'] = 2;

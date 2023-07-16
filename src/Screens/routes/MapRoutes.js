@@ -2,15 +2,20 @@ import React, { useEffect } from 'react'
 import { View, Text, Pressable, FlatList, Dimensions, StyleSheet, TouchableOpacity } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader';
-import { hitApiToSaveRide } from '../home/RideModal';
+import { hitApiToRequestGetEstimatedPrice, hitApiToRequestUpdateEstimatedPrice, hitApiToSaveRide } from '../home/RideModal';
 import Toast from 'react-native-simple-toast'
 import MapView, { Polyline, Marker } from 'react-native-maps';
+import { PriceSelection } from '../../components/priceselection/PriceSelection';
 export default function MapRoutes({ navigation, route }) {
     // let  path1 = [];
     const mapRef = React.useRef(null);
 
     const { pick, drop, date, seat, routeData, price } = route.params;
     const [selectedIndex, setSelectedIndex] = React.useState(0)
+    const [openPrice, setOpenPrice] = React.useState(false)
+    const [estimatedPrice, setEstimatedPrice] = React.useState('')
+    const [journeyId, setJourneyId] = React.useState('')
+    // openPrice
 
     useEffect(() => {
 
@@ -19,7 +24,7 @@ export default function MapRoutes({ navigation, route }) {
             // console.log(routeData, 'new data')
 
 
-            console.log(routeData[0].origin, 'abc')
+            console.log(price, 'abc')
 
 
         })();
@@ -28,7 +33,7 @@ export default function MapRoutes({ navigation, route }) {
             // clear/remove event listener
 
         }
-    }, []);
+    }, [journeyId, estimatedPrice, selectedIndex, openPrice]);
 
 
     const handleMapLayout = () => {
@@ -45,22 +50,71 @@ export default function MapRoutes({ navigation, route }) {
 
 
 
-    const saveRide = async () =>{
+    const saveRide = async () => {
 
         const result = await hitApiToSaveRide(pick, drop, seat, date, selectedIndex, price)
         console.log(result)
-        if (result.status)
-        {
+        if (result.status) {
 
-            navigation.goBack()
+            setJourneyId(result.data.rideId)
+            const price = await hitApiToRequestGetEstimatedPrice(result.data.rideId)
+            if (price.status) {
+
+                // {"data": 952.4361, "status": true} 
+                setOpenPrice(true)
+                setEstimatedPrice(String(price.data))
+                // navigation.goBack()
+            }
+            console.log(price, 'result')
 
         }
-        else{
+        else {
             Toast.showWithGravity(result.message ?? result.error ?? 'Something went wrong', 2, Toast.TOP);
         }
 
     }
 
+
+    const updateEstimatedRide = async (estimatedPrice) => {
+
+        const result = await hitApiToRequestUpdateEstimatedPrice(journeyId, estimatedPrice)
+        console.log(result)
+        if (result.status) {
+
+
+            // {"data": 952.4361, "status": true} 
+           
+           
+            navigation.goBack()
+            setOpenPrice(false)
+           
+
+        }
+        else {
+            Toast.showWithGravity(result.message ?? result.error ?? 'Something went wrong', 2, Toast.TOP);
+        }
+
+    }
+
+    const save = (val) => {
+        if (!val) {
+            Toast.showWithGravity('Please enter estimated price', 2, Toast.TOP);
+        }
+        else {
+           
+            updateEstimatedRide(val)
+
+        }
+        console.log(val, 'price')
+
+    }
+
+    const selectedPrice = (val) => {
+        setOpenPrice(false)
+    }
+    const closeEstimatePopup = () => {
+        setOpenPrice(false)
+    }
 
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
@@ -116,11 +170,13 @@ export default function MapRoutes({ navigation, route }) {
 
             <View style={{ justifyContent: 'center', alignItems: 'center', width: Dimensions.get('window').width, height: Dimensions.get('window').height / 5 }}>
 
-            <TouchableOpacity onPress={() =>  saveRide()} style={{ marginTop: 20, backgroundColor: AppColors.themePrimaryColor, width: '55%', height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: AppColors.themesWhiteColor }}>{'SAVE RIDE'}</Text>
-            </TouchableOpacity>
+                <TouchableOpacity onPress={() => saveRide()} style={{ marginTop: 20, backgroundColor: AppColors.themePrimaryColor, width: '55%', height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ fontSize: 14, fontWeight: '600', color: AppColors.themesWhiteColor }}>{'SAVE RIDE'}</Text>
+                </TouchableOpacity>
 
             </View>
+
+            {PriceSelection('Estimated Price', openPrice ? true : false, closeEstimatePopup, selectedPrice, estimatedPrice, price, save)}
 
 
         </View>

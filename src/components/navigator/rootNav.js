@@ -12,6 +12,7 @@ import MyRide from '../../Screens/myRide/MyRide';
 import MapRoutes from '../../Screens/routes/MapRoutes';
 import Message from '../../Screens/message/Message';
 import FindRide from '../../Screens/home/FindRide';
+import ProfileScreen from '../../Screens/profile/ProfileScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SplashScreen from '../../Screens/splash/SplashScreen';
@@ -112,6 +113,7 @@ export default function RootNav() {
                 <Stack.Screen name="KycScreen" component={KycScreen} />
                 <Stack.Screen name='FindRideList' component={FindRideList}/>
                 <Stack.Screen name='MapRoutes' component={MapRoutes}/>
+                <Stack.Screen name='ProfileScreen' component={ProfileScreen}/>
                 <Stack.Screen name="RideTab" component={RideTab} options={{ animationEnabled: false }} />
 
 

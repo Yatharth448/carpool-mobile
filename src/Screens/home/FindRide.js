@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Text, View, Image, TouchableOpacity, Dimensions, TextInput } from "react-native";
+import { Text, View, Image, TouchableOpacity, Dimensions, TextInput, Pressable } from "react-native";
 import { AppColors } from "../../components/constants/AppColor";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { FindAndOfferRide } from "../../components/findandoffer/FindAndOfferRide";
@@ -157,7 +157,7 @@ export default function FindRide({ navigation }) {
         else {
 
             // console.log(pickupLocation, dropLocation,selectedDate, 'check data')
-            navigation.navigate('FindRideList', { pick: pickupLocation, drop: dropLocation, date: selectedDate, seat: passengerValue })
+            navigation.navigate('FindRideList', { pick: pickupLocation, drop: dropLocation, date: rawDate, seat: passengerValue })
         }
 
     }
@@ -251,9 +251,9 @@ export default function FindRide({ navigation }) {
 
                         <Image source={require('../../assets/notification.png')} style={{ width: 25, height: 28 }} />
                     </View>
-                    <View style={{ width: '50%', height: 50, alignItems: 'flex-end', paddingRight: 20, justifyContent: 'center' }}>
+                    <Pressable onPress={()=> navigation.navigate('ProfileScreen')} style={{ width: '50%', height: 50, alignItems: 'flex-end', paddingRight: 20, justifyContent: 'center' }}>
                         <Image source={require('../../assets/profile.png')} style={{ width: 30, height: 30 }} />
-                    </View>
+                    </Pressable>
 
                 </View>
             </View>

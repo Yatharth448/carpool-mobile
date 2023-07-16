@@ -23,7 +23,18 @@ export default function OTPScreen({ navigation, route }) {
     if (result.status)
     {
       Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
-      navigation.navigate('AcccountSetupScreen')
+
+      if (result.kyc_status)
+      {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'RideTab' }],
+        })
+      }
+      else{
+        navigation.navigate('AcccountSetupScreen')
+       
+      }
     }
 
     }
@@ -52,7 +63,7 @@ export default function OTPScreen({ navigation, route }) {
           {'Enter the code sent to'}
         </Text>
         <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginTop: 0, width: '70%', color: AppColors.themeBlackColor }}>
-          {'+918810561414'}
+          {mobile}
         </Text>
 
         <View style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>

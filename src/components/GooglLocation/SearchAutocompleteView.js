@@ -1,9 +1,15 @@
 import React from 'react'
-import { Modal, View, Text, Image, StyleSheet, Pressable, Dimensions } from 'react-native'
+import { Modal, View, Text, Image, StyleSheet, Pressable, Dimensions, Keyboard } from 'react-native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { AppKeys } from '../constants/AppKeys';
 import { AppColors } from '../constants/AppColor';
 export const SearchAutocompleteView = (headerText, isLoading, closePopup, selectedText) => {
+
+
+    React.useEffect(() => {
+        // console.log('se', selectedIdType)
+        Keyboard.isVisible(true)
+    }, []);
 
 
     const selectLocation = (val) => {
@@ -37,7 +43,7 @@ export const SearchAutocompleteView = (headerText, isLoading, closePopup, select
 
                             style={{ width: '100%', }}
                             styles={{
-                                textInput: { color: AppColors.themeBlackColor, fontSize: 16, borderColor: AppColors.themeCardBorderColor, borderWidth: 5, height: 50, padding: 1 }, 
+                                textInput: { color: AppColors.themeBlackColor, fontSize: 16, borderColor: AppColors.themeCardBorderColor, borderWidth: 5, height: 50, padding: 1 },
                                 row: {
                                     backgroundColor: '#FFFFFF',
                                     padding: 13,
@@ -57,12 +63,14 @@ export const SearchAutocompleteView = (headerText, isLoading, closePopup, select
                             }}
                             textInputProps={{
                                 placeholderTextColor: AppColors.themeText2Color,
-                                returnKeyType: "search"
-                              }}
+                                returnKeyType: "search",
+                                autoFocus: true
+                            }}
                             // width={300}
+                            // autoFocus= {true}
                             borderColor={AppColors.themeCardBorderColor}
                             placeholder="Type a place"
-                            color = {AppColors.themeBlackColor}
+                            color={AppColors.themeBlackColor}
                             fontSize={18}
                             backgroundColor={AppColors.themeTextGrayColor}
                             onPress={(data, details = null) => selectLocation(data.description)}
