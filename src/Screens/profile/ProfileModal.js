@@ -23,7 +23,7 @@ export const hitApiToGetProfile = async () => {
 export const hitApiToUpdateProfile = async (name, email, dob) => {
 
     try {
-        const otpData = await connection.postAPI('api/user/profile', {'name': name, 'email': email, 'date_of_birth': dob})
+        const otpData = await connection.postAPI('api/user/update', {'name': name, 'email': email, 'date_of_birth': dob})
 
         if (otpData.success) {
             return otpData

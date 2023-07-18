@@ -14,6 +14,7 @@ export default function DateTimeView(mode, open, date, onConfirm, onCancel, open
                 modal={true}
                 mode={mode}
                 open={open}
+                minimumDate={new Date()}
                 date={date}
                 onConfirm={(date) => onConfirm(date)}
                 onCancel={() => {

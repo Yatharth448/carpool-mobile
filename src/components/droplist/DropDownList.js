@@ -18,12 +18,13 @@ export default function DropDownList(type, label, selectedId) {
                     <View style={{
                         padding: 5,
                         flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         alignItems: 'center',
                         width: '100%',
                         height: 30,
                     }}>
                         <Text style={{
+                            textAlign: 'center',
                             flex: 1,
                             fontSize: 16,
                             fontWeight: '600',
@@ -67,7 +68,7 @@ export default function DropDownList(type, label, selectedId) {
                 }}
                 renderItem={renderItem}
                 renderLeftIcon={() => 
-                     <Image source={require('../../assets/profile.png')} style={{ tintColor: AppColors.themePrimaryColor, marginLeft: 0, marginRight: 20, width: 25, resizeMode: 'contain' }} />
+                     <Image source={require('../../assets/profile.png')} style={{ tintColor: AppColors.themePrimaryColor, marginLeft: 0, marginRight: 10, width: 25, resizeMode: 'contain' }} />
                     }
             />
         )
