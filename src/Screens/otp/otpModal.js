@@ -1,9 +1,9 @@
 import connection from "../../network/connection"
 
-export const hitApiForVerifyOTP = async (mobile, otp, secret) => {
+export const hitApiForVerifyOTP = async (mobile, otp, secret, deviceToken) => {
 
     try {
-        const otpData = await connection.postAPI('/api/auth/verify/otp', { 'contactNumber': mobile, "otp": otp, "secret": secret })
+        const otpData = await connection.postAPI('/api/auth/verify/otp', { 'contactNumber': mobile, "otp": otp, "secret": secret, 'deviceToken': deviceToken })
 
         if (otpData.success) {
             return otpData

@@ -35,7 +35,7 @@ export default function MessageRoom({ navigation, route }) {
         }
 
         const result = await hitApiToGetChatList();
-        console.log("ride list", result.data);
+        console.log("msg room", result.data);
         if (result.status) {
             setMessage(result.data ?? [])
             setFetching(false)
@@ -51,7 +51,7 @@ export default function MessageRoom({ navigation, route }) {
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
             <Header close={() => { navigation.goBack() }} text='Messages' isBack={false}/>
             <FlatList
-                data={message}
+                data={message ?? []}
                 refreshControl={
                     <RefreshControl
                         onRefresh={() => getChat()}
@@ -68,12 +68,12 @@ export default function MessageRoom({ navigation, route }) {
                 // onEndReached={() => this.getCartList()}
                 renderItem={({ item, index }) => (
                     <View style={{ width: Dimensions.get('window').width, alignItems: 'center', marginTop: 10 }}>
-                        <Pressable onPress={() => navigation.navigate('Chat', { id: item._id })} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
+                        <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.cotraveller_id, 'id': item._id })} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
 
                             <View style={{ width: '100%', justifyContent: 'center', padding: 10 }}>
                                 <View style={{ width: '100%', alignItems: 'flex-start' }}>
                                     {/* {console.log(item)} */}
-                                    <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: AppColors.themeBlackColor }}>{(item.messages[item.messages.length - 1].from)}</Text>
+                                    <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: AppColors.themeBlackColor }}>{(item.cotraveller_name)}</Text>
                                     <Text style={{ width: '100%', marginTop: 10, fontWeight: '600', fontSize: 14, color: AppColors.themeText2Color }}>{(item.messages[item.messages.length - 1].message)}</Text>
 
                                 </View>

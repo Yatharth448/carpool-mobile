@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
-import { Text, View, Image, TouchableOpacity, Platform, Pressable } from 'react-native'
+import { Text, View, Image, TouchableOpacity, Platform, Pressable, Alert } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import TextInputView from '../../components/Input/TextInputView';
 import DateInput from '../../components/Input/DateInput';
+import AsyncStorage from "@react-native-community/async-storage"
 import moment from 'moment';
 import Toast from 'react-native-simple-toast'
 import { hitApiToGetProfile, hitApiToUpdateProfile } from './ProfileModal';
@@ -108,6 +109,29 @@ export default function ProfileScreen({ navigation }) {
 
     }
 
+
+    const clearAllData = (nav) => {
+        AsyncStorage.getAllKeys()
+
+            .then(keys => AsyncStorage.multiRemove(keys))
+            .then(() => nav.reset({
+                index: 0,
+                routes: [{ name: 'SplashScreen' }],
+            }));
+    }
+
+    const LogoutAlert = (navigation) => {
+        Alert.alert(
+            '',
+            'Are you sure you want to logout ?',
+            [
+                { text: 'OK', onPress:()=> clearAllData(navigation) },
+            ],
+            {
+                cancelable: false,
+            },
+        );
+    }
 
 
     return (

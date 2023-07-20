@@ -13,12 +13,13 @@ export default function OTPScreen({ navigation, route }) {
   const [otp, setOtp] = React.useState("");
   console.log(route.params, 'route')
   const { mobile, secret } = route.params;
-
+  
   const validateOTP = async (otp) => {
-
+    
+    const deviceToken = await Storage.getSavedItem('fcmToken')
     if ((!(otp) == '') && (otp.length == 4)) {
 
-    const result = await hitApiForVerifyOTP(mobile, otp, secret)
+    const result = await hitApiForVerifyOTP(mobile, otp, secret, deviceToken)
     console.log(result, 'otp result')
     if (result.status)
     {

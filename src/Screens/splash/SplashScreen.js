@@ -12,6 +12,7 @@ import { LogBox } from 'react-native';
 import Storage from '../../components/localStorage/storage';
 import { AppKeys } from '../../components/constants/AppKeys';
 import { AppColors } from '../../components/constants/AppColor';
+import {getToken, configureNotification} from '../../Utils/PushNotification';
 
 
 
@@ -43,6 +44,8 @@ export default class SplashScreen extends Component {
 
 	}
 	getSavedToken = async () => {
+		getToken()
+		configureNotification()
 		let token
 		token = await Storage.getSavedItem(AppKeys.SECRET_KEY)
 		return token
@@ -53,7 +56,7 @@ export default class SplashScreen extends Component {
 		LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
 		LogBox.ignoreAllLogs(); //Ignore all log notifications
 		// SplashScreen.hide();
-	
+	//   
 
 		await this.startTimer()
 
