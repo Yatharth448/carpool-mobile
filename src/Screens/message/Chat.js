@@ -9,9 +9,9 @@ import PushNotification from 'react-native-push-notification';
 import { hitApiToMessageForParticularUser, hitApiToSendMessage } from './MessageModal';
 import { Surface } from 'react-native-paper';
 export default function Chat({ navigation, route }) {
-
+    const [refreshPage, setRefreshPage] = React.useState(false);
     const [message, setMessage] = React.useState([])
-    const { id, coTravellerId } = route.params;
+    const { id, coTravellerId, cotravellerName } = route.params;
     const [text, setText] = React.useState('')
     const [fetching, setFetching] = React.useState(false)
     const listViewRef = useRef()
@@ -27,50 +27,46 @@ export default function Chat({ navigation, route }) {
             //     // listViewRef.scrollToEnd();
             // }, 1500);
 
+            //           messaging().onMessage(async (remoteMessage) => {
+            //     console.log('ios', remoteMessage)
+            //     await getAllMsg()
+
+            // })
+
+
+
 
         })();
 
         return () => {
             // clear/remove event listener
-
+            unsubscribeOnMessage();
         }
-    }, []);
+    }, [refreshPage]);
 
 
-    messaging().onMessage(async (remoteMessage) => {
-        console.log('ios', remoteMessage)
-        await getAllMsg()
-        // Platform.OS == 'ios' ? PushNotificationIOS.addNotificationRequest({
-        //     id: remoteMessage.messageId,
-        //     body: remoteMessage.notification.body,
-        //     title: remoteMessage.notification.title,
-        //     userInfo: remoteMessage.data,
-        // }) :
-        // PushNotification.createChannel(
-        //     {
-        //         channelId: 'fcm_fallback_notification_channel', // (required)
-        //         channelName: 'My channel', // (required)
-        //         channelDescription: '',
-        //         soundName: 'default',
-        //         importance: 4,
-        //         vibrate: true,
-        //     },
-        //     created => console.log(`createChannel returned '${created}'`),
-        // );
-        // const dat = {
-        //     channelId: 'fcm_fallback_notification_channel', // (required)
-        //     channelName: 'My channel',
-        //     body: remoteMessage.notification.body, // (required)
-        //     title: remoteMessage.notification.title,
-        // };
-        // console.log('dat', dat)
-        // PushNotification.localNotification(dat);
+
+    const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
+
+        console.log("DEBUG: Received FCM message: " + JSON.stringify(remoteMessage));
+
+        // Function to process new message and insert into local storage
+        // if (refreshPage)
+        // {
+
+            await getAllMsg();
+        // }
+
+        // Display notification to user
+
+        // Trigger refresh of FlatList component with setState
+        // setRefreshPage(Math.random() * 100);
+
     });
-
 
     const scrollToBottom = (msg) => {
         //OnCLick of down button we scrolled the list to bottom
-        console.log(msg?.length, 'length')
+        // console.log(msg?.length, 'length')
         // listViewRef.current.initialScrollIndex = ({ scrollToBottom: 33 })
         // listViewRef.current.scrollToOffset({ offset: msg?.length * (Dimensions.get('window').height), animated: false });
         // listViewRef?.current.scrollToOffset({ animated: false, offset:  msg.length + 5});
@@ -82,7 +78,7 @@ export default function Chat({ navigation, route }) {
             setFetching(true)
         }
         const result = await hitApiToMessageForParticularUser(id);
-        console.log("ride list", result.data, id);
+        // console.log("ride list", result.data, id);
         if (result.status) {
             setMessage((result.data[0].messages.reverse()) ?? [])
             setFetching(false)
@@ -119,11 +115,11 @@ export default function Chat({ navigation, route }) {
                 <View style={{ justifyContent: 'center', padding: 10, backgroundColor: item.right ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, borderRadius: 10 }}>
                     <View style={{ width: '100%', alignItems: item.right ? 'flex-end' : 'flex-start' }}>
                         {/* {console.log(item)} */}
-                        <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: item.right ? AppColors.themesWhiteColor : AppColors.themeBlackColor }}>{(item.from_name)}</Text>
-                        <Text style={{ width: '100%', marginTop: 10, fontWeight: '600', fontSize: 14, color: item.right ? AppColors.themesWhiteColor : AppColors.themeText2Color }}>{(item.message)}</Text>
+                        {/* <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: item.right ? AppColors.themesWhiteColor : AppColors.themeBlackColor }}>{(item.from_name)}</Text> */}
+                        <Text style={{ width: '100%', marginTop: 0, fontWeight: '600', fontSize: 14, color: item.right ? AppColors.themesWhiteColor : AppColors.themeText2Color }}>{(item.message)}</Text>
 
                     </View>
-                    {item.time ? <Text style={{ textAlign: 'left', width: '100%', marginTop: 10, fontWeight: '400', fontSize: 12, color: item.right ? AppColors.themesWhiteColor : AppColors.themeText2Color }}>{item.time ? (moment(item.time).format('hh:mm A')) : null}</Text> : null}
+                    {item.time ? <Text style={{ paddingLeft:  item.right ? 0 : 5, paddingRight:  item.right ? 5 : 0, textAlign: 'left', width: '100%', marginTop: 10, fontWeight: '400', fontSize: 12, color: item.right ? AppColors.themesWhiteColor : AppColors.themeText2Color }}>{item.time ? (moment(item.time).format('hh:mm A')) : null}</Text> : null}
 
 
                 </View>
@@ -138,7 +134,7 @@ export default function Chat({ navigation, route }) {
 
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
-            <Header close={() => { navigation.goBack() }} />
+            <Header close={() => { navigation.goBack() }} text={cotravellerName} />
             <View style={{ height: '83%' }}>
                 <FlatList
                     data={message}
@@ -205,7 +201,7 @@ const styles = StyleSheet.create({
         bottom: -3,
         borderBottomLeftRadius: 30,
         right: -10,
-       
+
     },
 
     rightArrowOverlap: {
@@ -217,7 +213,7 @@ const styles = StyleSheet.create({
         bottom: -6,
         borderBottomLeftRadius: 18,
         right: -20,
-        
+
 
     },
     leftArrow: {

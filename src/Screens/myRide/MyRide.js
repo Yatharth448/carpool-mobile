@@ -36,7 +36,7 @@ export default function MyRide({ navigation, route }) {
         if (load == 'refresh') { setLoading(true)}
 
             const result = await hitApiToGetMyRide();
-            console.log("ride list", result);
+            // console.log("ride list", result);
             if (result.status) {
                 setRideList(result.data ?? [])
                 setLoading(false)
