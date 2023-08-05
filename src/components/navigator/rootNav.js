@@ -13,97 +13,43 @@ import MapRoutes from '../../Screens/routes/MapRoutes';
 import MessageRoom from '../../Screens/message/MessageRoom';
 import FindRide from '../../Screens/home/FindRide';
 import ProfileScreen from '../../Screens/profile/ProfileScreen';
-import Icon from 'react-native-vector-icons/MaterialIcons'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import SplashScreen from '../../Screens/splash/SplashScreen';
 import Chat from '../../Screens/message/Chat';
-const BottomTab = createBottomTabNavigator();
+import SignupScreen from '../../Screens/signup/signup';
+
+const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator()
-const ACTIVE_TAB_COLOR = AppColors.themePrimaryColor;
-const INACTIVE_TAB_COLOR = AppColors.themeBlackColor;
 
 
-function RideTab() {
-    const customTabBarStyle = {
-        backgroundColor: AppColors.themePrimaryColor
-
-    }
+function RideDrawer() {
+  
     return (
-        <BottomTab.Navigator
 
-            initialRouteName="My Ride"
-            activeColor="red"
-            inactiveTintColor='gray'
-            screenOptions={{
-                // activeTintColor: 'red',
-                headerShown: false,
-                // barStyle:{backgroundColor: 'red'},
-                // style:{backgroundColor: 'red'},
-                tabBarStyle: { backgroundColor: 'white', height: 60, marginLeft: 8, marginRight: 8, paddingBottom: 10, borderRadius: 10, marginBottom: 8 },
-            }}
-            // backgroundColor={'blue'}
-            tabBarOptions={customTabBarStyle}
-            shifting="false">
-            <BottomTab.Screen
-                name="My Ride"
-                options={{
-                    marginLeft: 10,
-                    tabBarLabel: 'MY RIDE',
-                    tabBarIcon: ({ color, focused }) => (
-                        style = { marginLeft: 10 },
-                        <Image source={require('../../assets/myride.png')} style={{ width: 26, tintColor: color }} />
-                        // <Icon name="home" color={color} size={26} />
-                    )
-                }}
-                component={MyRide} />
-            <BottomTab.Screen
-                name="Add"
-                options={{
-                    tabBarLabel: '',
-                    tabBarIcon: ({ color }) => (
-                        <View
-                            style={{
-                                position: 'absolute',
-                                bottom: 0, // space from bottombar
-                                height: 68,
-                                width: 68,
-                                borderRadius: 34,
-                                // borderColor: AppColors.themeCardBorderColor,
-                                // borderWidth: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: AppColors.themesWhiteColor
-                            }}
-                        >
-                            <Image source={require('../../assets/locationtab.png')} style={{ width: 75, marginTop: 15, resizeMode: 'contain' }} />
-                            {/* <Icon name="add-circle-outline" color="grey" size={68} /> */}
-                        </View>
-                    )
-                }}
-                component={FindRide} />
-            <BottomTab.Screen
-                name="Message"
-                options={{
-                    tabBarLabel: 'MESSAGE',
-                    tabBarIcon: ({ color }) => (
-                        <Icon name="messenger-outline" color={color} size={26} />
-                    )
-                }}
-                component={MessageRoom} />
-        </BottomTab.Navigator>
+        <NavigationContainer>
+            <Drawer.Navigator initialRouteName="FindRide">
+                <Drawer.Screen name="FindRide" component={FindRide} />
+                <Drawer.Screen name="MyRide" component={MyRide} />
+                <Drawer.Screen name="MessageRoom" component={MessageRoom} />
+                <Drawer.Screen name='MapRoutes' component={MapRoutes} />
+                <Drawer.Screen name='ProfileScreen' component={ProfileScreen} />
+                <Drawer.Screen name='FindRideList' component={FindRideList} />
+                <Drawer.Screen name='Chat' component={Chat} />
+                {/* Add more screens here */}
+            </Drawer.Navigator>
+        </NavigationContainer>
+
+
     );
 }
 
 
 export default function RootNav() {
 
-
-
     return (
         <NavigationContainer>
 
             <StatusBar backgroundColor={AppColors.themePrimaryColor} barStyle='light-content' />
-
 
             <Stack.Navigator screenOptions={{ headerShown: false }} >
 
@@ -112,15 +58,8 @@ export default function RootNav() {
                 <Stack.Screen name="OTPScreen" component={OTPScreen} />
                 <Stack.Screen name="AcccountSetupScreen" component={AcccountSetupScreen} />
                 <Stack.Screen name="KycScreen" component={KycScreen} />
-                <Stack.Screen name='FindRideList' component={FindRideList} />
-                <Stack.Screen name='MapRoutes' component={MapRoutes} />
-                <Stack.Screen name='ProfileScreen' component={ProfileScreen} />
-                <Stack.Screen name='Chat' component={Chat} />
-                {/* <Stack.Screen name='MessageRoom' component={MessageRoom} /> */}
-
-                <Stack.Screen name="RideTab" component={RideTab} options={{ animationEnabled: false }} />
-
-
+                <Stack.Screen name='SignupScreen' component={SignupScreen} />
+                <Stack.Screen name="RideDrawer" component={RideDrawer} options={{ animationEnabled: false }} />
 
             </Stack.Navigator>
 

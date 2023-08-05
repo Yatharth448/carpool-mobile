@@ -210,7 +210,7 @@ export default function KycScreen({ navigation }) {
 
       navigation.reset({
         index: 0,
-        routes: [{ name: 'RideTab' }],
+        routes: [{ name: 'RideDrawer' }],
       })
     }
     else {

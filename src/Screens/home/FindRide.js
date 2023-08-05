@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Text, View, Image, TouchableOpacity, Dimensions, TextInput, Pressable } from "react-native";
+import { Text, View, Image, TouchableOpacity, Platform, TextInput, Pressable, ScrollView } from "react-native";
 import { AppColors } from "../../components/constants/AppColor";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { FindAndOfferRide } from "../../components/findandoffer/FindAndOfferRide";
@@ -13,11 +13,44 @@ import DropDownList from "../../components/droplist/DropDownList";
 import Toast from 'react-native-simple-toast'
 import { AppTexts } from "../../components/constants/AppTexts";
 import { hitApiToGetRoutes } from "./RideModal";
+import MapView, { Marker } from 'react-native-maps';
+import { GetCurrentLocation } from "../../components/location/GetCurrentLocation";
+import { AvtarView, CotravellerView, SeatsView } from "./RideComponent";
 
 export default function FindRide({ navigation }) {
 
-
+    const customMapStyle = [
+        // Paste your custom map style JSON here
+        // Example:
+        {
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": '#ffffff',
+                }
+            ]
+        },
+        {
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#ffffff"
+                }
+            ]
+        },
+        {
+            "elementType": "labels.text.stroke",
+            "stylers": [
+                {
+                    "color": "#403ADD"
+                }
+            ]
+        },
+        // ... add more styles
+    ];
     const [openDate, setOpenDate] = React.useState(false)
+    const [cotraveller, setCotraveller] = React.useState(false)
+    const [selectedIndex, setIndex] = React.useState(0)
     const [find, setFind] = React.useState(true)
     const [openTime, setOpenTime] = React.useState(false)
     const [date, setDate] = React.useState(new Date())
@@ -33,10 +66,24 @@ export default function FindRide({ navigation }) {
     const [passengerValue, setPassengerValue] = React.useState(1)
     const [seatPrice, setSeatPrice] = React.useState('')
     const [rawDate, setrawDate] = React.useState('')
+    const [location, setLocation] = React.useState({ latitude: 28.693072, longitude: 76.981635 })
 
 
     useEffect(() => {
         // console.log('se', selectedIdType)
+
+        (async () => {
+
+
+
+
+            const location = await GetCurrentLocation()
+            // setLocation(location)
+            console.log(location, 'loaction')
+
+
+        })();
+
 
     }, [find, openDate, openTime, date, selectedDate, selectedTime, openSearch, pickupLocation, dropLocation, noOfPassenger, selectCar, seater]);
 
@@ -189,9 +236,9 @@ export default function FindRide({ navigation }) {
         else {
 
             // console.log(pickupLocation, dropLocation,selectedDate, 'check data')
-           const routeData = await getPolylineCoordinats(pickupLocation, dropLocation)
+            const routeData = await getPolylineCoordinats(pickupLocation, dropLocation)
 
-         navigation.navigate('MapRoutes', { pick: pickupLocation, drop: dropLocation, date: rawDate, seat: seatCount, routeData, price: seatPrice })
+            navigation.navigate('MapRoutes', { pick: pickupLocation, drop: dropLocation, date: rawDate, seat: seatCount, routeData, price: seatPrice })
         }
 
     }
@@ -220,10 +267,10 @@ export default function FindRide({ navigation }) {
                     "cords": arr,
                     "distance": leg.distance.text,
                     "duration": leg.duration.text,
-                    "origin": {'latitude': leg.start_location.lat, 'longitude': leg.start_location.lng},
-                    "destination": {'latitude': leg.end_location.lat, 'longitude': leg.end_location.lng},
+                    "origin": { 'latitude': leg.start_location.lat, 'longitude': leg.start_location.lng },
+                    "destination": { 'latitude': leg.end_location.lat, 'longitude': leg.end_location.lng },
                     "summary": data.summary,
-                   
+
 
                 }
                 myData.push(abc)
@@ -240,134 +287,167 @@ export default function FindRide({ navigation }) {
     }
 
 
+    const setSelectedIndex = (i) => {
+        setIndex(i)
+
+
+    }
+    const onCheck = () => {
+        setCotraveller(!cotraveller)
+    }
 
 
     return (
-        <View style={{ flex: 1, backgroundColor: AppColors.themePrimaryColor, alignItems: 'center' }}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
 
-            <View style={{ width: '100%', height: Platform.OS == 'android' ? '10%' : '16%', backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ width: '100%', flexDirection: 'row', marginTop: Platform.OS == 'android' ? 0 : '12%', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                    <View style={{ width: '50%', height: 50, alignItems: 'flex-start', paddingLeft: 20, justifyContent: 'center' }}>
+            {/* <View style={{ width: '100%', height: Platform.OS == 'android' ? '10%' : '16%', backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}> */}
 
-                        <Image source={require('../../assets/notification.png')} style={{ width: 25, height: 28 }} />
-                    </View>
-                    <Pressable onPress={()=> navigation.navigate('ProfileScreen')} style={{ width: '50%', height: 50, alignItems: 'flex-end', paddingRight: 20, justifyContent: 'center' }}>
-                        <Image source={require('../../assets/profile.png')} style={{ width: 30, height: 30 }} />
+
+            <ScrollView>
+
+
+                <View style={{ height: 300, width: '100%' }}>
+                    {location ?
+                        <MapView style={{ flex: 1 }}
+                            initialRegion={{
+                                latitude: location.latitude,
+                                longitude: location.longitude,
+                                latitudeDelta: 0.0922,
+                                longitudeDelta: 0.0421,
+                            }}
+                            customMapStyle={customMapStyle}
+                        >
+                            <Marker title="Location" coordinate={location} />
+
+                        </MapView>
+                        : null}
+                </View>
+
+                <View style={{ position: 'absolute', top: 30, width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                    <Pressable onPress={() => console.log('pressed')} style={{ width: '50%', height: 50, alignItems: 'flex-start', paddingLeft: 20, justifyContent: 'center' }}>
+
+                        <Image source={require('../../assets/menu.png')} style={{ width: 40, height: 40 }} />
+                    </Pressable>
+                    <Pressable style={{ width: '50%', height: 50, alignItems: 'flex-end', paddingRight: 20, justifyContent: 'center' }}>
+                        {/* <Image source={require('../../assets/profile.png')} style={{ width: 30, height: 30 }} /> */}
                     </Pressable>
 
                 </View>
-            </View>
 
-            <View style={{ position: 'absolute', bottom: -100, height: '50%', width: '100%', backgroundColor: AppColors.themesWhiteColor }}>
-                <Image source={require('../../assets/mapbg.png')} style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height * .5 }} />
-            </View>
-
-            <View style={{
-                alignItems: 'center', backgroundColor: AppColors.themesWhiteColor,
-                width: '100%', height: Platform.OS == 'android' ? '65%' : '84%', borderRadius: 40
-            }}>
-                <View style={{ alignItems: 'center', width: '96%', marginTop: 15 }}>
+                <View style={{
+                    alignItems: 'center', backgroundColor: AppColors.themesWhiteColor, marginTop: -50,
+                    width: '100%', height: Platform.OS == 'android' ? '65%' : '84%', borderRadius: 30
+                }}>
+                    <View style={{ alignItems: 'center', width: '96%', marginTop: 0 }}>
 
 
 
-                    {FindAndOfferRide(findRide, offerRide)}
+                        {FindAndOfferRide(findRide, offerRide)}
 
-                    {PickupAndDrop(pickupLocation, dropLocation, pickUp, dropOff)}
+                        <AvtarView image={require('../../assets/profile.png')} name={'Yatharth'} />
+                        <View style={{ width: '94%', height: 1, marginTop: 20, backgroundColor: AppColors.themeCardBorderColor }} />
+                        <SeatsView
+                            selectedIndex={selectedIndex}
+                            setSelectedIndex={setSelectedIndex}
+                        />
+                        <CotravellerView onCheck={onCheck} image={cotraveller ? 'checkbox-outline' : 'checkbox-blank-outline'} />
+                        <View style={{ width: '94%', height: 1, marginTop: 20, backgroundColor: AppColors.themeCardBorderColor }} />
+                        {PickupAndDrop(pickupLocation, dropLocation, pickUp, dropOff)}
 
-                    {DefaultOrMap(useDefault, useMap)}
+                        {/* {DefaultOrMap(useDefault, useMap)} */}
 
-                    <View style={{ alignItems: 'center', width: '90%', height: '35%', justifyContent: 'center' }}>
+                        <View style={{ alignItems: 'center', width: '90%', height: '35%', justifyContent: 'center' }}>
 
-                        {find ?
+                            {find ?
 
-                            <View style={{ width: '100%', height: 70, justifyContent: 'center', alignItems: 'center' }}>
-
-
-                                {DateTimeView('date', openDate, date, onDateConfirm, onDateCancel, openDatePicker, selectedDate)}
-                                <View style={{ marginTop: 10, marginBottom: 10, width: '80%', height: 1, marginLeft: 20, backgroundColor: AppColors.themeCardBorderColor }}></View>
-                                {DateTimeView('time', openTime, date, onTimeConfirm, onTimeCancel, openTimePicker, selectedTime)}
-
-                            </View>
-
-                            :
+                                <View style={{ width: '100%', height: 70, justifyContent: 'center', alignItems: 'center' }}>
 
 
-                            <View style={{ width: '100%', height: 70, justifyContent: 'center', alignItems: 'center' }}>
+                                    {DateTimeView('date', openDate, date, onDateConfirm, onDateCancel, openDatePicker, selectedDate)}
+                                    <View style={{ marginTop: 10, marginBottom: 10, width: '80%', height: 1, marginLeft: 20, backgroundColor: AppColors.themeCardBorderColor }}></View>
+                                    {DateTimeView('time', openTime, date, onTimeConfirm, onTimeCancel, openTimePicker, selectedTime)}
 
-                                <View style={{ flexDirection: 'row', width: '100%', }}>
-
-                                    <View style={{ width: '50%' }}>
-                                        {DateTimeView('date', openDate, date, onDateConfirm, onDateCancel, openDatePicker, selectedDate)}
-                                    </View>
-                                    <View style={{ width: '50%' }}>
-                                        {DateTimeView('time', openTime, date, onTimeConfirm, onTimeCancel, openTimePicker, selectedTime)}
-                                    </View>
-                                </View>
-                                <View style={{ marginTop: 10, width: '90%', height: 1, marginLeft: 20, backgroundColor: AppColors.themeCardBorderColor }}></View>
-
-                                <View style={{ width: '100%', flexDirection: 'row' }}>
-                                    <View style={{ width: '50%' }}>
-
-                                        {DropDownList('car', selectCar, carAvailable)}
-                                    </View>
-                                    <View style={{ width: '50%' }}>
-
-                                        {DropDownList('seat', seater, seatAvailable)}
-                                    </View>
                                 </View>
 
-
-                            </View>
-
-                        }
-
-                    </View>
-
-                </View>
+                                :
 
 
+                                <View style={{ width: '100%', height: 70, justifyContent: 'center', alignItems: 'center' }}>
 
-            </View>
+                                    <View style={{ flexDirection: 'row', width: '100%', }}>
+
+                                        <View style={{ width: '50%' }}>
+                                            {DateTimeView('date', openDate, date, onDateConfirm, onDateCancel, openDatePicker, selectedDate)}
+                                        </View>
+                                        <View style={{ width: '50%' }}>
+                                            {DateTimeView('time', openTime, date, onTimeConfirm, onTimeCancel, openTimePicker, selectedTime)}
+                                        </View>
+                                    </View>
+                                    <View style={{ marginTop: 10, width: '90%', height: 1, marginLeft: 20, backgroundColor: AppColors.themeCardBorderColor }}></View>
+
+                                    <View style={{ width: '100%', flexDirection: 'row' }}>
+                                        <View style={{ width: '50%' }}>
+
+                                            {DropDownList('car', selectCar, carAvailable)}
+                                        </View>
+                                        <View style={{ width: '50%' }}>
+
+                                            {DropDownList('seat', seater, seatAvailable)}
+                                        </View>
+                                    </View>
 
 
-            {
-                find ?
+                                </View>
 
+                            }
 
-                    <View style={{ width: '80%', marginTop: 20, alignItems: 'center', paddingLeft: 10, backgroundColor: AppColors.themesWhiteColor }}>
-                        <View style={{ width: '90%' }}>
-
-                            {DropDownList('passenger', noOfPassenger, passengersAvailable)}
                         </View>
 
                     </View>
 
 
-                    :
-                    <View style={{ height: 50, borderRadius: 5, flexDirection: 'row', width: '80%', marginTop: 20, alignItems: 'center', paddingLeft: 20, backgroundColor: AppColors.themesWhiteColor }}>
-                        <Image source={require('../../assets/profile.png')} style={{ tintColor: AppColors.themePrimaryColor, marginLeft: 0, marginRight: 10, width: 25, resizeMode: 'contain' }} />
-                        <Text style={{ fontSize: 16, color: AppColors.themeBlackColor, fontWeight: '600' }}>{'Price per seat'}</Text>
-                        <TextInput
-                            onChangeText={text => setSeatPrice(text)}
-                            value={seatPrice}
-                            placeholder={AppTexts.Rupee_Symbol + " price"}
-                            placeholderTextColor={AppColors.themeText2Color}
-                            style={{ color: AppColors.themeBlackColor, marginLeft: 20, width: '20%', fontSize: 16, textAlign: 'center', fontWeight: '700' }}
-                        />
-                    </View>
 
-            }
+                </View>
 
 
-            <TouchableOpacity onPress={() => find ? searchRide() : procced()} style={{ marginTop: 20, backgroundColor: AppColors.themePrimaryColor, width: '55%', height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: AppColors.themesWhiteColor }}>{find ? 'SEARCH' : 'PROCCED'}</Text>
-            </TouchableOpacity>
+                {
+                    find ?
 
-            {SearchAutocompleteView(openSearch == 'pick' ? 'Search pick up location' : 'Search drop off location', openSearch ? true : false, openLocationSearch, selectedLoc)
-                // onPressCam={() => { openCam() }}
-                // onPressGal={() => { openGall() }}
-            }
 
+                        // <View style={{ width: '80%', marginTop: 20, alignItems: 'center', paddingLeft: 10, backgroundColor: AppColors.themesWhiteColor }}>
+                        //     <View style={{ width: '90%' }}>
+
+                        //         {DropDownList('passenger', noOfPassenger, passengersAvailable)}
+                        //     </View>
+
+                        // </View>
+null
+
+                        :
+                        <View style={{ height: 50, borderRadius: 5, flexDirection: 'row', width: '80%', marginTop: 20, alignItems: 'center', paddingLeft: 20, backgroundColor: AppColors.themesWhiteColor }}>
+                            <Image source={require('../../assets/profile.png')} style={{ tintColor: AppColors.themePrimaryColor, marginLeft: 0, marginRight: 10, width: 25, resizeMode: 'contain' }} />
+                            <Text style={{ fontSize: 16, color: AppColors.themeBlackColor, fontWeight: '600' }}>{'Price per seat'}</Text>
+                            <TextInput
+                                onChangeText={text => setSeatPrice(text)}
+                                value={seatPrice}
+                                placeholder={AppTexts.Rupee_Symbol + " price"}
+                                placeholderTextColor={AppColors.themeText2Color}
+                                style={{ color: AppColors.themeBlackColor, marginLeft: 20, width: '20%', fontSize: 16, textAlign: 'center', fontWeight: '700' }}
+                            />
+                        </View>
+
+                }
+
+
+                <TouchableOpacity onPress={() => find ? searchRide() : procced()} style={{ marginTop: 20, backgroundColor: AppColors.themePrimaryColor, width: '55%', height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ fontSize: 14, fontWeight: '600', color: AppColors.themesWhiteColor }}>{find ? 'SEARCH' : 'PROCCED'}</Text>
+                </TouchableOpacity>
+
+                {SearchAutocompleteView(openSearch == 'pick' ? 'Search pick up location' : 'Search drop off location', openSearch ? true : false, openLocationSearch, selectedLoc)
+                    // onPressCam={() => { openCam() }}
+                    // onPressGal={() => { openGall() }}
+                }
+            </ScrollView>
         </View>
     )
 }

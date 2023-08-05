@@ -68,7 +68,7 @@ export default class SplashScreen extends Component {
 				const token = await this.getSavedToken()
 				console.log(token, 'ttt')
 				if (token) {
-					this.props.navigation.navigate('RideTab');
+					this.props.navigation.navigate('RideDrawer');
 				}
 				else {
 					this.props.navigation.navigate('LoginScreen');

@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import React, { useEffect } from 'react'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import { AppColors } from '../constants/AppColor'
 
 export function FindAndOfferRide(onFindClick, onOfferClick) {
@@ -12,27 +12,32 @@ export function FindAndOfferRide(onFindClick, onOfferClick) {
     //   }, [selected]);
 
     const handleClick = (val) => {
-       if (val == 'find'){
-        onFindClick()
-       } 
-       else{
+        if (val == 'find') {
+            onFindClick()
+        }
+        else {
 
-           onOfferClick()
-       } 
+            onOfferClick()
+        }
         setSelected(!selected)
     }
 
     return (
 
 
-        <View style={{ flexDirection: 'row', width: '100%', height: 50, alignItems: 'center', justifyContent: 'space-evenly' , marginTop: 30}}>
+        <View style={{ flexDirection: 'row', width: '100%', height: 50, alignItems: 'center', justifyContent: 'space-evenly', marginTop: 10 }}>
 
-            <TouchableOpacity style={{ borderRadius: 25, width: '45%', height: 50, alignItems: 'center', justifyContent: 'center', backgroundColor: selected ? AppColors.themePrimaryColor : AppColors.themePickupDropSearchBg }} onPress={()=> handleClick('find')}>
-                <Text style={{ width: '100%',textAlign: 'center', color: selected ? AppColors.themesWhiteColor : AppColors.themePrimaryColor, fontSize: 16 }}>{'Find a ride'}</Text>
+            <TouchableOpacity style={{ width: '45%', height: 50, alignItems: 'center', justifyContent: 'center' }} onPress={() => handleClick('find')}>
+                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                    <Image source={require('../../assets/searchride.png')} style={{ width: 24, height: 24 }} />
+                    <Text style={{ width: '70%', textAlign: 'center', color: selected ? AppColors.themePrimaryColor : AppColors.themeTextPrimaryColor, fontSize: 18 }}>{'Search Ride'}</Text>
+                </View>
+                <View style={{ marginTop: 10, width: '100%', height: 2.5, backgroundColor: selected ? AppColors.themePrimaryColor : null }} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={{ borderRadius: 25, width: '45%', height: 50, alignItems: 'center', justifyContent: 'center', backgroundColor: selected ? AppColors.themePickupDropSearchBg : AppColors.themePrimaryColor }} onPress={()=> handleClick('ride')}>
-                <Text style={{ width: '100%', textAlign: 'center', color: selected ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, fontSize: 16 }}>{'Offer a ride'}</Text>
+            <TouchableOpacity style={{ width: '45%', height: 50, alignItems: 'center', justifyContent: 'center' }} onPress={() => handleClick('ride')}>
+                <Text style={{ width: '100%', textAlign: 'center', color: selected ? AppColors.themeTextPrimaryColor : AppColors.themePrimaryColor, fontSize: 18 }}>{'Offer Ride'}</Text>
+                <View style={{ marginTop: 10, width: '100%', height: 2.5, backgroundColor: selected ? null : AppColors.themePrimaryColor }} />
             </TouchableOpacity>
 
         </View>
