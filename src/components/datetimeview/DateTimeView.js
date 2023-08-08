@@ -12,7 +12,7 @@ export default function DateTimeView(mode, open, date, onConfirm, onCancel, open
 
             <DatePicker
                 modal={true}
-                mode={mode}
+                // mode={mode}
                 open={open}
                 minimumDate={new Date()}
                 date={date}
@@ -30,11 +30,16 @@ export default function DateTimeView(mode, open, date, onConfirm, onCancel, open
 
             {/* <Text style={{ fontSize: 16, fontWeight: '400',marginBottom: 5 , color: AppColors.themeBlackColor}}>{'Date of birth'}</Text> */}
 
-            <TouchableOpacity onPress={openDatePicker} style={{ flexDirection: 'row', alignItems: 'center', width: '100%', height: 30, backgroundColor: AppColors.themesWhiteColor, justifyContent: 'flex-start' }}>
-                <Image source={mode == 'date' ? require('../../assets/calendar.png') : require('../../assets/timer.png')} style={{ tintColor: AppColors.themePrimaryColor, marginRight: 0, width: 32, resizeMode: 'contain' }} />
-                <Text style={{ fontSize: 16, fontWeight: '400', width: '96%', color: selectedDate == 'Select ride date' || 'Select ride time' ? AppColors.themeTextGrayColor : AppColors.themeBlackColor }}>
-                    {selectedDate}
-                </Text>
+            <TouchableOpacity onPress={openDatePicker} style={{ borderRadius: 10, paddingLeft: 10, paddingRight: 10, backgroundColor: AppColors.themePickupDropSearchBg, flexDirection: 'row', alignItems: 'center', width: '100%', height: 45,justifyContent: 'space-between' }}>
+                <View style={{ width: '80%', justifyContent: 'center' }}>
+                    <Text style={{ fontSize: 16, fontWeight: '400', width: '100%', color: selectedDate == 'Date and time of departure' ? AppColors.themeTextGrayColor : AppColors.themeBlackColor }}>
+                        {selectedDate}
+                    </Text>
+
+                </View>
+                <View style={{ width: '20%', justifyContent: 'center', alignItems: 'flex-end'}}>
+                    <Image source={require('../../assets/calendar.png')} style={{ marginRight: 0, width: 24, resizeMode: 'contain' }} />
+                </View>
             </TouchableOpacity>
 
             {open ? selectDate() : null}

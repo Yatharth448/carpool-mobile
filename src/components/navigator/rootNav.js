@@ -17,6 +17,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import SplashScreen from '../../Screens/splash/SplashScreen';
 import Chat from '../../Screens/message/Chat';
 import SignupScreen from '../../Screens/signup/signup';
+import SearchLocation from '../GooglLocation/SearchLocation';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator()
@@ -26,18 +27,18 @@ function RideDrawer() {
   
     return (
 
-        <NavigationContainer>
-            <Drawer.Navigator initialRouteName="FindRide">
+        // <NavigationContainer>
+            <Drawer.Navigator initialRouteName="FindRide" screenOptions={{ headerShown: false }}>
                 <Drawer.Screen name="FindRide" component={FindRide} />
-                <Drawer.Screen name="MyRide" component={MyRide} />
-                <Drawer.Screen name="MessageRoom" component={MessageRoom} />
+                {/* <Drawer.Screen name="MyRide" component={MyRide} /> */}
+                {/* <Drawer.Screen name="MessageRoom" component={MessageRoom} />
                 <Drawer.Screen name='MapRoutes' component={MapRoutes} />
-                <Drawer.Screen name='ProfileScreen' component={ProfileScreen} />
-                <Drawer.Screen name='FindRideList' component={FindRideList} />
-                <Drawer.Screen name='Chat' component={Chat} />
+                <Drawer.Screen name='ProfileScreen' component={ProfileScreen} /> */}
+                {/* <Drawer.Screen name='FindRideList' component={FindRideList} /> */}
+                {/* <Drawer.Screen name='Chat' component={Chat} /> */}
                 {/* Add more screens here */}
             </Drawer.Navigator>
-        </NavigationContainer>
+        // </NavigationContainer>
 
 
     );
@@ -51,7 +52,7 @@ export default function RootNav() {
 
             <StatusBar backgroundColor={AppColors.themePrimaryColor} barStyle='light-content' />
 
-            <Stack.Navigator screenOptions={{ headerShown: false }} >
+            <Stack.Navigator initialRouteName='SplashScreen' screenOptions={{ headerShown: false }} >
 
                 <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ animationEnabled: false }} />
                 <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -59,6 +60,8 @@ export default function RootNav() {
                 <Stack.Screen name="AcccountSetupScreen" component={AcccountSetupScreen} />
                 <Stack.Screen name="KycScreen" component={KycScreen} />
                 <Stack.Screen name='SignupScreen' component={SignupScreen} />
+                <Stack.Screen name='FindRideList' component={FindRideList} />
+                {/* <Stack.Screen name='SearchLocation' component={SearchLocation} /> */}
                 <Stack.Screen name="RideDrawer" component={RideDrawer} options={{ animationEnabled: false }} />
 
             </Stack.Navigator>

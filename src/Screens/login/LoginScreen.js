@@ -13,17 +13,18 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from '../../components/constants/AppFonts'
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
+import { CommonActions } from '@react-navigation/native';
 // import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 // Configure Google Sign-In
 GoogleSignin.configure({
-  // webClientId is only required for Android
-  webClientId: '275128898778-i0e4ir4972quag1n2r32ut3iasr8fu0k.apps.googleusercontent.com',
-  offlineAccess: true, // if you want to access Google API on behalf of the user
+    // webClientId is only required for Android
+    webClientId: '1014270574372-fov483nuvi24dpcmusbo60o8vi3bmc79.apps.googleusercontent.com',
+    offlineAccess: true, // if you want to access Google API on behalf of the user
 });
 export default function LoginScreen({ navigation }) {
 
-    
+
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [checked, setChecked] = React.useState(false);
@@ -34,23 +35,23 @@ export default function LoginScreen({ navigation }) {
 
     const signIn = async () => {
         try {
-          await GoogleSignin.hasPlayServices();
-          const userInfo = await GoogleSignin.signIn();
-          console.log(userInfo, 'userInfo');
-          // Handle successful sign-in (e.g., store user info in state, navigate to another screen)
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log(userInfo, 'userInfo');
+            // Handle successful sign-in (e.g., store user info in state, navigate to another screen)
         } catch (error) {
-          if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-            // User cancelled the sign-in process
-            console.log('Sign-in process cancelled');
-          } else if (error.code === statusCodes.IN_PROGRESS) {
-            // Operation (e.g., sign-in) is in progress already
-            console.log('Operation in progress');
-          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-            // Play Services not available or outdated
-            console.log('Play Services not available');
-          } else {
-            console.log('Error:', error);
-          }
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                // User cancelled the sign-in process
+                console.log('Sign-in process cancelled');
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                // Operation (e.g., sign-in) is in progress already
+                console.log('Operation in progress');
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                // Play Services not available or outdated
+                console.log('Play Services not available');
+            } else {
+                console.log('Error:', error);
+            }
         }
     }
 
@@ -63,19 +64,22 @@ export default function LoginScreen({ navigation }) {
         }
         else {
 
-            
-            const loginRes = await hitApiForLogin( email, password)
 
-           
+            const loginRes = await hitApiForLogin(email, password)
+
+            console.log(loginRes, 'login Respnse')
             if (loginRes.status) {
-                // Storage.saveItem(AppKeys.SECRET_KEY, loginRes.secret)
-                // navigation.navigate('OTPScreen', { mobile: countryCode + email, secret: loginRes.secret })
+                Storage.saveItem(AppKeys.SECRET_KEY, loginRes.secret)
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'RideDrawer' }],
+                    })
+                );
+
             }
             else {
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'RideDrawer' }],
-                  })
+               
                 Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
             }
             //    
@@ -128,7 +132,7 @@ export default function LoginScreen({ navigation }) {
                         <ButtonPrimary
                             text={'Login'}
                             onPress={() => userLogin()}
-                            loader={ false }
+                            loader={false}
                         />
                     </View>
                 </View>
@@ -143,7 +147,7 @@ export default function LoginScreen({ navigation }) {
 
                 </View>
             </View>
-            <Pressable onPress={()=> signIn()} style={{ width: '100%', marginTop: 40, alignItems: 'center' }}>
+            <Pressable onPress={() => signIn()} style={{ width: '100%', marginTop: 40, alignItems: 'center' }}>
 
                 <Surface style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 47, borderRadius: 5 }} elevation={2}>
 

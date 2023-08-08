@@ -1,6 +1,7 @@
 export const AppColors = {
 
     themePrimaryColor: '#403ADD',
+    themeBgColor: '#FAFAFB',
     themeTextPrimaryColor: '#5C5C5C',
     themeBtnDisableColor: '#B4AAF2',
     themeBtnHoverColor: '#d8501e',
@@ -11,6 +12,6 @@ export const AppColors = {
     themeTextGrayColor: '#B9B9B9',
     themeText2Color: '#74788D',
     themeIdentityBgColor: '#f4f4f4',
-    themePickupDropSearchBg: '#eef1ff'
+    themePickupDropSearchBg: '#F7F7FC'
 
 }

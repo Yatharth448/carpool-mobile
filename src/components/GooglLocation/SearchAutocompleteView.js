@@ -3,21 +3,25 @@ import { Modal, View, Text, Image, StyleSheet, Pressable, Dimensions, Keyboard }
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { AppKeys } from '../constants/AppKeys';
 import { AppColors } from '../constants/AppColor';
-export const SearchAutocompleteView = (headerText, isLoading, closePopup, selectedText) => {
 
 
-    React.useEffect(() => {
-        // console.log('se', selectedIdType)
-        Keyboard.isVisible(true)
-    }, []);
+
+export const SearchAutocompleteView = ({ headerText, isLoading, closePopup, onSelectionPress }) => {
+
+    //    'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places'
+    // React.useEffect(() => {
+    //     // console.log('se', selectedIdType)
+    //     Keyboard.isVisible(true)
+    // }, []);
 
 
-    const selectLocation = (val) => {
+    // const selectLocation = (val) => {
 
-        console.log('abcsd', isLoading)
-        selectedText(val)
-        // closePopup
-    }
+    //     console.log('abcsd', isLoading)
+    //     selectedText(val)
+    //     // closePopup
+    // }
+
 
     return (
         <Modal visible={isLoading} animationType="slide"
@@ -73,7 +77,8 @@ export const SearchAutocompleteView = (headerText, isLoading, closePopup, select
                             color={AppColors.themeBlackColor}
                             fontSize={18}
                             backgroundColor={AppColors.themeTextGrayColor}
-                            onPress={(data, details = null) => selectLocation(data.description)}
+                            onPress={(data, details = null) => onSelectionPress(data.description)}
+                            // onPress={onSelectionPress}
                             query={{ key: AppKeys.API_KEY }}
                             fetchDetails={true}
                             onFail={error => console.log(error)}
