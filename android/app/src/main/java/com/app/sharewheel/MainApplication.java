@@ -1,4 +1,4 @@
-package com.carpool;
+package com.app.sharewheel;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

@@ -1,4 +1,4 @@
-package com.carpool;
+package com.app.sharewheel;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -13,7 +13,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "ShareWheel";
+    return "Travel App";
   }
 
   /**

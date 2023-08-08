@@ -77,9 +77,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.carpool"
+    namespace "com.app.sharewheel"
     defaultConfig {
-        applicationId "com.carpool"
+        applicationId "com.app.sharewheel"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
