@@ -15,6 +15,7 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { ScrollView } from 'react-native-gesture-handler'
 import { hitApiForSignUp } from './SignupModal'
+import { FindRideFilterView } from '../findridelist/FindRideComp'
 // import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 // Configure Google Sign-In
@@ -31,6 +32,8 @@ export default function SignupScreen({ navigation }) {
     const [password, setPassword] = React.useState("");
     const [checked, setChecked] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
+    const [selectedIndex, setIndex] = React.useState(0)
+    const [gender, setGender] = React.useState('m')
     const countryCode = '+91';
 
 
@@ -66,12 +69,12 @@ export default function SignupScreen({ navigation }) {
         }
         else {
 
-            const loginRes = await hitApiForSignUp(fullName, email, password, mobile)
+            const loginRes = await hitApiForSignUp(fullName, email, password, mobile, gender)
 
             // navigation.navigate('OTPScreen', { email: email, secret: '' })
             if (loginRes.status) {
                 // Storage.saveItem(AppKeys.SECRET_KEY, loginRes.secret)
-                navigation.navigate('OTPScreen', { email:  email, secret: loginRes.secret })
+                navigation.navigate('OTPScreen', { email: email, secret: loginRes.secret })
             }
             else {
                 Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
@@ -108,6 +111,21 @@ export default function SignupScreen({ navigation }) {
         setShowPassword(!showPassword)
     }
 
+
+    const setSelectedIndex = (i) => {
+        if (i === 0) {
+            setGender('m')
+        }
+        else if (i === 0) {
+            setGender('f')
+        }
+        else {
+            setGender('o')
+        }
+        setIndex(i)
+
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: AppColors.themesWhiteColor }}>
             <ScrollView>
@@ -124,6 +142,14 @@ export default function SignupScreen({ navigation }) {
                         <InputView left={require('../../assets/call.png')} headText={'Mobile Number'} placeHolder={'Your Mobile Number'} val={mobile} onChange={onChangeMobile} />
                         <InputView left={require('../../assets/sms.png')} headText={'E-mail'} placeHolder={'Your email id'} val={email} onChange={onChangeEmail} />
                         <InputView headText={'Password'} placeHolder={'Enter Password'} val={password} onChange={onChangePassword} right={showPassword ? 'eye-off-outline' : 'eye-outline'} rightClick={rightClick} secureText={showPassword} />
+                        <View style={{ width: '98%', alignItems: 'flex-start', marginTop: 20, marginBottom: 10 }}>
+                            <Text style={{ marginBottom: 10, fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular }}>{'Select Gender'}</Text>
+                            <FindRideFilterView
+                                data={[{ 'name': 'Male' }, { 'name': 'Female' }, { 'name': 'Others' }]}
+                                selectedIndex={selectedIndex}
+                                setSelectedIndex={setSelectedIndex}
+                            />
+                        </View>
                         <View style={{ width: '100%', alignItems: 'center', height: 50, marginTop: 10, marginBottom: 10 }}>
                             <TouchableOpacity onPress={() => userLogin()} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
                                 <Text style={{ fontSize: 14, color: AppColors.themeTextGrayColor }}>{"By signing up you agree to our"}
@@ -176,7 +202,7 @@ export default function SignupScreen({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-            </ScrollView>
-        </View>
+            </ScrollView >
+        </View >
     )
 }

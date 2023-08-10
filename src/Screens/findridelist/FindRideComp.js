@@ -27,9 +27,9 @@ export const FindRideFilterView = ({ data, selectedIndex, setSelectedIndex }) =>
                     renderItem={({ item, index }) => (
                         <>
                             <View style={{ padding: 0 }}>
-                                <Pressable onPress={() => setSelectedIndex(index)} style={{ marginLeft: 5, backgroundColor: selectedIndex == index ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, borderRadius: 10, borderWidth: 1.5, borderColor:  selectedIndex == index ? AppColors.themePrimaryColor : AppColors.themeCardBorderColor }}>
+                                <Pressable onPress={() => setSelectedIndex(index)} style={{ marginRight: 5, backgroundColor: selectedIndex == index ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, borderRadius: 10, borderWidth: 1.5, borderColor:  selectedIndex == index ? AppColors.themePrimaryColor : AppColors.themeCardBorderColor }}>
                                     {/* <View style={{ padding: 10 }}> */}
-                                    <Text numberOfLines={3} style={{ paddingLeft: 10, paddingBottom: 5, paddingRight: 10, paddingTop: 5, color: selectedIndex == index ? AppColors.themesWhiteColor : AppColors.themeTextGrayColor, fontSize: 16, fontWeight: '700' }}>{item}</Text>
+                                    <Text numberOfLines={3} style={{ paddingLeft: 10, paddingBottom: 5, paddingRight: 10, paddingTop: 5, color: selectedIndex == index ? AppColors.themesWhiteColor : AppColors.themeTextGrayColor, fontSize: 16, fontWeight: '700' }}>{item.name}</Text>
                                     {/* </View> */}
                                 </Pressable>
                             </View>

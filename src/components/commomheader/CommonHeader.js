@@ -1,29 +1,39 @@
 import React from "react";
 import { View, Text, Pressable, Image } from "react-native";
 import { AppColors } from "../constants/AppColor";
-export const Header = ({ isBack= true, close, text = '' }) => {
+import { Surface } from "react-native-paper";
+import { AppFontFamily } from "../constants/AppFonts";
+export const Header = ({ isBack = true, close, text = '', isRight= false, right }) => {
 
 
     return (
 
-        <View style={{ backgroundColor: AppColors.themePrimaryColor, width: '100%', height: 60 }}>
 
-            <View style={{ width: '100%', height: Platform.OS == 'android' ? 60 : 160, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ width: '100%', flexDirection: 'row', marginTop: Platform.OS == 'android' ? 0 : '12%', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                    <Pressable onPress={ isBack ? close : console.log('')} style={{ width: '30%', height: 50, alignItems: 'flex-start', paddingLeft: 20, justifyContent: 'center' }}>
+        <View style={{ marginTop: 20, height: 70, width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+            <Pressable onPress={close} style={{ width: '30%', height: 70, alignItems: 'flex-start', paddingLeft: 10, justifyContent: 'center' }}>
+                {
+                    isBack ?
+                        <Surface style={{ backgroundColor: AppColors.themesWhiteColor, width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }} elevation={4}>
+                            <Image source={require('../../assets/bckarrow.png')} style={{ width: 40, height: 40 }} />
+                        </Surface>
+                        :
+                        <Image source={require('../../assets/menu.png')} style={{ width: 70, height: 70 }} />
+                }
 
-                       {isBack ?  <Image source={require('../../assets/close.png')} style={{ width: 15, height: 15 }} /> : null}
-                    </Pressable>
-                    <View style={{ width: '40%', height: 50, alignItems: 'center', paddingRight: 20, justifyContent: 'center' }}>
-                        <Text style={{ fontWeight: '600', alignItems: 'center', color: AppColors.themesWhiteColor, fontSize: 18 }}>{text}</Text>
-                    </View>
-                    <View style={{ width: '30%', height: 50, alignItems: 'flex-end', paddingRight: 20, justifyContent: 'center' }}>
-                        {/* <Image source={require('../../assets/profile.png')} style={{ width: 30, height: 30 }} /> */}
-                    </View>
-
-                </View>
+            </Pressable>
+            <View style={{ width: '40%', height: 60, alignItems: 'center', paddingRight: 20, justifyContent: 'center' }}>
+                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, fontSize: 18, color: AppColors.themeBlackColor }}>{text}</Text>
             </View>
-            {/* <View style={{alignItems: 'center', backgroundColor: AppColors.themePickupDropSearchBg, width: '100%', height: 50, borderTopLeftRadius: 40, borderTopRightRadius: 40}}></View> */}
+            <Pressable style={{ width: '30%', height: 50, alignItems: 'flex-end', paddingRight: 20, justifyContent: 'center' }}>
+            {
+                    isRight ?
+                <Surface style={{ backgroundColor: AppColors.themesWhiteColor, width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }} elevation={4}>
+                    <Image source={right} style={{ width: 30, height: 30 }} />
+                </Surface> : 
+                null
+            }
+            </Pressable>
+
         </View>
 
 

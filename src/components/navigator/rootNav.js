@@ -18,26 +18,28 @@ import SplashScreen from '../../Screens/splash/SplashScreen';
 import Chat from '../../Screens/message/Chat';
 import SignupScreen from '../../Screens/signup/signup';
 import SearchLocation from '../GooglLocation/SearchLocation';
-
+import DrawerScreen from '../drawer/Drawer';
+import RideHistory from '../../Screens/ridehistory/RideHistory';
+import UpdateProfile from '../../Screens/profile/UpdateProfile';
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator()
 
 
 function RideDrawer() {
-  
+
     return (
 
         // <NavigationContainer>
-            <Drawer.Navigator initialRouteName="FindRide" screenOptions={{ headerShown: false }}>
-                <Drawer.Screen name="FindRide" component={FindRide} />
-                {/* <Drawer.Screen name="MyRide" component={MyRide} /> */}
-                {/* <Drawer.Screen name="MessageRoom" component={MessageRoom} />
+        <Drawer.Navigator drawerContent={(props) => <DrawerScreen {...props} />} initialRouteName="FindRide" screenOptions={{ headerShown: false }}>
+            <Drawer.Screen name="FindRide" component={FindRide} />
+            <Drawer.Screen name="RideHistory" component={RideHistory} />
+            {/* <Drawer.Screen name="MessageRoom" component={MessageRoom} />
                 <Drawer.Screen name='MapRoutes' component={MapRoutes} />
                 <Drawer.Screen name='ProfileScreen' component={ProfileScreen} /> */}
-                {/* <Drawer.Screen name='FindRideList' component={FindRideList} /> */}
-                {/* <Drawer.Screen name='Chat' component={Chat} /> */}
-                {/* Add more screens here */}
-            </Drawer.Navigator>
+            {/* <Drawer.Screen name='FindRideList' component={FindRideList} /> */}
+            {/* <Drawer.Screen name='Chat' component={Chat} /> */}
+            {/* Add more screens here */}
+        </Drawer.Navigator>
         // </NavigationContainer>
 
 
@@ -61,7 +63,8 @@ export default function RootNav() {
                 <Stack.Screen name="KycScreen" component={KycScreen} />
                 <Stack.Screen name='SignupScreen' component={SignupScreen} />
                 <Stack.Screen name='FindRideList' component={FindRideList} />
-                {/* <Stack.Screen name='SearchLocation' component={SearchLocation} /> */}
+                <Stack.Screen name='UpdateProfile' component={UpdateProfile} />
+                <Stack.Screen name='ProfileScreen' component={ProfileScreen} /> 
                 <Stack.Screen name="RideDrawer" component={RideDrawer} options={{ animationEnabled: false }} />
 
             </Stack.Navigator>

@@ -69,7 +69,7 @@ export default function FindRideList({ navigation, route }) {
             <View style={{ width: '98%', alignItems: 'center' }}>
 
                 <FindRideFilterView
-                    data={['Femailco-traveller', 'Smoking Allowed', 'Pets Allowed']}
+                    data={[{'name': 'Femailco-traveller'}, {'name': 'Smoking Allowed'}, { 'name': 'Pets Allowed'}]}
                     selectedIndex={selectedIndex}
                     setSelectedIndex={setSelectedIndex}
                 />

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Text, View, Image, TouchableOpacity, TextInput, Pressable, Dimensions } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 // import { TextInput } from 'react-native-paper'
@@ -11,17 +11,12 @@ import { Checkbox, Button, Surface } from 'react-native-paper';
 import { InputView } from '../../components/Input/InputView'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from '../../components/constants/AppFonts'
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { CommonActions } from '@react-navigation/native';
-// import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-// Configure Google Sign-In
-GoogleSignin.configure({
-    // webClientId is only required for Android
-    webClientId: '1014270574372-fov483nuvi24dpcmusbo60o8vi3bmc79.apps.googleusercontent.com',
-    offlineAccess: true, // if you want to access Google API on behalf of the user
-});
+
 export default function LoginScreen({ navigation }) {
 
 
@@ -32,28 +27,33 @@ export default function LoginScreen({ navigation }) {
     const countryCode = '+91';
 
 
+    useEffect(() => {
+        // Configure Google Sign-In
+        GoogleSignin.configure({
+          webClientId: '330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com', // Replace with your Web Client ID from the Firebase Console
+          offlineAccess: true, // To enable offline access
+          forceCodeForRefreshToken: true, // [Android] If true, will request authorization code instead of access token on refresh
+        });
+      }, []);
 
-    const signIn = async () => {
+
+      const signInWithGoogle = async () => {
         try {
-            await GoogleSignin.hasPlayServices();
-            const userInfo = await GoogleSignin.signIn();
-            console.log(userInfo, 'userInfo');
-            // Handle successful sign-in (e.g., store user info in state, navigate to another screen)
+          // Start the Google Sign-In process
+          await GoogleSignin.signIn();
+    
+          // Get the Google Sign-In user details
+          const { idToken } = await GoogleSignin.getTokens();
+          console.log(idToken, 'token')
+          const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    
+          console.log(idToken, googleCredential, 'google')
+          // Sign in with Firebase using the Google credential
+          await auth().signInWithCredential(googleCredential);
         } catch (error) {
-            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                // User cancelled the sign-in process
-                console.log('Sign-in process cancelled');
-            } else if (error.code === statusCodes.IN_PROGRESS) {
-                // Operation (e.g., sign-in) is in progress already
-                console.log('Operation in progress');
-            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                // Play Services not available or outdated
-                console.log('Play Services not available');
-            } else {
-                console.log('Error:', error);
-            }
+          console.error('Error signing in with Google:', error);
         }
-    }
+      };
 
     const userLogin = async () => {
 
@@ -147,7 +147,7 @@ export default function LoginScreen({ navigation }) {
 
                 </View>
             </View>
-            <Pressable onPress={() => signIn()} style={{ width: '100%', marginTop: 40, alignItems: 'center' }}>
+            <Pressable onPress={signInWithGoogle} style={{ width: '100%', marginTop: 40, alignItems: 'center' }}>
 
                 <Surface style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 47, borderRadius: 5 }} elevation={2}>
 

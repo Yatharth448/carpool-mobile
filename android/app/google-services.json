@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "1014270574372",
-    "project_id": "carpool-83692",
-    "storage_bucket": "carpool-83692.appspot.com"
+    "project_number": "330513389777",
+    "project_id": "sharewheel-c13ce",
+    "storage_bucket": "sharewheel-c13ce.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1014270574372:android:570b095a7b887486abfdb1",
+        "mobilesdk_app_id": "1:330513389777:android:9f82c8e4ccd14f12884df0",
         "android_client_info": {
-          "package_name": "com.carpool"
+          "package_name": "com.app.sharewheel"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1014270574372-fov483nuvi24dpcmusbo60o8vi3bmc79.apps.googleusercontent.com",
+          "client_id": "330513389777-l63h2lhfb4575spf3bt0tj7b1d2uai2l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.sharewheel",
+            "certificate_hash": "78d48ae691afc2a43d20c93ba1b7d80ec665fe2e"
+          }
+        },
+        {
+          "client_id": "330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCGQt-BJT-Tv5NkRsRjkEyROBZllprlCps"
+          "current_key": "AIzaSyCHxhvO8pkd4_QBkIL3x3Pj8h9Frs1Q8SE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1014270574372-8tqm099jp7108hdqjsd8dgt9vkkrppot.apps.googleusercontent.com",
+              "client_id": "330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,309 +1,139 @@
 import React, { useEffect } from 'react'
-import { Text, View, Image, TouchableOpacity, Platform, Pressable, Alert } from 'react-native'
+import { Text, View, Image, Platform, Pressable, Dimensions } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
-import TextInputView from '../../components/Input/TextInputView';
-import DateInput from '../../components/Input/DateInput';
-import AsyncStorage from "@react-native-community/async-storage"
-import moment from 'moment';
-import Toast from 'react-native-simple-toast'
-import { hitApiToGetProfile, hitApiToUpdateProfile } from './ProfileModal';
 import { Header } from '../../components/commomheader/CommonHeader';
-export default function ProfileScreen({ navigation }) {
+import { connect } from 'react-redux';
+import { getProfileDataRequest } from '../../redux/actions/actions';
+import { AppFontFamily } from '../../components/constants/AppFonts';
+import { Surface } from 'react-native-paper';
+import { Switch } from 'react-native-paper';
+import { ButtonPrimary } from '../../components/button/buttonPrimary';
+function ProfileScreen({ data, loading, error, getProfileDataRequest, navigation }) {
 
-    const [fullName, setFullName] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [mobile, setMobile] = React.useState("");
-    const [date, setDate] = React.useState(new Date())
-    const [open, setOpen] = React.useState(false)
-    const [selectedDate, setSelectedDate] = React.useState('Select DOB')
+    const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+    const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+
 
     useEffect(() => {
+        getProfileDataRequest();
 
-        (async () => {
-
-            // console.log(routeData, 'new data')
-
-            const result = await hitApiToGetProfile()
-            console.log(result, 'abc')
-
-            if (result.status) {
-                const date2 = new Date(result.data.date_of_birth)
-                console.log(date2, 'date 2')
-                setFullName(result.data.name)
-                setEmail(result.data.email)
-                setMobile(result.data.contact_number)
-                setSelectedDate(moment(date2).format('DD/MM/YYYY'))
-            }
-            else {
-                Toast.showWithGravity(result.message ?? 'something went wrong', 2, Toast.TOP);
-            }
-
-        })();
-
-        return () => {
-            // clear/remove event listener
-
-        }
+        console.log(data, 'result')
     }, []);
 
 
-    const setName = (text) => {
-        setFullName(text)
-    }
-
-    const setEmailId = (text) => {
-        setEmail(text)
-    }
-
-    const onConfirm = (date) => {
-        setOpen(false)
-        setDate(date)
-
-        setSelectedDate(moment(date).format('DD/MM/YYYY'))
-
-    }
-    const onCancel = () => {
-        setOpen(false)
-    }
-
-    const openDatePicker = (date) => {
-
-        setOpen(true)
-        // console.log(date, 'date')
-    }
-
-    const saveAndContinue = async () => {
-
-        try {
-
-
-            if (!fullName) {
-                console.log('2')
-                Toast.showWithGravity('Enter full name', 2, Toast.TOP);
-            }
-            else if (!email) {
-                console.log('2')
-                Toast.showWithGravity('Enter email', 2, Toast.TOP);
-            }
-            else if (!date) {
-                console.log('2')
-                Toast.showWithGravity('Select Date', 2, Toast.TOP);
-            }
-            else {
-
-                const accountRes = await hitApiToUpdateProfile(fullName, email, date)
-
-                if (accountRes.status) {
-                    // Storage.saveItem(AppKeys.SECRET_KEY, loginRes.secret)
-                    navigation.goBack()
-                }
-                else {
-                    Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
-                }
-                //    
-            }
-        }
-        catch (error) {
-
-        }
-
-    }
-
-
-    const clearAllData = (nav) => {
-        AsyncStorage.getAllKeys()
-
-            .then(keys => AsyncStorage.multiRemove(keys))
-            .then(() => nav.reset({
-                index: 0,
-                routes: [{ name: 'SplashScreen' }],
-            }));
-    }
-
-    const LogoutAlert = (navigation) => {
-        Alert.alert(
-            '',
-            'Are you sure you want to logout ?',
-            [
-                { text: 'OK', onPress:()=> clearAllData(navigation) },
-            ],
-            {
-                cancelable: false,
-            },
-        );
-    }
-
 
     return (
-        <View style={{ flex: 1, backgroundColor: AppColors.themePrimaryColor }}>
+        <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg }}>
 
-            <Header close={() => { navigation.goBack() }} text='Profile' />
+            <Header close={() => { navigation.goBack() }} text='Profile' right={false} />
 
-            <View style={{ alignItems: 'center', backgroundColor: AppColors.themePickupDropSearchBg, width: '100%', height: Platform.OS == 'android' ? '92%' : '84%' }}>
 
-                <View style={{ width: '96%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10, marginTop: 10 }}>
+            <View style={{ alignItems: 'center', width: '100%', height: Platform.OS == 'android' ? '92%' : '84%' }}>
 
-                    <View style={{ alignItems: 'center', flexDirection: 'row', width: '100%' }}>
+                <Pressable onPress={() => navigation.navigate('UpdateProfile')} style={{ width: '96%', borderRadius: 10, marginTop: 30, justifyContent: 'center' }}>
 
-                        <View style={{ width: '80%', paddingLeft: 10 }}>
-                            <Text style={{ fontSize: 24, color: AppColors.themeBlackColor, fontWeight: '700' }}>
-                                {fullName}
-                            </Text>
-                            <Text style={{ fontSize: 16, color: AppColors.themeText2Color, fontWeight: '700' }}>
-                                {'55 y/o'}
-                            </Text>
+                    <View style={{ width: '96%', alignItems: 'center', justifyContent: 'center' }}>
+                        <Image source={require('../../assets/otp.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 40, borderWidth: 2, width: 80, height: 80, resizeMode: 'contain' }} />
+                    </View>
+                    <Image source={require('../../assets/edit.png')} style={{ marginLeft: Dimensions.get('window').width / 2 + 5, position: 'absolute', width: 20, height: 20, borderRadius: 40, borderRadius: 40, borderColor: AppColors.themesWhiteColor, borderWidth: .5, resizeMode: 'contain' }} />
 
-                        </View>
+                    <View style={{ width: '96%', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
 
-                        <View style={{ width: '20%', alignItems: 'center', paddingRight: 20 }}>
-                            <Image source={require('../../assets/otp.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 40, borderWidth: 2, width: 80, height: 80, resizeMode: 'contain' }} />
-                        </View>
-
+                        <Text style={{ fontSize: 20, fontFamily: AppFontFamily.PopinsBold, color: AppColors.themeBlackColor }}>{data.name}</Text>
                     </View>
 
-                    <View style={{ width: '100%', paddingLeft: 10 }}>
 
-                        <TouchableOpacity onPress={() => console.log('Add vehicle')} style={{ width: '96%', height: 40, borderRadius: 20, alignItems: 'center', flexDirection: 'row' }}>
-                            <Image source={require('../../assets/add.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 10, borderWidth: 2, width: 20, height: 20, resizeMode: 'contain' }} />
-                            <Text style={{ paddingLeft: 10, fontSize: 16, fontWeight: '600', color: AppColors.themePrimaryColor }}>{'Edit peronal detail'}</Text>
-                        </TouchableOpacity>
+                </Pressable>
 
 
-                    </View>
+                <Surface style={{ width: '92%', borderRadius: 10, marginTop: 30, justifyContent: 'center', padding: 20 }}>
 
-                </View>
+                    <View style={{ width: '80%', flexDirection: 'row', }}>
 
-                <View style={{ width: '96%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10, marginTop: 10 }}>
-
-                    <View style={{ alignItems: 'center', width: '100%' }}>
-
-                        <View style={{ width: '100%', padding: 10 }}>
-                            <Text style={{ fontSize: 24, color: AppColors.themeBlackColor, fontWeight: '700' }}>
-                                {'Verify your profile'}
-                            </Text>
-                            {/* <Text style={{ fontSize: 16, color: AppColors.themeText2Color, fontWeight: '700' }}>
-                                {'55 y/o'}
-                            </Text> */}
-
+                        <View style={{ width: '20%', justifyContent: 'center' }}>
+                            <Image source={require('../../assets/phone.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
+                        </View>
+                        <View style={{ width: '80%', justifyContent: 'center' }}>
+                            <Text style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeText2Color }}>{data.contact_number}</Text>
                         </View>
 
                     </View>
-
-                    <View style={{ width: '100%', paddingLeft: 10 }}>
-
-                        <TouchableOpacity onPress={() => console.log('Add vehicle')} style={{ width: '96%', height: 40, borderRadius: 20, alignItems: 'center', flexDirection: 'row' }}>
-                            <Image source={require('../../assets/add.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 10, borderWidth: 2, width: 20, height: 20, resizeMode: 'contain' }} />
-                            <Text style={{ paddingLeft: 10, fontSize: 16, fontWeight: '600', color: AppColors.themePrimaryColor }}>{'Verify your Govt. ID'}</Text>
-                        </TouchableOpacity>
+                    <View style={{ marginTop: 10, marginBottom: 15, marginLeft: 45, width: '88%', height: 1, backgroundColor: AppColors.themeCardBorderColor }}></View>
 
 
+                    <View style={{ width: '80%', flexDirection: 'row', }}>
 
-                    </View>
-                    <View style={{ width: '100%', paddingLeft: 10 }}>
-
-                        <TouchableOpacity onPress={() => console.log('Add vehicle')} style={{ width: '96%', height: 40, borderRadius: 20, alignItems: 'center', flexDirection: 'row' }}>
-                            <Image source={require('../../assets/add.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 10, borderWidth: 2, width: 20, height: 20, resizeMode: 'contain' }} />
-                            <Text style={{ paddingLeft: 10, fontSize: 16, fontWeight: '600', color: AppColors.themePrimaryColor }}>{'Confirm email ' + email}</Text>
-                        </TouchableOpacity>
-
-
+                        <View style={{ width: '20%', justifyContent: 'center' }}>
+                            <Image source={require('../../assets/mail.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
+                        </View>
+                        <View style={{ width: '80%', justifyContent: 'center' }}>
+                            <Text style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeText2Color }}>{data.email}</Text>
+                        </View>
 
                     </View>
-                    <View style={{ width: '100%', paddingLeft: 10 }}>
-
-                        <TouchableOpacity onPress={() => console.log('Add vehicle')} style={{ width: '96%', height: 40, borderRadius: 20, alignItems: 'center', flexDirection: 'row' }}>
-                            <Image source={require('../../assets/checkblue.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 10, borderWidth: 2, width: 20, height: 20, resizeMode: 'contain' }} />
-                            <Text style={{ paddingLeft: 10, fontSize: 16, fontWeight: '600', color: AppColors.themePrimaryColor }}>{mobile}</Text>
-                        </TouchableOpacity>
+                    <View style={{ marginTop: 10, marginBottom: 15, marginLeft: 45, width: '88%', height: 1, backgroundColor: AppColors.themeCardBorderColor }}></View>
 
 
+                    <View style={{ width: '80%', flexDirection: 'row', }}>
 
-                    </View>
-
-                </View>
-
-
-
-                <View style={{ width: '96%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10, marginTop: 10 }}>
-
-                    <View style={{ alignItems: 'center', width: '100%' }}>
-
-                        <View style={{ width: '100%', padding: 10 }}>
-                            <Text style={{ fontSize: 24, color: AppColors.themeBlackColor, fontWeight: '700' }}>
-                                {'About you'}
-                            </Text>
-                            {/* <Text style={{ fontSize: 16, color: AppColors.themeText2Color, fontWeight: '700' }}>
-                                {'55 y/o'}
-                            </Text> */}
-
+                        <View style={{ width: '20%', justifyContent: 'center' }}>
+                            <Image source={require('../../assets/facebook.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
+                        </View>
+                        <View style={{ width: '80%', justifyContent: 'center' }}>
+                            <Text style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeText2Color }}>{data.name}</Text>
                         </View>
 
                     </View>
 
-                    <View style={{ width: '100%', paddingLeft: 10 }}>
 
-                        <TouchableOpacity onPress={() => console.log('Add vehicle')} style={{ width: '96%', height: 40, borderRadius: 20, alignItems: 'center', flexDirection: 'row' }}>
-                            <Image source={require('../../assets/add.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 10, borderWidth: 2, width: 20, height: 20, resizeMode: 'contain' }} />
-                            <Text style={{ paddingLeft: 10, fontSize: 16, fontWeight: '600', color: AppColors.themePrimaryColor }}>{'Add a mini bio'}</Text>
-                        </TouchableOpacity>
+                </Surface>
 
 
+                <Surface style={{ width: '92%', borderRadius: 10, marginTop: 30, justifyContent: 'center', padding: 10, flexDirection: 'row', alignItems: 'center' }}>
 
-                    </View>
-                    <View style={{ width: '100%', paddingLeft: 10 }}>
-
-                        <TouchableOpacity onPress={() => console.log('Add vehicle')} style={{ width: '96%', height: 40, borderRadius: 20, alignItems: 'center', flexDirection: 'row' }}>
-                            <Image source={require('../../assets/add.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 10, borderWidth: 2, width: 20, height: 20, resizeMode: 'contain' }} />
-                            <Text style={{ paddingLeft: 10, fontSize: 16, fontWeight: '600', color: AppColors.themePrimaryColor }}>{'Add travel preferences'}</Text>
-                        </TouchableOpacity>
-
-
-
+                    <View style={{ width: '80%' }}>
+                        <Text style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsBold, color: AppColors.themeBlackColor }}>{'Notifications'}</Text>
+                        <Text style={{ fontSize: 13, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeText2Color }}>{'For receiving driver messages'}</Text>
                     </View>
 
-                </View>
-
-
-
-
-                <View style={{ width: '96%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10, marginTop: 10 }}>
-
-                    <View style={{ alignItems: 'center', width: '100%' }}>
-
-                        <View style={{ width: '100%', padding: 10 }}>
-                            <Text style={{ fontSize: 24, color: AppColors.themeBlackColor, fontWeight: '700' }}>
-                                {'Vehicles'}
-                            </Text>
-                            {/* <Text style={{ fontSize: 16, color: AppColors.themeText2Color, fontWeight: '700' }}>
-                                {'55 y/o'}
-                            </Text> */}
-
-                        </View>
-
+                    <View style={{ width: '20%' }}>
+                        <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
                     </View>
 
-                    <View style={{ width: '100%', paddingLeft: 10 }}>
-
-                        <TouchableOpacity onPress={() => console.log('Add vehicle')} style={{ width: '96%', height: 40, borderRadius: 20, alignItems: 'center', flexDirection: 'row' }}>
-                            <Image source={require('../../assets/add.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 10, borderWidth: 2, width: 20, height: 20, resizeMode: 'contain' }} />
-                            <Text style={{ paddingLeft: 10, fontSize: 16, fontWeight: '600', color: AppColors.themePrimaryColor }}>{'Add vehicle'}</Text>
-                        </TouchableOpacity>
+                </Surface>
 
 
 
-                    </View>
 
-                </View>
+            </View>
 
 
-                <View style={{ alignItems: 'center', width: '96%', marginTop: 35 }}>
-
-                    <TouchableOpacity onPress={() => LogoutAlert(navigation)} style={{ width: '55%', height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ fontSize: 18, fontWeight: '600', color: AppColors.themeBlackColor }}>{'Logout'}</Text>
-                    </TouchableOpacity>
-
+            <View style={{ width: '100%', alignItems: 'center', marginTop: 10, position: 'absolute', bottom: 30 }}>
+                <View style={{ width: '92%', alignItems: 'center' }}>
+                    <ButtonPrimary
+                        style={{ backgroundColor: '#E84343' }}
+                        text={'Delete Account'}
+                        onPress={() => console.log('delete')}
+                        loader={false}
+                    />
                 </View>
             </View>
+
+
         </View>
+
+
     )
 }
+
+const mapStateToProps = (state) => ({
+    data: state.data,
+    loading: state.loading,
+    error: state.error,
+});
+
+const mapDispatchToProps = {
+    getProfileDataRequest,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);
