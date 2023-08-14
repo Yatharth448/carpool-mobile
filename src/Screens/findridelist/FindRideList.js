@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { View, Text, Pressable, Image, FlatList, Dimensions } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
-import { hitApiToGetRideList } from './RideListModal';
+import { hitApiToGetRideList, hitApiToRequestARide } from './RideListModal';
 import { Header } from '../../components/commomheader/CommonHeader';
 import moment from 'moment';
 import { AppTexts } from '../../components/constants/AppTexts';
@@ -9,12 +9,13 @@ import { convertToKms } from '../../components/commonfunction/CommonFunctions';
 import { AppFontFamily } from '../../components/constants/AppFonts';
 import { FindRideFilterView } from './FindRideComp';
 import { Surface } from 'react-native-paper';
+import { ButtonPrimary } from '../../components/button/buttonPrimary';
 export default function FindRideList({ navigation, route }) {
 
 
     const [rideList, setRideList] = React.useState([])
-    const { data } = route.params;
-    const [selectedIndex, setIndex] = React.useState(0)
+    const { data, seat } = route.params;
+    const [selectedIndex, setIndex] = React.useState('')
 
     useEffect(() => {
 
@@ -25,7 +26,7 @@ export default function FindRideList({ navigation, route }) {
             // const result = await hitApiToGetRideList(pick, drop, date, seat);
             // console.log("ride list", result);
             // if (result.status) {
-                setRideList(data ?? [])
+            setRideList(data ?? [])
             // }
             // else {
             //     console.log(result)
@@ -44,6 +45,28 @@ export default function FindRideList({ navigation, route }) {
     const setSelectedIndex = (i) => {
         setIndex(i)
 
+    }
+
+
+    const requestRide = async (item, itemIndex) => {
+        const result = await hitApiToRequestARide(
+            item._id, seat,
+            item.intresected_source_lat,
+            item.intresected_source_long,
+            item.intresected_destination_lat,
+            item.intresected_destination_long
+        )
+        console.log(result, 'request ride response')
+        if (result.status) {
+
+            const updatedArray = rideList.map((obj, index) =>
+                index === itemIndex ? { ...obj, alreadyRequest: true } : obj
+            );
+            setRideList(updatedArray);
+        }
+        else {
+
+        }
     }
 
     return (
@@ -69,7 +92,7 @@ export default function FindRideList({ navigation, route }) {
             <View style={{ width: '98%', alignItems: 'center' }}>
 
                 <FindRideFilterView
-                    data={[{'name': 'Femailco-traveller'}, {'name': 'Smoking Allowed'}, { 'name': 'Pets Allowed'}]}
+                    data={[{ 'name': 'Femailco-traveller' }, { 'name': 'Smoking Allowed' }, { 'name': 'Pets Allowed' }]}
                     selectedIndex={selectedIndex}
                     setSelectedIndex={setSelectedIndex}
                 />
@@ -111,15 +134,15 @@ export default function FindRideList({ navigation, route }) {
 
                                         <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row' }}>
 
-                                            <View style={{ width: '100%',  justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.journey_origin_address}</Text>
+                                            <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.intresected_source_address}</Text>
                                             </View>
                                         </View>
                                         <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
                                         <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row' }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.journey_destination_address}</Text>
+                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.intresected_destination_address}</Text>
                                             </View>
                                         </View>
 
@@ -142,13 +165,34 @@ export default function FindRideList({ navigation, route }) {
                                 <Text style={{ width: '100%', padding: 10, paddingTop: 0, fontWeight: '400', fontSize: 16, color: AppColors.themeText2Color }}>{"You are " + item.distance_from_source + " kms away from the nearest pickup point"}</Text>
                             </View> */}
                             <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
-                            <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
-                                <Image source={require('../../assets/check.png')} style={{ marginRight: 5, width: 40, height: 40, borderRadius: 20, resizeMode: 'contain' }} />
-                                <View style={{ justifyContent: 'center' }}>
-
-                                    <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsSemiBold, fontSize: 18, color: AppColors.themeText2Color }}>{item.user_name ?? "Sachin Gupta"}</Text>
-                                    <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{item.rating + " rating"}</Text>
+                            <View style={{ width: '95%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
+                                <View style={{ width: '11%' }}>
+                                    <Image source={require('../../assets/check.png')} style={{ marginRight: 5, width: 40, height: 40, borderRadius: 20, resizeMode: 'contain' }} />
                                 </View>
+                                <View style={{ justifyContent: 'center', width: '49%' }}>
+
+                                    <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsSemiBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.user_name ?? "Sachin Gupta"}</Text>
+                                    <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{item.rating + " rating"}</Text>
+                                </View>
+                                {item?.alreadyRequest ?
+
+                                    <View style={{ width: '40%' }}>
+                                        <ButtonPrimary
+                                            disabled={true}
+                                            text={'Requested'}
+                                            onPress={() => console.log('Requested')}
+                                            loader={false}
+                                        />
+                                    </View>
+                                    :
+                                    <View style={{ width: '40%' }}>
+                                        <ButtonPrimary
+                                            text={'Request Ride'}
+                                            onPress={() => requestRide(item, index)}
+                                            loader={false}
+                                        />
+                                    </View>
+                                }
                             </View>
 
                         </Surface>

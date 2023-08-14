@@ -2,10 +2,39 @@ import React from 'react'
 import { View, TouchableOpacity, Text, Image } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader'
+import RequestedRides from './RequestedRides'
+import OfferedRides from './OfferedRide'
 
 export default function RideHistory({ navigation }) {
 
     const [isRequest, setIsRequest] = React.useState(false)
+  
+
+    const changeTab = async (val) => {
+        if (val === 'request') {
+
+            setIsRequest(true)
+           
+        }
+        else {
+
+            setIsRequest(false)
+          
+        }
+    }
+
+
+    const selectedData = (item) => {
+
+        console.log(item, 'selected data')
+        navigation.navigate('RideDetails', { id: item._id })
+    }
+
+    const selectedRequest = (item) => {
+
+        console.log(item, 'selected request')
+        navigation.navigate('RideDetails', { id: item._id })
+    }
 
     return (
         <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg }}>
@@ -14,17 +43,19 @@ export default function RideHistory({ navigation }) {
 
             <View style={{ flexDirection: 'row', width: '100%', height: 50, alignItems: 'center', justifyContent: 'space-evenly', marginTop: 10 }}>
 
-                <TouchableOpacity style={{ width: '45%', height: 50, alignItems: 'center', justifyContent: 'center' }} onPress={()=> console.log('a')}>
+                <TouchableOpacity style={{ width: '40%', height: 50, alignItems: 'center', justifyContent: 'center' }} onPress={() => changeTab('request')}>
                     <Text style={{ width: '100%', textAlign: 'center', color: isRequest ? AppColors.themePrimaryColor : AppColors.themeTextPrimaryColor, fontSize: 18 }}>{'Requested Rides'}</Text>
                     <View style={{ marginTop: 10, width: '100%', height: 2.5, backgroundColor: isRequest ? AppColors.themePrimaryColor : null }} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{ width: '45%', height: 50, alignItems: 'center', justifyContent: 'center' }} onPress={()=> console.log('b')}>
+                <TouchableOpacity style={{ width: '40%', height: 50, alignItems: 'center', justifyContent: 'center' }} onPress={() => changeTab('offer')}>
                     <Text style={{ width: '100%', textAlign: 'center', color: isRequest ? AppColors.themeTextPrimaryColor : AppColors.themePrimaryColor, fontSize: 18 }}>{'Offered Rides'}</Text>
                     <View style={{ marginTop: 10, width: '100%', height: 2.5, backgroundColor: isRequest ? null : AppColors.themePrimaryColor }} />
                 </TouchableOpacity>
 
             </View>
+
+            {isRequest ? <RequestedRides selectedRequest={selectedRequest} /> : <OfferedRides selectedData={selectedData} />}
 
         </View>
     )

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, Pressable, FlatList, Dimensions, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, Image, Pressable, FlatList, Dimensions, StyleSheet, TouchableOpacity } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader';
 import { hitApiToRequestGetEstimatedPrice, hitApiToRequestUpdateEstimatedPrice, hitApiToSaveRide } from '../home/RideModal';
@@ -83,11 +83,11 @@ export default function MapRoutes({ navigation, route }) {
 
 
             // {"data": 952.4361, "status": true} 
-           
-           
+
+
             navigation.goBack()
             setOpenPrice(false)
-           
+
 
         }
         else {
@@ -101,7 +101,7 @@ export default function MapRoutes({ navigation, route }) {
             Toast.showWithGravity('Please enter estimated price', 2, Toast.TOP);
         }
         else {
-           
+
             updateEstimatedRide(val)
 
         }
@@ -118,7 +118,7 @@ export default function MapRoutes({ navigation, route }) {
 
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
-            <Header close={() => { navigation.goBack() }} />
+
             {routeData.length > 0 ?
                 <MapView
                     ref={mapRef}
@@ -146,39 +146,51 @@ export default function MapRoutes({ navigation, route }) {
                 </MapView> : null
             }
 
-
-            <FlatList
-                data={routeData}
-                columnWrapperStyle={{ flexWrap: 'wrap' }}
-                numColumns={3}
-                keyExtractor={(item, index) => index}
-                showsVerticalScrollIndicator={false}
-                renderItem={({ item, index }) => (
-                    <>
-                        <View style={{ padding: 0 }}>
-                            <Pressable onPress={() => { setSelectedIndex(index) }} style={{ marginTop: 5, marginLeft: 5, backgroundColor: AppColors.themesWhiteColor, borderRadius: 10, borderWidth: 2, borderColor: selectedIndex == index ? AppColors.themePrimaryColor : AppColors.themeCardBorderColor }}>
-                                <View style={{ padding: 10 }}>
-                                    <Text numberOfLines={3} style={{ color: AppColors.themeBlackColor, fontSize: 16, fontWeight: '700' }}>{item.duration}</Text>
-                                    <Text numberOfLines={3} style={{ color: AppColors.themeText2Color, fontSize: 14, fontWeight: '700' }}>{item.distance + " / " + item.summary}</Text>
-                                </View>
-                            </Pressable>
-                        </View>
-
-                    </>
-                )}
-            />
-
-            <View style={{ justifyContent: 'center', alignItems: 'center', width: Dimensions.get('window').width, height: Dimensions.get('window').height / 5 }}>
-
-                <TouchableOpacity onPress={() => saveRide()} style={{ marginTop: 20, backgroundColor: AppColors.themePrimaryColor, width: '55%', height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 14, fontWeight: '600', color: AppColors.themesWhiteColor }}>{'SAVE RIDE'}</Text>
-                </TouchableOpacity>
-
+            <View style={{ position: 'absolute', top: 0 }}>
+                <Header close={() => { navigation.goBack() }} text='Select your route' />
             </View>
 
-            {PriceSelection('Estimated Price', openPrice ? true : false, closeEstimatePopup, selectedPrice, estimatedPrice, price, save)}
+            <View style={{ marginTop: -30, backgroundColor: AppColors.themesWhiteColor, height: Dimensions.get('window').height / 2 + 30, borderTopRightRadius: 30, borderTopLeftRadius: 30 }}>
 
 
+                <FlatList
+                    data={routeData}
+                    // columnWrapperStyle={{ flexWrap: 'wrap' }}
+                    // numColumns={3}
+                    keyExtractor={(item, index) => index}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item, index }) => (
+                        <>
+                            <View style={{ width: '100%', padding: 20, backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
+                                <Pressable onPress={() => { setSelectedIndex(index) }} style={{ flexDirection: 'row', }}>
+                                    <View style={{ width: '90%', justifyContent: 'center' }}>
+                                        <Text numberOfLines={3} style={{ color: AppColors.themeBlackColor, fontSize: 16, fontWeight: '700' }}>{item.duration}
+                                            <Text numberOfLines={3} style={{ color: AppColors.themeText2Color, fontSize: 14, fontWeight: '700' }}>{item.distance + " / " + item.summary}</Text>
+                                        </Text>
+                                        <Text numberOfLines={3} style={{ color: AppColors.themeText2Color, fontSize: 14, fontWeight: '700' }}>{item.distance + " / " + item.summary}</Text>
+                                    </View>
+                                    <View style={{ width: '10%', justifyContent: 'center' }}>
+                                        <Image source={selectedIndex == index ? require('../../assets/bluecircle.png') : require('../../assets/greycircle.png')} style={{ marginRight: 5, width: 20, height: 20, borderRadius: 10, resizeMode: 'contain' }} />
+                                    </View>
+                                </Pressable>
+                                <View style={{ width: '98%', height: 2, marginTop: 10, backgroundColor: AppColors.themeCardBorderColor }} />
+                            </View>
+
+                        </>
+                    )}
+                />
+
+                <View style={{ justifyContent: 'center', alignItems: 'center', width: Dimensions.get('window').width, height: Dimensions.get('window').height / 5 }}>
+
+                    <TouchableOpacity onPress={() => saveRide()} style={{ marginTop: 20, backgroundColor: AppColors.themePrimaryColor, width: '95%', height: 50, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 16, fontWeight: '600', color: AppColors.themesWhiteColor }}>{'Proceed'}</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+                {PriceSelection('Estimated Price', openPrice ? true : false, closeEstimatePopup, selectedPrice, estimatedPrice, price, save)}
+
+            </View>
         </View>
     )
 }
@@ -188,6 +200,6 @@ const styles = StyleSheet.create({
     },
     maps: {
         width: Dimensions.get('screen').width,
-        height: Dimensions.get('screen').height / 2,
+        height: (Dimensions.get('screen').height / 2),
     },
 });

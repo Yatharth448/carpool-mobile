@@ -21,6 +21,8 @@ import SearchLocation from '../GooglLocation/SearchLocation';
 import DrawerScreen from '../drawer/Drawer';
 import RideHistory from '../../Screens/ridehistory/RideHistory';
 import UpdateProfile from '../../Screens/profile/UpdateProfile';
+import Payment from '../../Screens/payment/Payment';
+import RideDetails from '../../Screens/ridehistory/RideDetails';
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator()
 
@@ -33,9 +35,9 @@ function RideDrawer() {
         <Drawer.Navigator drawerContent={(props) => <DrawerScreen {...props} />} initialRouteName="FindRide" screenOptions={{ headerShown: false }}>
             <Drawer.Screen name="FindRide" component={FindRide} />
             <Drawer.Screen name="RideHistory" component={RideHistory} />
-            {/* <Drawer.Screen name="MessageRoom" component={MessageRoom} />
-                <Drawer.Screen name='MapRoutes' component={MapRoutes} />
-                <Drawer.Screen name='ProfileScreen' component={ProfileScreen} /> */}
+            <Drawer.Screen name="Payment" component={Payment} />
+                {/* <Drawer.Screen name='MapRoutes' component={MapRoutes} />
+                <Drawer.Screen name='ProfileScreen' component={ProfileScreen} /> */} 
             {/* <Drawer.Screen name='FindRideList' component={FindRideList} /> */}
             {/* <Drawer.Screen name='Chat' component={Chat} /> */}
             {/* Add more screens here */}
@@ -65,6 +67,8 @@ export default function RootNav() {
                 <Stack.Screen name='FindRideList' component={FindRideList} />
                 <Stack.Screen name='UpdateProfile' component={UpdateProfile} />
                 <Stack.Screen name='ProfileScreen' component={ProfileScreen} /> 
+                <Stack.Screen name='MapRoutes' component={MapRoutes} />
+                <Stack.Screen name='RideDetails' component={RideDetails} />
                 <Stack.Screen name="RideDrawer" component={RideDrawer} options={{ animationEnabled: false }} />
 
             </Stack.Navigator>

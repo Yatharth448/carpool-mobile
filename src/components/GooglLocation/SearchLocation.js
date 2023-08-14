@@ -163,6 +163,7 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
                             <FlatList
                                 contentContainerStyle={{ height: Dimensions.get('window').height * .73 }}
                                 data={predictions}
+                                keyboardShouldPersistTaps={'always'}
                                 renderItem={({ item }) => (
                                     <>
 

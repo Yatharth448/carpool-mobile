@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View, ActivityIndicator } from 'react-nati
 import { AppColors } from '../constants/AppColor';
 import { AppFontFamily } from '../constants/AppFonts';
 
-export const ButtonPrimary = ({ text, onPress, style, textStyle, loader = false }) => {
+export const ButtonPrimary = ({ text, onPress, style, textStyle, loader = false, disabled =false }) => {
   return (
     <Pressable
       style={({ pressed }) => [{
@@ -12,7 +12,7 @@ export const ButtonPrimary = ({ text, onPress, style, textStyle, loader = false 
         width: '100%',
         height: 47,
         // borderColor: loader ? AppColors.themeBorderLightDarkColor : AppColors.themePrimaryColor,
-        backgroundColor: loader ? AppColors.themeBtnDisableColor : AppColors.themePrimaryColor,
+        backgroundColor: disabled ? AppColors.themeBtnDisableColor : AppColors.themePrimaryColor,
       }, pressed && styles.pressed, style]}
       onPress={onPress}
     >

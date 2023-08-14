@@ -8,7 +8,7 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
 
 const DrawerScreen = ({ data, loading, error, getProfileDataRequest, navigation }) => {
 
-    const [menu, setMenu] = React.useState([{ 'screen': 'FindRide', 'name': 'HOME' }, { 'screen': 'RideHistory', 'name': 'RIDE HISTORY' }, { 'index': 2, 'name': 'PAYMENT' }, { 'index': 3, 'name': 'SUPPORT' },])
+    const [menu, setMenu] = React.useState([{ 'screen': 'FindRide', 'name': 'HOME' }, { 'screen': 'RideHistory', 'name': 'RIDE HISTORY' }, { 'screen': 'Payment', 'name': 'PAYMENT' }, { 'index': 3, 'name': 'SUPPORT' },])
     const [ind, setInd] = React.useState(0)
     const handleDrawerItemPress = (screenName, index) => {
         selectedInd(index)
