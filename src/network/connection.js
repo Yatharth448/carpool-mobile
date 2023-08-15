@@ -54,7 +54,7 @@ const apiCaller = async (method, url, params = {}, headerOptions = {}, onUploadP
         const response = await axios(options);
         // if (response?.headers?.authorization) {
 
-        //     console.log('header response token', response.headers.authorization);
+            console.log('header response token', options.headers.authorization);
 
         //     LocalStorage.storeData('token', response.headers.authorization)
         // }

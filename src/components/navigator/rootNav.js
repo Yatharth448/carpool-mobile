@@ -23,6 +23,8 @@ import RideHistory from '../../Screens/ridehistory/RideHistory';
 import UpdateProfile from '../../Screens/profile/UpdateProfile';
 import Payment from '../../Screens/payment/Payment';
 import RideDetails from '../../Screens/ridehistory/RideDetails';
+import Cotravellers from '../../Screens/ridehistory/Cotravellers';
+
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator()
 
@@ -68,6 +70,7 @@ export default function RootNav() {
                 <Stack.Screen name='UpdateProfile' component={UpdateProfile} />
                 <Stack.Screen name='ProfileScreen' component={ProfileScreen} /> 
                 <Stack.Screen name='MapRoutes' component={MapRoutes} />
+                <Stack.Screen name='Cotravellers' component={Cotravellers} />
                 <Stack.Screen name='RideDetails' component={RideDetails} />
                 <Stack.Screen name="RideDrawer" component={RideDrawer} options={{ animationEnabled: false }} />
 

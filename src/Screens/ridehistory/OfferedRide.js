@@ -24,7 +24,7 @@ export default function OfferedRides({ selectedData }) {
             if (result.status) {
 
                 setOfferedArr(result.data)
-                console.log(offeredArr, 'offered')
+                console.log(result.data, 'offered')
             }
 
 

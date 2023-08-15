@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Image, Dimensions, FlatList, ImageBackground } from 'react-native'
+import { View, Text, Image, Dimensions, FlatList, ImageBackground, Pressable } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader'
 import { Surface } from 'react-native-paper'
@@ -8,12 +8,13 @@ import { AppTexts } from '../../components/constants/AppTexts'
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import Carousel from 'react-native-reanimated-carousel';
 import PaginationDot from 'react-native-animated-pagination-dot'
+import { hitApiToAcceptRide } from '../ridehistory/RideHistoryModal'
 
 
 export default class Payment extends Component {
     constructor(props) {
         super(props);
-        // this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+        this._acceptRide = this._acceptRide.bind(this);
         this.state = {
             selectedIndex: 0,
             screenWidth: Dimensions.get('screen').width,
@@ -25,8 +26,31 @@ export default class Payment extends Component {
 
     }
 
+
+    componentDidMount() {
+        console.log(this.props.route.params?.data, 'co traveller')
+    }
+
+    _acceptRide = ({item})=> {
+        // const result = await hitApiToAcceptRide(item.ride_id, item.user_id)
+        console.log(item, 'vvv')
+        // if (result.status) {
+
+        // }
+
+    }
+
     _renderItem({ item, index }) {
         // setActiveCard(index, 'current index')
+       const _acceptRide = async ()=> {
+            const result = await hitApiToAcceptRide(item.ride_id, item.user_id)
+            console.log(result, 'vvv')
+            if (result.status) {
+    
+            }
+    
+        }
+
         return (
             <View style={{ width: Dimensions.get('screen').width, height: Dimensions.get('window').height * .7, alignItems: 'center', justifyContent: 'center' }}>
                 {/* <ImageBackground source={require('../../assets/paymentcardbg.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover', alignItems: 'center' }}> */}
@@ -58,14 +82,14 @@ export default class Payment extends Component {
                                         <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row' }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{'1, Thrale Street, London, SE19HW, UK'}</Text>
+                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.origin_address}</Text>
                                             </View>
                                         </View>
                                         <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
                                         <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row' }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{'Ealing Broadway Shopping Centre, London, W55JY, UK'}</Text>
+                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.destination_address}</Text>
                                             </View>
                                         </View>
 
@@ -74,8 +98,8 @@ export default class Payment extends Component {
                                 </View>
 
                                 <View style={{ width: '25%', alignItems: 'flex-end' }}>
-                                    <Text style={{ paddingTop: 8, paddingRight: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{AppTexts.Rupee_Symbol + '350'}</Text>
-                                    <Text style={{ padding: 10, paddingTop: 5, paddingBottom: 0, fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{'2' + " seats left"}</Text>
+                                    <Text style={{ paddingTop: 8, paddingRight: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{AppTexts.Rupee_Symbol + item.price}</Text>
+                                    {/* <Text style={{ padding: 10, paddingTop: 5, paddingBottom: 0, fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{'2' + " seats left"}</Text> */}
 
                                 </View>
                             </View>
@@ -83,11 +107,11 @@ export default class Payment extends Component {
 
                             <View style={{ width: '100%', marginTop: 20, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
                             <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
-                                <Image source={require('../../assets/check.png')} style={{ marginRight: 5, width: 40, height: 40, borderRadius: 20, resizeMode: 'contain' }} />
+                                <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 40, height: 40, borderRadius: 20, resizeMode: 'contain' }} />
                                 <View style={{ justifyContent: 'center' }}>
 
-                                    <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsSemiBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.user_name ?? "Sachin Gupta"}</Text>
-                                    <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{item.rating + " rating"}</Text>
+                                    <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsSemiBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.name ?? "Sachin Gupta"}</Text>
+                                    <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{item.user_gender}</Text>
                                 </View>
                             </View>
 
@@ -95,12 +119,28 @@ export default class Payment extends Component {
                     </View>
 
 
-                    <View style={{ width: '100%', height: 70, alignItems: 'center', marginTop: 30 }}>
+                    <View style={{ width: '100%', flexDirection: 'row', height: 70, alignItems: 'center', marginTop: 30, justifyContent: 'space-between' }}>
+
+                        {item.status === 'pending' ?
+                            // <ButtonPrimary
+                            //     style={{ width: '48%', backgroundColor: 'green' }}
+                            //     text={'Accept Ride'}
+                            //     onPress={()=> this.acceptRide(item)}
+                            //     loader={false}
+                            // /> 
+                            <Pressable onPress={()=> _acceptRide()} style={{ width: '48%', borderRadius: 5, height: 50, backgroundColor: 'green', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{fontSize: 16, color: AppColors.themesWhiteColor}}>{'Accept ride'}</Text>
+                            </Pressable>
+
+                            : null}
+
                         <ButtonPrimary
-                            text={'confirm ride'}
-                            onPress={() => console.log('confirem')}
+                            style={{ width: '48%', backgroundColor: 'red' }}
+                            text={'Reject ride'}
+                            onPress={() => console.log('confirm', item)}
                             loader={false}
                         />
+
                     </View>
 
 
@@ -127,7 +167,7 @@ export default class Payment extends Component {
                     autoPlay={false}
                     pagingEnabled={true}
                     // snapEnabled={true}
-                    data={['1', '2']}
+                    data={this.props.route.params?.data}
                     scrollAnimationDuration={1000}
                     renderItem={this._renderItem}
                     mode="parallax"
@@ -154,23 +194,23 @@ export default class Payment extends Component {
 
     BottomPaging() {
         return (
-          <View style={{ height: 20, width: this.state.screenWidth, marginTop: 30, alignItems: 'center' }}>
-    
-            <PaginationDot
-              activeDotColor={AppColors.themePrimaryColor}
-              inactiveDotColor={AppColors.themeTextGrayColor}
-              curPage={this.state.currentCard}
-              maxPage={2}
-              sizeRatio={1.5}
-            />
-          </View>
+            <View style={{ height: 20, width: this.state.screenWidth, marginTop: 30, alignItems: 'center' }}>
+
+                <PaginationDot
+                    activeDotColor={AppColors.themePrimaryColor}
+                    inactiveDotColor={AppColors.themeTextGrayColor}
+                    curPage={this.state.currentCard}
+                    maxPage={2}
+                    sizeRatio={1.5}
+                />
+            </View>
         );
-      }
+    }
 
 
     render() {
         return (
-            <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center'}}>
+            <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
                 <Header isBack={false} close={() => this.props.navigation.openDrawer()} />
                 {this.PaymentCourousal()}
                 {this.BottomPaging()}

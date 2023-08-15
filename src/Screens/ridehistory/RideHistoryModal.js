@@ -43,7 +43,7 @@ export const hitApiToGetRequestedRide = async () => {
 export const hitApiToGetOfferedRideDetails = async (param) => {
 
     try {
-        const result = await connection.getAPI('/api/ride/list/offer', param)
+        const result = await connection.getAPI('/api/ride/list/offer/'+ param)
 
         if (result.success) {
             return result
@@ -63,7 +63,49 @@ export const hitApiToGetOfferedRideDetails = async (param) => {
 export const hitApiToGetRequestedRideDetails = async (param) => {
 
     try {
-        const result = await connection.getAPI('/api/ride/list/request', param)
+        const result = await connection.getAPI('/api/ride/list/request/'+ param)
+
+        if (result.success) {
+            return result
+        }
+        else {
+            return result
+        }
+
+    } catch (error) {
+
+        console.error('request ride list', error);
+        throw error
+    }
+
+}
+
+export const hitApiToAcceptOfferedRide = async (rideId, userId) => {
+
+    try {
+        const result = await connection.postAPI('/api/ride/rider/request/action', {'rideId': rideId, 'userRequestId': userId})
+
+        if (result.success) {
+            return result
+        }
+        else {
+            return result
+        }
+
+    } catch (error) {
+
+        console.error('request ride list', error);
+        throw error
+    }
+
+}
+
+
+
+export const hitApiToAcceptRequestedRide = async (rideId, userId, riderId) => {
+
+    try {
+        const result = await connection.postAPI('/api/ride/traveller/request/action', {'rideId': rideId, 'userRequestId': userId, 'riderId': riderId})
 
         if (result.success) {
             return result

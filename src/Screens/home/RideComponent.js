@@ -9,7 +9,7 @@ export const AvtarView = ({ image, name }) => {
 
             <View style={{ width: '16%' }}>
 
-                <Image source={image} style={{ width: 60, height: 60, borderColor: 'red', borderWidth: 1, borderRadius: 5 }} />
+                <Image source={image} style={{ width: 60, height: 60, borderRadius: 5 }} />
 
             </View>
 

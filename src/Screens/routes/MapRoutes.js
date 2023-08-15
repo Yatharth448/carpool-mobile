@@ -165,9 +165,9 @@ export default function MapRoutes({ navigation, route }) {
                                 <Pressable onPress={() => { setSelectedIndex(index) }} style={{ flexDirection: 'row', }}>
                                     <View style={{ width: '90%', justifyContent: 'center' }}>
                                         <Text numberOfLines={3} style={{ color: AppColors.themeBlackColor, fontSize: 16, fontWeight: '700' }}>{item.duration}
-                                            <Text numberOfLines={3} style={{ color: AppColors.themeText2Color, fontSize: 14, fontWeight: '700' }}>{item.distance + " / " + item.summary}</Text>
+                                            <Text numberOfLines={3} style={{ color: AppColors.themeText2Color, fontSize: 14, fontWeight: '700' }}>{" ("+ item.distance + ")"}</Text>
                                         </Text>
-                                        <Text numberOfLines={3} style={{ color: AppColors.themeText2Color, fontSize: 14, fontWeight: '700' }}>{item.distance + " / " + item.summary}</Text>
+                                        <Text numberOfLines={3} style={{ color: AppColors.themeText2Color, fontSize: 14, fontWeight: '700' }}>{item.summary}</Text>
                                     </View>
                                     <View style={{ width: '10%', justifyContent: 'center' }}>
                                         <Image source={selectedIndex == index ? require('../../assets/bluecircle.png') : require('../../assets/greycircle.png')} style={{ marginRight: 5, width: 20, height: 20, borderRadius: 10, resizeMode: 'contain' }} />

@@ -470,7 +470,7 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
 
                     {FindAndOfferRide(this.findRide, this.offerRide, this.state.find)}
 
-                    <AvtarView image={require('../../assets/profile.png')} name={name} />
+                    <AvtarView image={require('../../assets/avtar.png')} name={name} />
                     <View style={{ width: '94%', height: 1, marginTop: 20, backgroundColor: AppColors.themeCardBorderColor }} />
                     {this.state.find ?
                         <>
