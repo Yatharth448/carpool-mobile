@@ -80,3 +80,64 @@ export const hitApiToRequestUpdateEstimatedPrice = async ( journeyId , estimated
 
 }
 
+export const hitApiToCheckExistingRide = async () => {
+
+    try {
+        const result = await connection.getAPI('/api/ride/isrideexist')
+
+        if (result.success) {
+            return result
+        }
+        else {
+            return result
+        }
+
+    } catch (error) {
+
+        console.error('login modal', error);
+        throw error
+    }
+
+}
+
+export const hitApiToAllGetVehicle = async () => {
+
+    try {
+        const result = await connection.getAPI('/api/user/vehicle')
+
+        if (result.success) {
+            return result
+        }
+        else {
+            return result
+        }
+
+    } catch (error) {
+
+        console.error('login modal', error);
+        throw error
+    }
+
+}
+
+export const hitApiToAddVehicle = async ( vehicleName , vehicleNumber) => {
+
+    try {
+        const result = await connection.postAPI('/api/user/update/vehicle', {'vehicleName' : vehicleName, 'vehicleNumber' : vehicleNumber })
+
+        if (result.success) {
+            return result
+        }
+        else {
+            return result
+        }
+
+    } catch (error) {
+
+        console.error('login modal', error);
+        throw error
+    }
+
+}
+
+

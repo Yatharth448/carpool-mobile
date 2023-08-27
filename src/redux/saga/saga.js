@@ -1,6 +1,5 @@
 import { put, takeEvery, all } from 'redux-saga/effects';
 import { getProfileDataSuccess, getProfileDataFailure } from '../actions/actions';
-import axios from 'axios';
 import { hitApiToGetProfile } from '../../Screens/profile/ProfileModal';
 
 function* fetchDataSaga() {

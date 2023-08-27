@@ -11,3 +11,5 @@ export const getProfileDataRequest = () => ({
     type: 'GET_PROFILE_DATA_FAILURE',
     payload: error,
   });
+
+  

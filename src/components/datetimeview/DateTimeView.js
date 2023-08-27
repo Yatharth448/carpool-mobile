@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { AppColors } from '../constants/AppColor'
 import DatePicker from 'react-native-date-picker'
+import { AppFontFamily } from '../constants/AppFonts'
 export default function DateTimeView(mode, open, date, onConfirm, onCancel, openDatePicker, selectedDate) {
 
 
@@ -32,7 +33,7 @@ export default function DateTimeView(mode, open, date, onConfirm, onCancel, open
 
             <TouchableOpacity onPress={openDatePicker} style={{ borderRadius: 10, paddingLeft: 10, paddingRight: 10, backgroundColor: AppColors.themePickupDropSearchBg, flexDirection: 'row', alignItems: 'center', width: '100%', height: 45,justifyContent: 'space-between' }}>
                 <View style={{ width: '80%', justifyContent: 'center' }}>
-                    <Text style={{ fontSize: 16, fontWeight: '400', width: '100%', color: selectedDate == 'Date and time of departure' ? AppColors.themeTextGrayColor : AppColors.themeBlackColor }}>
+                    <Text style={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 14, fontWeight: '400', width: '100%', color: selectedDate == 'Date and time of departure' ? AppColors.themeTextGrayColor : AppColors.themeBlackColor }}>
                         {selectedDate}
                     </Text>
 

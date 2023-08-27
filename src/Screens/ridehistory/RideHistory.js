@@ -5,10 +5,11 @@ import { Header } from '../../components/commomheader/CommonHeader'
 import RequestedRides from './RequestedRides'
 import OfferedRides from './OfferedRide'
 import { hitApiToGetRequestedRideDetails } from './RideHistoryModal'
+import { AppFontFamily } from '../../components/constants/AppFonts'
 
 export default function RideHistory({ navigation }) {
 
-    const [isRequest, setIsRequest] = React.useState(false)
+    const [isRequest, setIsRequest] = React.useState(true)
 
 
     const changeTab = async (val) => {
@@ -28,13 +29,13 @@ export default function RideHistory({ navigation }) {
     const selectedData = (item) => {
 
         console.log(item, 'selected data')
-        navigation.navigate('RideDetails', { id: item._id, from: 'offered' })
+        navigation.navigate('OfferedRideDetails', { id: item._id, from: 'offered' })
     }
 
     const selectedRequest = (item) => {
 
         console.log(item, 'selected request')
-        navigation.navigate('RideDetails', { id: item.ride_id, from: 'requested' })
+        navigation.navigate('RequestedRideDetails', { id: item.ride_id, from: 'requested' })
     }
 
 
@@ -46,7 +47,7 @@ export default function RideHistory({ navigation }) {
             navigation.navigate('Cotravellers', {data: result.data.rideData})
         }
 
-        console.log(result.data.rideData, 'view request')
+        console.log(result.data.cotravellerData, 'cotraveller data', result.data.rideData, 'ride data')
     }
 
 
@@ -58,12 +59,12 @@ export default function RideHistory({ navigation }) {
             <View style={{ flexDirection: 'row', width: '100%', height: 50, alignItems: 'center', justifyContent: 'space-evenly', marginTop: 10 }}>
 
                 <TouchableOpacity style={{ width: '40%', height: 50, alignItems: 'center', justifyContent: 'center' }} onPress={() => changeTab('request')}>
-                    <Text style={{ width: '100%', textAlign: 'center', color: isRequest ? AppColors.themePrimaryColor : AppColors.themeTextPrimaryColor, fontSize: 18 }}>{'Requested Rides'}</Text>
+                    <Text style={{ width: '100%', textAlign: 'center', color: isRequest ? AppColors.themePrimaryColor : AppColors.themeTextPrimaryColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Requested Rides'}</Text>
                     <View style={{ marginTop: 10, width: '100%', height: 2.5, backgroundColor: isRequest ? AppColors.themePrimaryColor : null }} />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{ width: '40%', height: 50, alignItems: 'center', justifyContent: 'center' }} onPress={() => changeTab('offer')}>
-                    <Text style={{ width: '100%', textAlign: 'center', color: isRequest ? AppColors.themeTextPrimaryColor : AppColors.themePrimaryColor, fontSize: 18 }}>{'Offered Rides'}</Text>
+                    <Text style={{ width: '100%', textAlign: 'center', color: isRequest ? AppColors.themeTextPrimaryColor : AppColors.themePrimaryColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Offered Rides'}</Text>
                     <View style={{ marginTop: 10, width: '100%', height: 2.5, backgroundColor: isRequest ? null : AppColors.themePrimaryColor }} />
                 </TouchableOpacity>
 

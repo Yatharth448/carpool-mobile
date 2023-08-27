@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 14,
     color: AppColors.themesWhiteColor,
     fontFamily: AppFontFamily.PopinsMedium
   },

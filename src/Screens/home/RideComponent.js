@@ -3,22 +3,22 @@ import { Text, Image, View, FlatList, Pressable } from "react-native"
 import { AppColors } from "../../components/constants/AppColor"
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from "../../components/constants/AppFonts"
-export const AvtarView = ({ image, name }) => {
+export const AvtarView = ({ image, name, type }) => {
     return (
         <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
 
-            <View style={{ width: '16%' }}>
+            <View style={{ width: '13%', justifyContent: 'center', alignItems: 'flex-start' }}>
 
-                <Image source={image} style={{ width: 60, height: 60, borderRadius: 5 }} />
+                <Image source={image} style={{ width: 50, height: 50, borderRadius: 5, resizeMode: 'contain' }} />
 
             </View>
 
-            <View style={{ width: '75%' }}>
-                <Text style={{ width: '100%', color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsBold, fontSize: 20 }}>
+            <View style={{ width: '78%', justifyContent: 'center', alignItems: 'flex-start' }}>
+                <Text style={{ width: '100%', color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsBold, fontSize: 18 }}>
                     {'Hey ' + name + ","}
                 </Text>
-                <Text style={{ width: '100%', color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 16 }}>
-                    {'Enter details below to find your ride'}
+                <Text style={{ width: '100%', color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 14 }}>
+                    {type ? 'Enter details below to find your ride' : 'Enter details below to offer ride'}
                 </Text>
 
             </View>
@@ -33,8 +33,8 @@ export const SeatsView = ({ data, selectedIndex, setSelectedIndex }) => {
 
             <View style={{ width: '40%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
 
-                <Image source={require('../../assets/carseat.png')} style={{  width: 26, height: 26, resizeMode: 'contain'  }} />
-                <Text style={{ marginLeft: 10, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 16 }}>
+                <Image source={require('../../assets/carseat.png')} style={{  width: 20, height: 20, resizeMode: 'contain'  }} />
+                <Text style={{ marginLeft: 10, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 14 }}>
                     {'Seats needed'}
                 </Text>
 
@@ -51,9 +51,9 @@ export const SeatsView = ({ data, selectedIndex, setSelectedIndex }) => {
                     renderItem={({ item, index }) => (
                         <>
                             <View style={{ padding: 0 }}>
-                                <Pressable onPress={()=> setSelectedIndex(index)} style={{ marginLeft: 5, backgroundColor: selectedIndex == index ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, borderRadius: 5, borderWidth: 1.5, borderColor: AppColors.themePrimaryColor }}>
+                                <Pressable onPress={()=> setSelectedIndex(index)} style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 5, width: 26, height: 26, backgroundColor: selectedIndex == index ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, borderRadius: 5, borderWidth: 1.5, borderColor: AppColors.themePrimaryColor }}>
                                     {/* <View style={{ padding: 10 }}> */}
-                                    <Text numberOfLines={3} style={{ paddingLeft: 10, paddingBottom: 5, paddingRight: 10, paddingTop: 5, color: selectedIndex == index ? AppColors.themesWhiteColor : AppColors.themePrimaryColor, fontSize: 16, fontWeight: '700' }}>{item}</Text>
+                                    <Text numberOfLines={1} style={{ marginTop: 2, fontFamily: AppFontFamily.PopinsRegular, color: selectedIndex == index ? AppColors.themesWhiteColor : AppColors.themePrimaryColor, fontSize: 14 }}>{item}</Text>
                                     {/* </View> */}
                                 </Pressable>
                             </View>
@@ -74,7 +74,7 @@ export const CotravellerView = ({ onCheck, image }) => {
         <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
             <View style={{ width: '68%', flexDirection: 'row', alignItems: 'center' }}>
 
-                <Image source={require('../../assets/cotraveller.png')} style={{ width: 24, resizeMode: 'contain'}} />
+                <Image source={require('../../assets/cotraveller.png')} style={{ width: 18, resizeMode: 'contain'}} />
                 <Text style={{ marginLeft: 10, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 16 }}>
                     {'Need a female co traveller'}
                 </Text>

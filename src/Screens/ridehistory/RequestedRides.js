@@ -7,10 +7,12 @@ import { AppTexts } from '../../components/constants/AppTexts'
 import moment from 'moment'
 import { hitApiToGetRequestedRide } from './RideHistoryModal'
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
+import CommonLoaders from '../../components/loader/Loader'
 
-export default function RequestedRides({ selectedRequest , viewRequest}) {
+export default function RequestedRides({ selectedRequest }) {
 
     const [requestedArr, setRequestedArr] = React.useState([])
+    const [isLoading, setIsLoading] = React.useState(false)
 
     useEffect(() => {
 
@@ -25,6 +27,7 @@ export default function RequestedRides({ selectedRequest , viewRequest}) {
             if (result.status) {
 
                 setRequestedArr(result.data)
+                setIsLoading(true)
                 console.log(result.data, 'requested')
             }
 
@@ -39,12 +42,8 @@ export default function RequestedRides({ selectedRequest , viewRequest}) {
 
 
 
-   
-
-
-
-    return (
-        <View style={{ height: Dimensions.get('window').height * .78 }}>
+    const listView = () => {
+        return (
             <FlatList
                 data={requestedArr}
                 // refreshControl={
@@ -64,52 +63,52 @@ export default function RequestedRides({ selectedRequest , viewRequest}) {
                 renderItem={({ item, index }) => (
                     <Pressable onPress={() => selectedRequest(item)} style={{ width: Dimensions.get('window').width, alignItems: 'center', marginTop: 10, marginBottom: 10 }}>
                         <Surface elevation={4} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
-
-
                             <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
-                                <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
-                                    <View style={{ width: '60%', justifyContent: 'center' }}>
+                                <View style={{ justifyContent: 'center' }}>
 
-                                        <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsSemiBold, fontSize: 14, color: AppColors.themeText2Color }}>{moment(item.date).format('DD MMM YYYY, HH:mm:ss')}</Text>
-                                    </View>
-                                    <View style={{ width: '40%' , justifyContent: 'center', alignItems: 'flex-end'}}>
-                                        <ButtonPrimary
-                                        style={{height: 35}}
-                                            text={'View Request'}
-                                            onPress={() => viewRequest(item)}
-                                            loader={false}
-                                        />
-                                    </View>
+                                    <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(item.date).format('DD MMM YYYY, HH:mm')}</Text>
 
                                 </View>
                             </View>
                             <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
 
-                            <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
+                            <View style={{ flexDirection: 'row', width: '100%', marginTop: 0, justifyContent: 'center' }}>
 
-                                <View style={{ width: '95%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+                                <View style={{ width: '92%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
 
-                                    <View style={{ width: '15%', alignItems: 'center' }}>
 
-                                        <Image source={require('../../assets/dotone.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
-                                        <Image source={require('../../assets/dotline.png')} style={{ marginLeft: 0, width: 5, height: 50, resizeMode: 'contain' }} />
-                                        <Image source={require('../../assets/triangle.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
+                                    <View style={{ width: '25%', alignItems: 'center', justifyContent: 'center' }}>
+
+                                        <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 13 }}>{moment(item.date).format('HH:mm') + '   '}</Text>
+                                            <Image source={require('../../assets/dotone.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
+                                        </View>
+                                        <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themesWhiteColor, fontSize: 13 }}>{moment(item.date).format('HH:mm') + '   '}</Text>
+                                            <View style={{ width: 2, height: 25, backgroundColor: AppColors.themeBlackColor }}>
+                                            </View>
+                                            {/* <Image source={require('../../assets/dotline.png')} style={{ marginLeft: 0, width: 5, height: 50, resizeMode: 'contain' }} /> */}
+                                        </View>
+                                        <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 13 }}>{moment(item.date).format('HH:mm') + '   '}</Text>
+                                            <Image source={require('../../assets/triangle.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
+                                        </View>
 
                                     </View>
 
-                                    <View style={{ width: '85%', justifyContent: 'center', alignItems: 'center' }}>
+                                    <View style={{ marginLeft: 0, width: '75%', justifyContent: 'center', alignItems: 'center' }}>
 
-                                        <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginTop: 20, marginBottom: 20 }}>
+                                        <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginTop: 20, marginBottom: 0 }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.origin_address}</Text>
+                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.origin_address}</Text>
                                             </View>
                                         </View>
                                         <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
-                                        <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginBottom: 20 }}>
+                                        <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginBottom: 20, marginTop: 20 }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.destination_address}</Text>
+                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.destination_address}</Text>
                                             </View>
                                         </View>
 
@@ -123,6 +122,16 @@ export default function RequestedRides({ selectedRequest , viewRequest}) {
                     </Pressable>
                 )}
             />
+        )
+    }
+
+
+
+
+    return (
+        <View style={{ height: Dimensions.get('window').height * .78 }}>
+
+{isLoading ? listView() : CommonLoaders.RideHistoryLoader()}
         </View>
     )
 }

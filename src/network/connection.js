@@ -25,11 +25,12 @@ const apiCaller = async (method, url, params = {}, headerOptions = {}, onUploadP
             },
 
         }
-
+       
         if (Object.keys(headerOptions).length) {
 
             options.headers = Object.assign({}, options.headers, headerOptions);
-            options.onUploadProgress = onUploadProgress
+            options.onUploadProgress = onUploadProgress;
+           
         }
 
         if (authToken) {

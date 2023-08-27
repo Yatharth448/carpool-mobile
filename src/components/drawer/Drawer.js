@@ -5,8 +5,9 @@ import { AppFontFamily } from '../constants/AppFonts';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import { getProfileDataRequest } from '../../redux/actions/actions';
+import reducer from '../../redux/reducers/reducers';
 
-const DrawerScreen = ({ data, loading, error, getProfileDataRequest, navigation }) => {
+const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
 
     const [menu, setMenu] = React.useState([{ 'screen': 'FindRide', 'name': 'HOME' }, { 'screen': 'RideHistory', 'name': 'RIDE HISTORY' }, { 'screen': 'Payment', 'name': 'PAYMENT' }, { 'index': 3, 'name': 'SUPPORT' },])
     const [ind, setInd] = React.useState(0)
@@ -53,14 +54,14 @@ const DrawerScreen = ({ data, loading, error, getProfileDataRequest, navigation 
             <View style={{ paddingTop: 60, width: '100%', backgroundColor: AppColors.themePrimaryColor, height: Dimensions.get('window').height * .32, alignItems: 'center' }}>
                 <Pressable onPress={()=> navigation.navigate('ProfileScreen')} style={{ width: '80%', height: '90%', justifyContent: 'center' }}>
                     <View style={{ width: 80, height: 80, marginBottom: 10 }}>
-                        <Image source={require('../../assets/logo.png')} style={{ width: 80, height: 80, borderRadius: 40, borderRadius: 40, borderColor: AppColors.themesWhiteColor, borderWidth: .5, resizeMode: 'contain' }} />
+                        <Image source={require('../../assets/avtar.png')} style={{ width: 80, height: 80, borderRadius: 40, borderRadius: 40, borderColor: AppColors.themesWhiteColor, borderWidth: .5, resizeMode: 'contain' }} />
                     </View>
                     <Image source={require('../../assets/edit.png')} style={{marginLeft: 60, position: 'absolute', width: 20, height: 20, borderRadius: 40, borderRadius: 40, borderColor: AppColors.themesWhiteColor, borderWidth: .5, resizeMode: 'contain' }} />
                     <Text style={{ fontSize: 20, fontFamily: AppFontFamily.PopinsBold, color: AppColors.themesWhiteColor }}>
-                        {data.name}
+                        {data?.name}
                     </Text>
                     <Text style={{ fontSize: 14, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themesWhiteColor }}>
-                        {data.email}
+                        {data?.email}
                     </Text>
                 </Pressable>
             </View>

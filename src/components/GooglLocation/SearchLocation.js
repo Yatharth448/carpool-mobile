@@ -13,7 +13,8 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
     const [predictions, setPredictions] = useState([]);
 
     const fetchPredictions = async (text) => {
-        const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${AppKeys.API_KEY}&input=${text}&types=(cities)`;
+        console.log(text, 'search text')
+        const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${AppKeys.API_KEY}&input=${text}&types=address`;
 
         try {
             const response = await fetch(apiUrl);
@@ -161,13 +162,13 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
 
 
                             <FlatList
-                                contentContainerStyle={{ height: Dimensions.get('window').height * .73 }}
+                                contentContainerStyle={{ height: Dimensions.get('window').height * .73 , marginTop: 20}}
                                 data={predictions}
                                 keyboardShouldPersistTaps={'always'}
                                 renderItem={({ item }) => (
                                     <>
 
-                                        <Pressable onPress={() => setPickup(item.description)} style={{ flexDirection: 'row', width: '100%', height: 70 }}>
+                                        <Pressable onPress={() => setPickup(item.description)} style={{ flexDirection: 'row', width: '100%' }}>
                                             <View style={{ width: '15%', justifyContent: 'center' }}>
                                                 <Image source={require('../../assets/searchlist.png')} style={{ marginLeft: 0, width: 40, height: 40, resizeMode: 'contain' }} />
                                             </View>
@@ -178,7 +179,7 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
 
                                             </View>
                                         </Pressable>
-                                        <View style={{ marginLeft: 50, width: '85%', backgroundColor: AppColors.themeCardBorderColor, height: 1 }}>
+                                        <View style={{ marginLeft: 50, width: '85%', backgroundColor: AppColors.themeCardBorderColor, height: 1, marginTop: 5, marginBottom: 10 }}>
 
                                         </View>
                                     </>

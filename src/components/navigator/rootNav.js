@@ -22,8 +22,12 @@ import DrawerScreen from '../drawer/Drawer';
 import RideHistory from '../../Screens/ridehistory/RideHistory';
 import UpdateProfile from '../../Screens/profile/UpdateProfile';
 import Payment from '../../Screens/payment/Payment';
-import RideDetails from '../../Screens/ridehistory/RideDetails';
+import RideDetails from '../../Screens/ridehistory/OfferedRideDetails';
 import Cotravellers from '../../Screens/ridehistory/Cotravellers';
+import Success from '../../Screens/success/Success';
+import OfferedRideDetails from '../../Screens/ridehistory/OfferedRideDetails';
+import RequestedRideDetails from '../../Screens/ridehistory/RequestedRideDetails';
+import AddVehicle from '../../Screens/addnewvehicle/AddVehicle';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator()
@@ -71,7 +75,11 @@ export default function RootNav() {
                 <Stack.Screen name='ProfileScreen' component={ProfileScreen} /> 
                 <Stack.Screen name='MapRoutes' component={MapRoutes} />
                 <Stack.Screen name='Cotravellers' component={Cotravellers} />
-                <Stack.Screen name='RideDetails' component={RideDetails} />
+                <Stack.Screen name='OfferedRideDetails' component={OfferedRideDetails} />
+                <Stack.Screen name='RequestedRideDetails' component={RequestedRideDetails} />
+                <Stack.Screen name='Chat' component={Chat} /> 
+                <Stack.Screen name='Success' component={Success}/>
+                <Stack.Screen name='AddVehicle' component={AddVehicle}/>
                 <Stack.Screen name="RideDrawer" component={RideDrawer} options={{ animationEnabled: false }} />
 
             </Stack.Navigator>

@@ -3,12 +3,13 @@ import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
 import { AppColors } from '../constants/AppColor'
 // import { Menu } from 'react-native-paper';
 import { Dropdown } from 'react-native-element-dropdown';
-export default function DropDownList(type, label, selectedId) {
+import { AppFontFamily } from '../constants/AppFonts';
+export default function DropDownList( label, selectedId ) {
 
-    const passengerArray = [{ 'value': '1', 'label': '1 passenger' }, { 'value': '2', 'label': '2 passenger' }, { 'value': '3', 'label': '3 passenger' }, { 'value': '4', 'label': '4 passenger' }, { 'value': '5', 'label': '5 passenger' }, { 'value': '6', 'label': '6 passenger' }]
-    const carArray = [{ 'value': '1', 'label': 'Tata Nexon' }, { 'value': '2', 'label': 'MG Hector' }]
+    // const passengerArray = [{ 'value': '1', 'label': '1 passenger' }, { 'value': '2', 'label': '2 passenger' }, { 'value': '3', 'label': '3 passenger' }, { 'value': '4', 'label': '4 passenger' }, { 'value': '5', 'label': '5 passenger' }, { 'value': '6', 'label': '6 passenger' }]
+    const carArray = [{ 'value': '1', 'label': 'Tata Nexon' }, { 'value': '2', 'label': 'MG Hector' }, { 'value': '3', 'label': 'Add New Car' }]
 
-    const seaterArray = [{ 'value': '1', 'label': '1 seater' }, { 'value': '2', 'label': '2 seater' }, { 'value': '3', 'label': '3 seater' }, { 'value': '4', 'label': '4 seater' }, { 'value': '5', 'label': '5 seater' }, { 'value': '6', 'label': '6 seater' }]
+    // const seaterArray = [{ 'value': '1', 'label': '1 seater' }, { 'value': '2', 'label': '2 seater' }, { 'value': '3', 'label': '3 seater' }, { 'value': '4', 'label': '4 seater' }, { 'value': '5', 'label': '5 seater' }, { 'value': '6', 'label': '6 seater' }]
    
     const renderItem = (item) => {
     
@@ -22,11 +23,15 @@ export default function DropDownList(type, label, selectedId) {
                         alignItems: 'center',
                         width: '100%',
                         height: 30,
+                        paddingLeft: 10,
+                        borderRadius: 10,
+                        backgroundColor: AppColors.themePickupDropSearchBg
                     }}>
                         <Text style={{
                             textAlign: 'center',
                             flex: 1,
-                            fontSize: 16,
+                            fontSize: 14,
+                            fontFamily: AppFontFamily.PopinsRegular,
                             fontWeight: '600',
                             color: AppColors.themeBlackColor
                             // fontFamily: themes.appFontFamily.semiCondencedMedium,
@@ -50,7 +55,7 @@ export default function DropDownList(type, label, selectedId) {
                 selectedTextStyle={styles.selectedTextStyle}
                 inputSearchStyle={styles.inputSearchStyle}
                 iconStyle={styles.iconStyle}
-                data={type == 'passenger' ? passengerArray : type == 'seat' ? seaterArray : carArray}
+                data={carArray}
                 //search
                 maxHeight={300}
                 // fontFamily={themes.appFontFamily.semiCondencedMedium}
@@ -67,9 +72,9 @@ export default function DropDownList(type, label, selectedId) {
                     //     : this.reloadList()
                 }}
                 renderItem={renderItem}
-                renderLeftIcon={() => 
-                     <Image source={require('../../assets/profile.png')} style={{ tintColor: AppColors.themePrimaryColor, marginLeft: 0, marginRight: 10, width: 25, resizeMode: 'contain' }} />
-                    }
+                // renderLeftIcon={() => 
+                //      <Image source={require('../../assets/profile.png')} style={{ tintColor: AppColors.themePrimaryColor, marginLeft: 0, marginRight: 10, width: 25, resizeMode: 'contain' }} />
+                //     }
             />
         )
     }
@@ -91,10 +96,10 @@ const styles = StyleSheet.create({
          width: '100%',
         // margin: 14,
         height: 50,
-        backgroundColor: AppColors.themesWhiteColor,
+        backgroundColor: AppColors.themePickupDropSearchBg,
         borderColor: AppColors.themesWhiteColor,
         borderWidth: 1,
-        borderRadius: 5
+        borderRadius: 10
     },
 
     icon: {
@@ -102,15 +107,17 @@ const styles = StyleSheet.create({
     },
 
     placeholderStyle: {
-        marginLeft: 5,
-        color: AppColors.themeBlackColor,
-        fontSize: 16,
+        marginLeft: 10,
+        color: AppColors.themeTextGrayColor,
+        fontFamily: AppFontFamily.PopinsRegular,
+        fontSize: 14,
     },
 
     selectedTextStyle: {
         color: AppColors.themeBlackColor,
-        marginLeft: 5,
-        fontSize: 16,
+        marginLeft: 10,
+        fontFamily: AppFontFamily.PopinsRegular,
+        fontSize: 14,
     },
 
     iconStyle: {

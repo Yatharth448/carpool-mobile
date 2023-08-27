@@ -80,9 +80,9 @@ export default function Chat({ navigation, route }) {
         const result = await hitApiToMessageForParticularUser(id);
         // console.log("ride list", result.data, id);
         if (result.status) {
-            setMessage((result.data[0].messages.reverse()) ?? [])
+            setMessage((result.data[0]?.messages.reverse()) ?? [])
             setFetching(false)
-            scrollToBottom(result.data[0].messages)
+            scrollToBottom(result.data[0]?.messages)
         }
         else {
             console.log(result)

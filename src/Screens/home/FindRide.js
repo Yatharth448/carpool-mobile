@@ -13,7 +13,7 @@ import DropDownList from "../../components/droplist/DropDownList";
 import Toast from 'react-native-simple-toast'
 import { AppTexts } from "../../components/constants/AppTexts";
 import MapView, { Marker } from 'react-native-maps';
-import { hitApiToGetRoutes } from "./RideModal";
+import { hitApiToAllGetVehicle, hitApiToCheckExistingRide, hitApiToGetRoutes } from "./RideModal";
 import { GetCurrentLocation, checkLocationPermission } from "../../components/location/GetCurrentLocation";
 import { AvtarView, CotravellerView, SeatsView } from "./RideComponent";
 import { ButtonPrimary } from "../../components/button/buttonPrimary";
@@ -25,42 +25,48 @@ import { Surface } from "react-native-paper";
 import { Header } from "../../components/commomheader/CommonHeader";
 import { Switch } from 'react-native-paper';
 import { connect } from "react-redux";
-import { getProfileDataRequest } from '../../redux/actions/actions';
+import { reducer } from '../../redux/reducers/reducers'
+import { getProfileDataRequest, getExistingDataRequest } from '../../redux/actions/actions';
+import { AppFontFamily } from "../../components/constants/AppFonts";
+import { AddVehiclePopup } from "../../components/popupComponents/AddVehiclePopup";
 
- class FindRide extends Component {
+class FindRide extends Component {
 
     constructor(props) {
         super(props);
-        // this.setSelectedIndex = this.setSelectedIndex.bind(this);
+        this.closeVehPopUp = this.closeVehPopUp.bind(this);
+        this.selectedVehicle = this.selectedVehicle.bind(this);
+        this.addCar = this.addCar.bind(this);
+        this.onDownloadProgress = this.onDownloadProgress.bind(this);
         this.state = {
             customMapStyle: [
-                // Paste your custom map style JSON here
-                // Example:
                 {
-                    "elementType": "geometry",
-                    "stylers": [
+                    featureType: "poi",
+                    elementType: "geometry",
+                    stylers: [
                         {
-                            "color": '#ffffff',
-                        }
-                    ]
+                            color: "#eeeeee",
+                        },
+                    ],
                 },
                 {
-                    "elementType": "labels.text.fill",
-                    "stylers": [
+                    featureType: "poi",
+                    elementType: "labels.text",
+                    stylers: [
                         {
-                            "color": "#ffffff"
-                        }
-                    ]
+                            visibility: "off",
+                        },
+                    ],
                 },
                 {
-                    "elementType": "labels.text.stroke",
-                    "stylers": [
+                    featureType: "water",
+                    elementType: "labels.text.fill",
+                    stylers: [
                         {
-                            "color": "#403ADD"
-                        }
-                    ]
+                            color: "#9e9e9e",
+                        },
+                    ],
                 },
-                // ... add more styles
             ],
             openDate: false,
             cotraveller: false,
@@ -85,11 +91,16 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
             initialRegion: {},
             markers: {},
             permission: false,
-            addVehicle: '',
+            addVehicle: 'Select Vehicle',
             avilSeat: '',
             perSeat: '',
             isSwitchOn: false,
-            coordinate: ''
+            coordinate: '',
+            existingData: {},
+            progress: 0,
+            loading: false,
+            openAddVeh: false,
+            vehicleArray: [],
 
 
             // const [location, setLocation] = React.useState({ latitude: 28.693072, longitude: 76.981635 })
@@ -100,9 +111,53 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
     onToggleSwitch = () => {
         this.setState(!isSwitchOn)
     }
-    componentDidMount() {
 
+
+    componentWillUnmount() {
+        this._unsubscribe();
+
+
+    }
+    async componentDidMount() {
+
+        this._unsubscribe = this.props.navigation.addListener('focus', async () => {
+
+            await this.getRideNotificationData()
+            await this.getSavedVehicles()
+
+        });
+
+        //    await this.getRideNotificationData()
+
+
+
+    }
+
+
+    async getSavedVehicles() {
+
+        const result = await hitApiToAllGetVehicle()
+        if (result.status) {
+
+            const vehData = result.data?.vehicle_info
+
+            for (const data of vehData) {
+                data.label = data.vehicle_name
+            }
+            // const updatedArray = vehData.map((obj) =>  ...obj, obj.vehicle_name = 'vehicle_name');
+            this.setState({ vehicleArray: vehData })
+            console.log(vehData, 'all vehicle')
+        }
+        else {
+
+        }
+    }
+
+    async getRideNotificationData() {
+        const result = await hitApiToCheckExistingRide()
+        console.log(result, 'data')
         this.reloadMap()
+        this.setState({ existingData: result })
     }
 
     reloadMap = async () => {
@@ -205,10 +260,25 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
     }
 
 
+    onDownloadProgress(data) {
+        // const percentCompleted = Math.round(
+        //     (progressEvent.loaded * 100) / progressEvent.total
+        //   );
+
+        //   console.log(percentCompleted, ' % progress')
+        //   this.setState({ progress:  percentCompleted})
+
+        var progress = data.loaded / data.total;
+        this.setState({ progress })
+        console.log(progress, 'aaaaaa------')
+
+    }
 
     getSearchData = async (pick, drop, date, seat) => {
-        const result = await hitApiToGetRideList(pick, drop, date, seat);
+        const result = await hitApiToGetRideList(pick, drop, date, seat, this.onDownloadProgress);
         console.log("ride list", result);
+
+        this.setState({ loading: false })
         if (result.status) {
 
             // setRideList(result.data ?? [])
@@ -232,7 +302,7 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
 
     searchRide = async () => {
 
-      
+
         if (!this.state.pickupLocation) {
 
             Toast.showWithGravity('Select pickup location', 2, Toast.TOP);
@@ -241,7 +311,7 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
 
             Toast.showWithGravity('Select drop location', 2, Toast.TOP);
         }
-        else if (!this.state.selectedDate) {
+        else if (this.state.selectedDate === 'Date and time of departure') {
 
             Toast.showWithGravity('Select Date', 2, Toast.TOP);
         }
@@ -254,7 +324,7 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
             console.log('search ride')
 
             // setIsSearch('start')
-            this.setState({isSearch: 'start'})
+            this.setState({ isSearch: 'start', loading: true })
             await this.getSearchData(this.state.pickupLocation, this.state.dropLocation, this.state.rawDate, this.state.passengerValue)
             // console.log(pickupLocation, dropLocation,selectedDate, 'check data')
 
@@ -307,7 +377,7 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
                 <View style={{ width: '95%', alignItems: 'center', marginTop: 20 }}>
                     <ButtonPrimary
                         text={'Cancel Booking'}
-                        onPress={() => this.setState({ isSearch: 'cancel'})}
+                        onPress={() => this.setState({ isSearch: 'cancel' })}
                         loader={false}
                     />
                 </View>
@@ -330,7 +400,7 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
 
                     <View style={{ width: '100%', alignItems: 'center' }}>
 
-                        <Image source={require('../../assets/dotone.png')} style={{ borderRadius: 40, width: 80, height: 80, resizeMode: 'contain' }} />
+                        <Image source={require('../../assets/avtar.png')} style={{ borderRadius: 40, width: 80, height: 80, resizeMode: 'contain' }} />
 
                     </View>
 
@@ -377,7 +447,7 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
 
             Toast.showWithGravity('Select drop location', 2, Toast.TOP);
         }
-        else if (!this.state.selectedDate) {
+        else if (this.state.selectedDate === 'Date and time of departure') {
 
             Toast.showWithGravity('Select Date', 2, Toast.TOP);
         }
@@ -456,115 +526,171 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
         // setCotraveller(!cotraveller)
     }
 
+    onViewClick() {
 
+        const from = this.state.existingData?.from
 
-    SearchOffer = (name) => {
+        this.props.navigation.navigate(this.state.existingData?.screenname, { id: this.state.existingData?.id, from: from })
+    }
+
+    checkExistingRequest() {
         return (
             <View style={{
-                alignItems: 'center', backgroundColor: AppColors.themesWhiteColor, marginTop: -50,
-                width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
+                alignItems: 'center', backgroundColor: AppColors.themeNotificationBg, marginTop: -50,
+                width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, padding: 10, minHeight: 90
             }}>
-                <View style={{ alignItems: 'center', width: '96%', marginTop: 0 }}>
-
-
-
-                    {FindAndOfferRide(this.findRide, this.offerRide, this.state.find)}
-
-                    <AvtarView image={require('../../assets/avtar.png')} name={name} />
-                    <View style={{ width: '94%', height: 1, marginTop: 20, backgroundColor: AppColors.themeCardBorderColor }} />
-                    {this.state.find ?
-                        <>
-                            <SeatsView
-                                data={['1', '2', '3', '4']}
-                                selectedIndex={this.state.selectedIndex}
-                                setSelectedIndex={this.setSelectedIndex}
-                            />
-                            <CotravellerView onCheck={this.onCheck} image={this.state.cotraveller ? 'checkbox-outline' : 'checkbox-blank-outline'} />
-                            <View style={{ width: '94%', height: 1, marginTop: 20, backgroundColor: AppColors.themeCardBorderColor }} />
-                        </>
-                        :
-                        null
-                    }
-                    {PickupAndDrop(this.state.pickupLocation, this.state.dropLocation, this.pickUp, this.dropOff)}
-                    <View style={{ marginTop: 10, width: '95%', height: 70, justifyContent: 'center', alignItems: 'center' }}>
-
-                        {DateTimeView('date', this.state.openDate, this.state.date, this.onDateConfirm, this.onDateCancel, this.openDatePicker, this.state.selectedDate)}
-
+                <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <View style={{ width: '80%', justifyContent: 'center', alignItems: 'flex-start' }}>
+                        <Text style={{ color: AppColors.themeBlackColor, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular }}>{this.state.existingData?.text}</Text>
                     </View>
+                    <View style={{ width: 53, justifyContent: 'center', alignItems: 'center' }}>
+                        <ButtonPrimary
+                            style={{ height: 22 }}
+                            textStyle={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12 }}
+                            text={'View'}
+                            onPress={() => this.onViewClick()}
+                            loader={false}
+                        />
+                    </View>
+                </View>
+            </View>
+        )
+    }
+
+    SearchOffer = (name, gender) => {
+        return (
+            <>
+                {this.state.existingData?.status ? this.checkExistingRequest() : null}
+                {/* {this.checkExistingRequest()} */}
+                <View style={{
+                    alignItems: 'center', backgroundColor: AppColors.themesWhiteColor, marginTop: -50,
+                    width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, borderColor: AppColors.themeCardBorderColor, borderWidth: 1
+                }}>
+
+                    <View style={{ alignItems: 'center', width: '96%', marginTop: 0 }}>
 
 
-                    <View style={{ alignItems: 'center', width: '95%', justifyContent: 'center' }}>
 
+                        {FindAndOfferRide(this.findRide, this.offerRide, this.state.find)}
+
+                        <AvtarView image={require('../../assets/avtar.png')} name={name} type={this.state.find} />
+                        <View style={{ width: '94%', height: 1, marginTop: 20, backgroundColor: AppColors.themeCardBorderColor }} />
                         {this.state.find ?
                             <>
-
-
-                                <View style={{ width: '100%', height: 70, alignItems: 'center', marginTop: 10 }}>
-                                    <ButtonPrimary
-                                        text={'Search for rides'}
-                                        onPress={() => this.searchRide()}
-                                        loader={false}
-                                    />
-                                </View>
-
-                                <View style={{ width: '100%', height: 1, marginBottom: 20, backgroundColor: AppColors.themeCardBorderColor }} />
-
-                                <View style={{ width: '100%', alignItems: 'flex-start', marginBottom: 20 }}>
-                                    <RecentHorizontal recentArray={['1', '2']} onPress={() => console.log('item pressed')} />
-                                </View>
-
+                                <SeatsView
+                                    data={['1', '2', '3', '4']}
+                                    selectedIndex={this.state.selectedIndex}
+                                    setSelectedIndex={this.setSelectedIndex}
+                                />
+                                {gender === 'f' ?
+                                    <CotravellerView onCheck={this.onCheck} image={this.state.cotraveller ? 'checkbox-outline' : 'checkbox-blank-outline'} /> : null}
+                                <View style={{ width: '94%', height: 1, marginTop: 20, backgroundColor: AppColors.themeCardBorderColor }} />
                             </>
-
                             :
+                            null
+                        }
+                        {PickupAndDrop(this.state.pickupLocation, this.state.dropLocation, this.pickUp, this.dropOff)}
+                        <View style={{ marginTop: 10, width: '95%', height: 70, justifyContent: 'center', alignItems: 'center' }}>
+
+                            {DateTimeView('date', this.state.openDate, this.state.date, this.onDateConfirm, this.onDateCancel, this.openDatePicker, this.state.selectedDate)}
+
+                        </View>
 
 
-                            <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{ alignItems: 'center', width: '95%', justifyContent: 'center' }}>
+
+                            {this.state.find ?
+                                <>
 
 
-                                {this.offerRideView()}
+                                    <View style={{ width: '100%', height: 70, alignItems: 'center', marginTop: 10 }}>
+                                        <ButtonPrimary
+                                            text={'Search for rides'}
+                                            onPress={() => this.searchRide()}
+                                            loader={false}
+                                        />
+                                    </View>
 
-                                <View style={{ width: '100%', height: 70, alignItems: 'center', marginTop: 10 }}>
-                                    <ButtonPrimary
-                                        text={'Search for rides'}
-                                        onPress={() => this.procced()}
-                                        loader={false}
-                                    />
+                                    <View style={{ width: '100%', height: 1, marginBottom: 20, backgroundColor: AppColors.themeCardBorderColor }} />
+
+                                    <View style={{ width: '100%', alignItems: 'flex-start', marginBottom: 20 }}>
+                                        <RecentHorizontal recentArray={['1', '2']} onPress={() => console.log('item pressed')} />
+                                    </View>
+
+                                </>
+
+                                :
+
+
+                                <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+
+
+                                    {this.offerRideView()}
+
+                                    <View style={{ width: '100%', height: 70, alignItems: 'center', marginTop: 10 }}>
+                                        <ButtonPrimary
+                                            text={'Next'}
+                                            onPress={() => this.procced()}
+                                            loader={false}
+                                        />
+                                    </View>
+
                                 </View>
 
-                            </View>
+                            }
 
-                        }
+                        </View>
 
                     </View>
 
+
+
                 </View>
-
-
-
-            </View>
-
+            </>
         )
 
 
 
     }
 
+    selectedVehicle(val) {
 
 
+        console.log(val, 'abc')
+        this.setState({ addVehicle: val.label, openAddVeh: false })
+
+    }
+
+    closeVehPopUp() {
+        this.setState({ openAddVeh: false })
+    }
+    addCar() {
+        this.props.navigation.navigate('AddVehicle')
+    }
     offerRideView = () => {
         return (
             <View style={{ width: '100%' }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
 
-                    <View style={{ backgroundColor: AppColors.themePickupDropSearchBg, width: '48%', borderRadius: 10 }}>
-                        <TextInput
+                    <Pressable onPress={() => this.setState({ openAddVeh: true })} style={{ paddingLeft: 10, justifyContent: 'center', backgroundColor: AppColors.themePickupDropSearchBg, height: 50, width: '48%', borderRadius: 10 }}>
+
+                        <Text style={{ color: this.state.addVehicle == 'Select Vehicle' ? AppColors.themeTextGrayColor : AppColors.themeBlackColor, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular }}>{this.state.addVehicle}</Text>
+                        <AddVehiclePopup
+                            data={this.state.vehicleArray}
+                            headerText={'Select Vehicle'}
+                            isLoading={this.state.openAddVeh}
+                            closePopup={this.closeVehPopUp}
+                            selectedVehicle={this.selectedVehicle}
+                            addCar={this.addCar}
+                        />
+                        {/* <TextInput
                             onChangeText={text => this.setState({ addVehicle: text })}
                             value={this.state.addVehicle}
                             placeholder={"Add your vehicle"}
                             placeholderTextColor={AppColors.themeTextGrayColor}
-                            style={{ color: AppColors.themeBlackColor, padding: 10, width: '95%', fontSize: 16, textAlign: 'left' }}
-                        />
-                    </View>
+                            style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '95%', fontSize: 14, textAlign: 'left' }}
+                        /> */}
+                    </Pressable>
 
                     <View style={{ backgroundColor: AppColors.themePickupDropSearchBg, width: '48%', borderRadius: 10 }}>
                         <TextInput
@@ -572,7 +698,10 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
                             value={this.state.avilSeat}
                             placeholder={"Available seats"}
                             placeholderTextColor={AppColors.themeTextGrayColor}
-                            style={{ color: AppColors.themeBlackColor, padding: 10, width: '95%', fontSize: 16, textAlign: 'left' }}
+                            style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '95%', fontSize: 14, textAlign: 'left' }}
+                            keyboardType={
+                                Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                            }
                         />
                     </View>
 
@@ -585,13 +714,16 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
                             value={this.state.perSeat}
                             placeholder={"Price per seat"}
                             placeholderTextColor={AppColors.themeTextGrayColor}
-                            style={{ color: AppColors.themeBlackColor, padding: 10, width: '95%', fontSize: 16, textAlign: 'left' }}
+                            style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '95%', fontSize: 14, textAlign: 'left' }}
+                            keyboardType={
+                                Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                            }
                         />
                     </View>
                 </View>
 
-
-                <View>
+                {/* resturn Trip View */}
+                {/* <View>
                     <View style={{ flexDirection: 'row', backgroundColor: AppColors.themePickupDropSearchBg, width: '100%', borderRadius: 10, padding: 8, marginTop: 10, marginBottom: 20 }}>
                         <View style={{ width: '12%', justifyContent: 'center', alignItems: 'center' }}>
                             <Image source={require('../../assets/returntrip.png')} style={{ tintColor: AppColors.themePrimaryColor, marginRight: 10, width: 25, resizeMode: 'contain' }} />
@@ -604,28 +736,26 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
                         </View>
 
                     </View>
-                </View>
+                </View> */}
 
             </View>
         )
     }
 
 
-    HeaderView = ({name}) => {
+    HeaderView = ({ name, gender }) => {
         return (
             <>
                 <View style={{ height: this.state.isSearch == 'cancel' ? 300 : Dimensions.get('window').height * .65, width: '100%' }}>
                     {this.state.permission ?
-                        <MapComponent initialRegion={this.state.initialRegion} markers={this.state.markers} /> :
+                        <MapComponent initialRegion={this.state.initialRegion} markers={this.state.markers} loading={this.state.loading} customMapStyle={this.state.customMapStyle} /> :
                         null}
 
                 </View>
 
-                <View style={{ width: '100%', position: 'absolute', top: 0 }}>
-                    <Header isBack={false} close={() => this.props.navigation.openDrawer()} isRight={true} right={require('../../assets/notification.png')} />
-                </View>
 
-                {this.state.isSearch == 'cancel' ? this.SearchOffer(name) : this.state.isSearch == 'start' ? this.searchLoaderScreen() : this.NoRideFound()}
+
+                {this.state.isSearch == 'cancel' ? this.SearchOffer(name, gender) : this.state.isSearch == 'start' ? this.searchLoaderScreen() : this.NoRideFound()}
 
 
             </>
@@ -654,7 +784,7 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
                     // columnWrapperStyle={{ flexWrap: 'wrap' }}
                     // numColumns={5}
                     contentContainerStyle={{ width: Dimensions.get('window').width }}
-                    ListHeaderComponent={<this.HeaderView name={data.name}/>}
+                    ListHeaderComponent={<this.HeaderView name={data.name} gender={data.gender} />}
                     keyExtractor={(item, index) => index}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (
@@ -666,6 +796,10 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
                         </>
                     )}
                 />
+
+                <View style={{ width: '100%', position: 'absolute', top: 0 }}>
+                    <Header isBack={false} close={() => this.props.navigation.openDrawer()} isRight={true} right={require('../../assets/notification.png')} />
+                </View>
 
                 < SearchLocation
                     headerText={'Select address'}
@@ -687,6 +821,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     getProfileDataRequest
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FindRide);

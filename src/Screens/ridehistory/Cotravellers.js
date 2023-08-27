@@ -56,80 +56,24 @@ setCotravellerArray(data)
 
     }
 
-    const _acceptRequestRide = async (item, ind) => {
-        const result = await hitApiToAcceptRequestedRide(item._id, item.user_id, item.journey_published_by)
-        console.log(result, 'vvv')
-        if (result.status) {
-
-           
-            const updatedArray = data.map((obj, index) =>
-            index === ind ? { ...obj, status: 'accepted' } : obj);
-
-            // console.log(updatedArray, 'arr')
-            setCotravellerArray(updatedArray)
-
-
-            navigation.goBack()
-        }
-
-    }
-
-    const _acceptRequestRide1 = async (item, ind) => {
-        const result = await hitApiToAcceptRequestedRide(item._id, '', item.journey_published_by)
-        console.log(result, 'vvv')
-        if (result.status) {
-
-           
-            const updatedArray = data.map((obj, index) =>
-            index === ind ? { ...obj, status: 'accepted' } : obj);
-
-            // console.log(updatedArray, 'arr')
-            setCotravellerArray(updatedArray)
-
-
-            navigation.goBack()
-        }
-
-    }
-
+   
 
 
     const acceptBtn = (item, index) =>{
-        if (from === 'offered') {
-        return(
-                item.status === 'pending' ?
-                <ButtonPrimary
-                    style={{ width: '48%', backgroundColor: 'green' }}
-                    text={'Accept Ride'}
-                    onPress={()=> _acceptOfferedRide(item, index)}
-                    loader={false}
-                /> 
-                : null
-        )
-        }
-        else if (from === 'requested'){
-            return(
-                item.status === 'confirmed' ?
-                <ButtonPrimary
-                    style={{ width: '48%', backgroundColor: 'green' }}
-                    text={'Accept Ride'}
-                    onPress={()=> _acceptRequestRide(item, index)}
-                    loader={false}
-                /> 
-                : null
-        )
-        }
-        else{
+
+        console.log(item, 'check')
+
+      
             return(
 
                 <ButtonPrimary
-                style={{ width: '48%', backgroundColor: 'green' }}
+                style={{ width: '100%' }}
                 text={'Accept Ride'}
-                onPress={()=> _acceptRequestRide1(item, index)}
+                onPress={()=> _acceptOfferedRide(item, index)}
                 loader={false}
                 /> 
             )
-        }
+        
     }
 
     const renderItem = ({ item, index }) => {
@@ -144,7 +88,7 @@ setCotravellerArray(data)
 
                     <Image source={require('../../assets/paysuccess.png')} style={{ height: 60, width: 60, resizeMode: 'contain' }} />
                     <Text style={{ marginTop: 20, width: '80%', textAlign: 'center', fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsBold }}>
-                        {'Few drivers have accepted your request'}
+                        {'Few riders have sent your request'}
                     </Text>
 
 
@@ -153,12 +97,12 @@ setCotravellerArray(data)
 
                             <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
 
-                                <View style={{ width: '75%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+                                <View style={{ width: '95%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
 
                                     <View style={{ width: '15%', alignItems: 'center' }}>
 
                                         <Image source={require('../../assets/dotone.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
-                                        <Image source={require('../../assets/dotline.png')} style={{ marginLeft: 0, width: 5, height: 40, resizeMode: 'contain' }} />
+                                        <Image source={require('../../assets/dotline.png')} style={{ marginLeft: 0, width: 5, height: 50, resizeMode: 'contain' }} />
                                         <Image source={require('../../assets/triangle.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
 
                                     </View>
@@ -168,14 +112,14 @@ setCotravellerArray(data)
                                         <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row' }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.origin_address}</Text>
+                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 14 }}>{item.origin_address}</Text>
                                             </View>
                                         </View>
-                                        <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
+                                        <View style={{ marginLeft: 0, width: '100%', height: 20 }}></View>
                                         <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row' }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text style={{ fontFamily: AppFontFamily.PopinsMedium, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.destination_address}</Text>
+                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 14 }}>{item.destination_address}</Text>
                                             </View>
                                         </View>
 
@@ -183,11 +127,6 @@ setCotravellerArray(data)
 
                                 </View>
 
-                                <View style={{ width: '25%', alignItems: 'flex-end' }}>
-                                    <Text style={{ paddingTop: 8, paddingRight: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{AppTexts.Rupee_Symbol + item.price}</Text>
-                                    {/* <Text style={{ padding: 10, paddingTop: 5, paddingBottom: 0, fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{'2' + " seats left"}</Text> */}
-
-                                </View>
                             </View>
 
 
@@ -209,12 +148,12 @@ setCotravellerArray(data)
 
                         { acceptBtn(item, index)}
 
-                        <ButtonPrimary
+                        {/* <ButtonPrimary
                             style={{ width: '48%', backgroundColor: 'red' }}
                             text={'Reject ride'}
                             onPress={() => console.log('confirm', item)}
                             loader={false}
-                        />
+                        /> */}
 
                     </View>
 

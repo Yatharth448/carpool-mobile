@@ -10,11 +10,11 @@ export const RecentHorizontal = ({ recentArray, onPress }) => {
 
             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
 
-                <Text style={{ color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 18 }}>
+                <Text style={{ color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium, fontSize: 16 }}>
                     {'Recent Searches'}
                 </Text>
 
-                <Text style={{ color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsLight, fontSize: 18 }}>
+                <Text style={{ color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 14 }}>
                     {'See all'}
                 </Text>
 
@@ -43,10 +43,10 @@ export const RecentHorizontal = ({ recentArray, onPress }) => {
                                         </View>
 
                                         <View style={{ width: '80%', justifyContent: 'center' }}>
-                                            <Text style={{ fontSize: 16, color: AppColors.themeText2Color }}>
+                                            <Text style={{ fontSize: 12, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
                                                 {'Gol Market, Merrut'}
                                             </Text>
-                                            <Text style={{ marginTop: 5, fontSize: 16, color: AppColors.themeText2Color }}>
+                                            <Text style={{ marginTop: 5, fontSize: 12, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
                                                 {'Sector 29, Mumbai'}
                                             </Text>
                                         </View>
@@ -56,26 +56,26 @@ export const RecentHorizontal = ({ recentArray, onPress }) => {
                                     <View style={{ flexDirection: 'row', width: '100%', marginTop: 20, borderTopColor: AppColors.themeCardBorderColor, borderTopWidth: 0.3 }}>
 
                                         <View style={{ width: '33.3%', borderRightColor: AppColors.themeCardBorderColor, borderRightWidth: 1, padding: 10 }}>
-                                            <Text style={{ fontSize: 14, color: AppColors.themeText2Color }}>
+                                            <Text style={{ fontSize: 10, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
                                                 {'Time'}
                                             </Text>
-                                            <Text style={{ marginTop: 5, fontSize: 14, color: AppColors.themeText2Color }}>
+                                            <Text style={{ marginTop: 5, fontSize: 10, color: AppColors.themeText2Color , fontFamily: AppFontFamily.PopinsRegular}}>
                                                 {'6:30 PM'}
                                             </Text>
                                         </View>
                                         <View style={{ width: '33.3%', borderRightColor: AppColors.themeCardBorderColor, borderRightWidth: 1, padding: 10 }}>
-                                            <Text style={{ fontSize: 14, color: AppColors.themeText2Color }}>
+                                            <Text style={{ fontSize: 10, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
                                                 {'Seats'}
                                             </Text>
-                                            <Text style={{ marginTop: 5, fontSize: 14, color: AppColors.themeText2Color }}>
+                                            <Text style={{ marginTop: 5, fontSize: 10, color: AppColors.themeText2Color , fontFamily: AppFontFamily.PopinsRegular}}>
                                                 {'02/05'}
                                             </Text>
                                         </View>
                                         <View style={{ width: '33.3%', padding: 10 }}>
-                                            <Text style={{ fontSize: 14, color: AppColors.themeText2Color }}>
+                                            <Text style={{ fontSize: 10, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
                                                 {'Pay'}
                                             </Text>
-                                            <Text style={{ marginTop: 5, fontSize: 14, color: AppColors.themeText2Color }}>
+                                            <Text style={{ marginTop: 5, fontSize: 10, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
                                                 {'500 INR'}
                                             </Text>
                                         </View>

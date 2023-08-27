@@ -6,6 +6,7 @@ import { hitApiToRequestGetEstimatedPrice, hitApiToRequestUpdateEstimatedPrice, 
 import Toast from 'react-native-simple-toast'
 import MapView, { Polyline, Marker } from 'react-native-maps';
 import { PriceSelection } from '../../components/priceselection/PriceSelection';
+import { AppFontFamily } from '../../components/constants/AppFonts';
 export default function MapRoutes({ navigation, route }) {
     // let  path1 = [];
     const mapRef = React.useRef(null);
@@ -83,9 +84,14 @@ export default function MapRoutes({ navigation, route }) {
 
 
             // {"data": 952.4361, "status": true} 
+            let itemData = {
+                'price': estimatedPrice,
+                'pick' : pick,
+                'drop' : drop,
 
+            }
 
-            navigation.goBack()
+            navigation.navigate('Success', { item: itemData })
             setOpenPrice(false)
 
 
@@ -135,7 +141,7 @@ export default function MapRoutes({ navigation, route }) {
                         <React.Fragment key={index}>
                             <Polyline
                                 coordinates={path.cords}
-                                strokeColor={index == selectedIndex ? AppColors.themePrimaryColor : AppColors.themeBlackColor}
+                                strokeColor={index === selectedIndex ? AppColors.themePrimaryColor : AppColors.themeBlackColor}
                                 strokeWidth={8}
                             />
                             <Marker coordinate={path.origin} />
@@ -164,10 +170,10 @@ export default function MapRoutes({ navigation, route }) {
                             <View style={{ width: '100%', padding: 20, backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
                                 <Pressable onPress={() => { setSelectedIndex(index) }} style={{ flexDirection: 'row', }}>
                                     <View style={{ width: '90%', justifyContent: 'center' }}>
-                                        <Text numberOfLines={3} style={{ color: AppColors.themeBlackColor, fontSize: 16, fontWeight: '700' }}>{item.duration}
-                                            <Text numberOfLines={3} style={{ color: AppColors.themeText2Color, fontSize: 14, fontWeight: '700' }}>{" ("+ item.distance + ")"}</Text>
+                                        <Text numberOfLines={3} style={{ fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeBlackColor, fontSize: 16,  }}>{item.duration}
+                                            <Text numberOfLines={3} style={{fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeText2Color, fontSize: 12, }}>{" (" + item.distance + ")"}</Text>
                                         </Text>
-                                        <Text numberOfLines={3} style={{ color: AppColors.themeText2Color, fontSize: 14, fontWeight: '700' }}>{item.summary}</Text>
+                                        <Text numberOfLines={3} style={{ fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeText2Color, fontSize: 12 }}>{item.summary}</Text>
                                     </View>
                                     <View style={{ width: '10%', justifyContent: 'center' }}>
                                         <Image source={selectedIndex == index ? require('../../assets/bluecircle.png') : require('../../assets/greycircle.png')} style={{ marginRight: 5, width: 20, height: 20, borderRadius: 10, resizeMode: 'contain' }} />

@@ -5,7 +5,7 @@ import { Text, View, Image, TouchableOpacity, Platform, TextInput, Pressable, Fl
 import MapView, { Marker } from 'react-native-maps';
 
 
-const MapComponent = React.memo(({ initialRegion, markers }) => {
+const MapComponent = React.memo(({ initialRegion, markers, loading = false, customMapStyle }) => {
 
 
     // useEffect(() => {
@@ -27,10 +27,11 @@ const MapComponent = React.memo(({ initialRegion, markers }) => {
 
         <MapView style={{ flex: 1 }}
             initialRegion={initialRegion}
-        // customMapStyle={customMapStyle}
+            customMapStyle={customMapStyle}
         >
-            <Marker title="Location" coordinate={markers.coordinate} >
-                <Image source={require('../../assets/location.png')} style={{ height: 35, width: 35 }} />
+            <Marker title="Location" coordinate={markers.coordinate}>
+                {loading ? <Image source={require('../../assets/radar.gif')} style={{ height: 175, width: 175 }} /> :
+                    <Image source={require('../../assets/location.png')} style={{ height: 35, width: 35 }} />}
             </Marker>
 
         </MapView>
