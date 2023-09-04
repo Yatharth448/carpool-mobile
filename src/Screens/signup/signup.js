@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Text, View, Image, TouchableOpacity, TextInput, Pressable, Dimensions } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 // import { TextInput } from 'react-native-paper'
@@ -11,10 +11,13 @@ import { Checkbox, Button, Surface } from 'react-native-paper';
 import { InputView } from '../../components/Input/InputView'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from '../../components/constants/AppFonts'
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import {
+    GoogleSignin,
+    statusCodes,
+} from '@react-native-google-signin/google-signin';
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { ScrollView } from 'react-native-gesture-handler'
-import { hitApiForSignUp } from './SignupModal'
+import { hitApiForGoogleSignUp, hitApiForSignUp } from './SignupModal'
 import { FindRideFilterView } from '../findridelist/FindRideComp'
 // import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
@@ -38,26 +41,79 @@ export default function SignupScreen({ navigation }) {
 
 
 
-    const signIn = async () => {
+    useEffect(() => {
+        // Configure Google Sign-In
+        GoogleSignin.configure({
+            scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
+            webClientId:
+                '330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+            offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+        });
+    }, []);
+
+    _signIn = async () => {
         try {
+            await signOut()
             await GoogleSignin.hasPlayServices();
+            console.log('success 1')
+            // const { accessToken, idToken } = await GoogleSignin.signIn();
             const userInfo = await GoogleSignin.signIn();
-            console.log(userInfo, 'userInfo');
-            // Handle successful sign-in (e.g., store user info in state, navigate to another screen)
+            if (userInfo?.user) {
+
+                await userGoogleSignup(userInfo.user)
+            }
+            console.log(userInfo, 'success')
+            setloggedIn(true);
         } catch (error) {
+
+            console.log(error, 'error')
+
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                // User cancelled the sign-in process
-                console.log('Sign-in process cancelled');
+                // user cancelled the login flow
+                alert('Cancel');
             } else if (error.code === statusCodes.IN_PROGRESS) {
-                // Operation (e.g., sign-in) is in progress already
-                console.log('Operation in progress');
+                alert('Signin in progress');
+                // operation (f.e. sign in) is in progress already
             } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                // Play Services not available or outdated
-                console.log('Play Services not available');
+                alert('PLAY_SERVICES_NOT_AVAILABLE');
+                // play services not available or outdated
             } else {
-                console.log('Error:', error);
+                // some other error happened
             }
         }
+    };
+
+    signOut = async () => {
+        try {
+            await GoogleSignin.revokeAccess();
+            await GoogleSignin.signOut();
+            //   setloggedIn(false);
+            //   setuserInfo([]);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+    const userGoogleSignup = async (userInfo) => {
+
+        const result = await hitApiForGoogleSignUp( userInfo.email, userInfo.familyName, userInfo.givenName, userInfo.id, userInfo.photo, )
+        console.log(result, 'login Respnse')
+        if (result.status) {
+            Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'RideDrawer' }],
+                })
+            );
+
+        }
+        else {
+
+            Toast.showWithGravity(result.message, 2, Toast.TOP);
+        }
+
     }
 
     const userLogin = async () => {
@@ -74,7 +130,7 @@ export default function SignupScreen({ navigation }) {
             // navigation.navigate('OTPScreen', { email: email, secret: '' })
             if (loginRes.status) {
                 // Storage.saveItem(AppKeys.SECRET_KEY, loginRes.secret)
-                navigation.navigate('OTPScreen', { email: email, secret: loginRes.secret })
+                navigation.navigate('OTPScreen', { fullName: fullName, email: email, password: password, mobile: mobile, secret: loginRes.secret })
             }
             else {
                 Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
@@ -179,7 +235,7 @@ export default function SignupScreen({ navigation }) {
 
                     </View>
                 </View>
-                <Pressable onPress={() => signIn()} style={{ width: '100%', marginTop: 20, alignItems: 'center' }}>
+                <Pressable onPress={() => _signIn()} style={{ width: '100%', marginTop: 20, alignItems: 'center' }}>
 
                     <Surface style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 47, borderRadius: 5 }} elevation={2}>
 

@@ -9,11 +9,18 @@ import reducer from '../../redux/reducers/reducers';
 
 const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
 
-    const [menu, setMenu] = React.useState([{ 'screen': 'FindRide', 'name': 'HOME' }, { 'screen': 'RideHistory', 'name': 'RIDE HISTORY' }, { 'screen': 'Payment', 'name': 'PAYMENT' }, { 'index': 3, 'name': 'SUPPORT' },])
+    const [menu, setMenu] = React.useState([{ 'screen': 'FindRide', 'name': 'HOME' }, { 'screen': 'RideHistory', 'name': 'RIDE HISTORY' }, { 'screen': 'Payment', 'name': 'PAYMENT' }, { 'screen': 'support', 'name': 'SUPPORT' },])
     const [ind, setInd] = React.useState(0)
     const handleDrawerItemPress = (screenName, index) => {
         selectedInd(index)
-        navigation.navigate(screenName);
+        if (screenName == 'Payment' || screenName == 'support')
+        {
+
+        }
+        else{
+
+            navigation.navigate(screenName);
+        }
     };
 
     useEffect(() => {

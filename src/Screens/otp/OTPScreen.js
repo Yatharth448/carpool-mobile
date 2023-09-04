@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Text, View, Image, TouchableOpacity } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { TextInput } from 'react-native-paper'
@@ -11,17 +11,26 @@ import Storage from '../../components/localStorage/storage'
 import { AppKeys } from '../../components/constants/AppKeys'
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { AppFontFamily } from '../../components/constants/AppFonts'
+import { hitApiForSignUp } from '../signup/SignupModal'
 export default function OTPScreen({ navigation, route }) {
   const [otp, setOtp] = React.useState("");
+  const [newSecret, setNewSecter] = React.useState("");
   console.log(route.params, 'route')
-  const { email, secret } = route.params;
+  const { email, secret, fullName, password, mobile, gender } = route.params;
+
+  useEffect(() => {
+
+    setNewSecter(secret)
+
+    // console.log(data, 'result')
+}, []);
 
   const validateOTP = async (otp) => {
 
     const deviceToken = await Storage.getSavedItem('fcmToken')
     if ((!(otp) == '') && (otp.length == 4)) {
 
-      const result = await hitApiForVerifyOTP(email, otp, secret, deviceToken)
+      const result = await hitApiForVerifyOTP(email, otp, newSecret, deviceToken)
       console.log(result, 'otp result')
       if (result.status) {
         Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
@@ -37,17 +46,31 @@ export default function OTPScreen({ navigation, route }) {
 
         // }
       }
+      else {
+
+        Toast.showWithGravity('Invalid otp', 2, Toast.TOP);
+        // Toast.show(themes.appCustomTexts.InvalidOTPText);
+      }
 
     }
-    else {
-
-      Toast.showWithGravity('Invalid otp', 2, Toast.TOP);
-      // Toast.show(themes.appCustomTexts.InvalidOTPText);
-    }
+    
 
 
   }
 
+
+  const resendOTP = async () => {
+
+    const result = await hitApiForSignUp(fullName, email, password, mobile, gender)
+
+    if (result.status)
+    {
+      console.log(newSecret, 'old', )
+      setNewSecter(result.secret)
+      console.log(newSecret, 'new' )
+    } 
+
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: AppColors.themesWhiteColor }}>
@@ -92,7 +115,7 @@ export default function OTPScreen({ navigation, route }) {
           <View style={{ alignItems: 'center', marginTop: 10 }}>
             <ButtonPrimary
               text={'Verify'}
-              onPress={() => userLogin()}
+              onPress={() => validateOTP()}
               loader={false}
             />
           </View>
@@ -146,7 +169,7 @@ export default function OTPScreen({ navigation, route }) {
 
 
       <View style={{ width: '100%', alignItems: 'center', height: 50, position: 'absolute', bottom: 0 }}>
-        <TouchableOpacity onPress={() => userLogin()} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
+        <TouchableOpacity onPress={() => resendOTP()} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ fontSize: 16, color: AppColors.themeTextGrayColor }}>{"Didn't receive code? "}
             <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{' Resend Code'}</Text>
           </Text>

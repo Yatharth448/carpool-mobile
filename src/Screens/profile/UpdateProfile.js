@@ -39,9 +39,9 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                 console.log('2')
                 Toast.showWithGravity('Enter full name', 2, Toast.TOP);
             }
-            else if (!email) {
+            else if (!mobile) {
                 console.log('2')
-                Toast.showWithGravity('Enter email', 2, Toast.TOP);
+                Toast.showWithGravity('Enter mobile number', 2, Toast.TOP);
             }
             else if (!date) {
                 console.log('2')
@@ -49,7 +49,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
             }
             else {
 
-                const accountRes = await hitApiToUpdateProfile(fullName, email, date)
+                const accountRes = await hitApiToUpdateProfile(fullName, mobile, date)
 
                 if (accountRes.status) {
                     // Storage.saveItem(AppKeys.SECRET_KEY, loginRes.secret)
@@ -146,12 +146,13 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                                 placeholder={'Enter mmobile'}
                                 placeholderTextColor={AppColors.themeTextGrayColor}
                                 value={email}
+                                editable={false}
                                 onChangeText={(text) => onChangeEmail(text)}
                             />
                         </View>
 
                     </View>
-                    <View style={{ marginTop: 10, marginBottom: 15, marginLeft: 45, width: '88%', height: 1, backgroundColor: AppColors.themeCardBorderColor }}></View>
+                    {/* <View style={{ marginTop: 10, marginBottom: 15, marginLeft: 45, width: '88%', height: 1, backgroundColor: AppColors.themeCardBorderColor }}></View>
 
 
                     <View style={{ width: '90%', flexDirection: 'row', }}>
@@ -169,13 +170,13 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                             />
                         </View>
 
-                    </View>
+                    </View> */}
 
 
                 </Surface>
 
 
-                <View style={{ width: '100%', alignItems: 'center', marginTop: 10, }}>
+                <View style={{ width: '100%', alignItems: 'center', marginTop: 30, }}>
                     <View style={{ width: '92%', alignItems: 'center' }}>
                         <ButtonPrimary
                             text={'Save info'}

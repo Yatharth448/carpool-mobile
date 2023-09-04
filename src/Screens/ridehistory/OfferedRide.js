@@ -43,7 +43,7 @@ export default function OfferedRides({ selectedData }) {
     const listView = () => {
         return (
             <FlatList
-                data={offeredArr}
+                data={offeredArr.reverse()}
                 // contentContainerStyle={{width: 300, height: 600}}
                 // refreshControl={
                 //     <RefreshControl
@@ -100,14 +100,14 @@ export default function OfferedRides({ selectedData }) {
                                         <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginTop: 20, marginBottom: 0 }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.journey_origin_address}</Text>
+                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.pick_main_text}</Text>
                                             </View>
                                         </View>
                                         <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
                                         <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginBottom: 20, marginTop: 20 }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.journey_destination_address}</Text>
+                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.drop_main_text}</Text>
                                             </View>
                                         </View>
 
@@ -125,8 +125,8 @@ export default function OfferedRides({ selectedData }) {
     }
 
     return (
-        <View style={{ height: Dimensions.get('window').height * .78 }}>
-            {isLoading ? listView() : CommonLoaders.RideHistoryLoader()}
+        <View style={{ height: Dimensions.get('window').height * .83 }}>
+            {isLoading ? offeredArr.length ? listView() : CommonLoaders.NoDataInList('No offered ride found') : CommonLoaders.RideHistoryLoader()}
         </View>
     )
 }

@@ -20,10 +20,10 @@ export const hitApiToGetRoutes = async (pickUp, drop) => {
 
 }
 
-export const hitApiToSaveRide = async (pickUp, drop, seat, date, route, price) => {
+export const hitApiToSaveRide = async (pickUp, drop, seat, date, route, price, pickMain, dropMain) => {
 
     try {
-        const result = await connection.postAPI('/api/ride', { 'journey_start_from': pickUp, 'journey_end_to': drop, 'seat_available': seat, 'journey_start_at': date, 'route': route, 'expected_price': price })
+        const result = await connection.postAPI('/api/ride', { 'journey_start_from': pickUp, 'journey_end_to': drop, 'seat_available': seat, 'journey_start_at': date, 'route': route, 'expected_price': price , 'pick_main_text': pickMain, 'drop_main_text': dropMain})
 
         if (result.success) {
             return result
@@ -40,10 +40,10 @@ export const hitApiToSaveRide = async (pickUp, drop, seat, date, route, price) =
 
 }
 
-export const hitApiToRequestGetEstimatedPrice = async ( journeyId ) => {
+export const hitApiToRequestGetEstimatedPrice = async ( distance ) => {
 
     try {
-        const result = await connection.postAPI('/api/ride/request/price/estimate', {'journey_id' : journeyId })
+        const result = await connection.postAPI('/api/ride/request/price/estimate', { 'distance': distance})
 
         if (result.success) {
             return result

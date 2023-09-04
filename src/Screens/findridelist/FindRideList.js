@@ -65,10 +65,15 @@ export default function FindRideList({ navigation, route }) {
             const updatedArray = rideList.map((obj, index) =>
                 index === itemIndex ? { ...obj, alreadyRequest: true } : obj
             );
+            updatedArray.reverse()
             setRideList(updatedArray);
 
         }
         else {
+            if (result.message == "Please add money to wallet")
+            {
+                console.log('open wallet')
+            }
 
         }
     }
@@ -77,17 +82,17 @@ export default function FindRideList({ navigation, route }) {
         return (
             <>
 
-                <View style={{ width: '98%', alignItems: 'center' }}>
+                {/* <View style={{ width: '98%', alignItems: 'center' }}> */}
 
-                    <FindRideFilterView
+                {/* <FindRideFilterView
                         data={[{ 'name': 'Female co-traveller' }, { 'name': 'Smoking Allowed' }, { 'name': 'Pets Allowed' }]}
                         selectedIndex={selectedIndex}
                         setSelectedIndex={setSelectedIndex}
-                    />
-                </View>
+                    /> */}
+                {/* </View> */}
 
                 <FlatList
-                    data={rideList}
+                    data={rideList.reverse()}
                     // refreshControl={
                     //     <RefreshControl
                     //         onRefresh={() => this.getCartList()}
@@ -106,6 +111,15 @@ export default function FindRideList({ navigation, route }) {
                         <View style={{ width: Dimensions.get('window').width, alignItems: 'center', marginTop: 10, marginBottom: 10 }}>
                             <Surface elevation={4} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
 
+                                <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
+                                    <View style={{ justifyContent: 'center' }}>
+
+                                        <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(item.journey_start_at).format('DD MMM YYYY, HH:mm')}</Text>
+
+                                    </View>
+                                </View>
+                                <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
+
                                 <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
 
                                     <View style={{ width: '75%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
@@ -120,17 +134,17 @@ export default function FindRideList({ navigation, route }) {
 
                                         <View style={{ width: '85%', justifyContent: 'center', alignItems: 'center' }}>
 
-                                            <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row' }}>
+                                            <View style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
 
                                                 <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                    <Text style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.intresected_source_address}</Text>
+                                                    <Text numberOfLines={1} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.pick_main_text}</Text>
                                                 </View>
                                             </View>
-                                            <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
-                                            <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row' }}>
+                                            <View style={{ marginLeft: 0, width: '100%', height: 20 }}></View>
+                                            <View style={{ width: '100%', alignItems: 'center', marginBottom: 10 }}>
 
                                                 <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                    <Text style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.intresected_destination_address}</Text>
+                                                    <Text numberOfLines={1} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.drop_main_text}</Text>
                                                 </View>
                                             </View>
 
@@ -206,7 +220,7 @@ export default function FindRideList({ navigation, route }) {
 
 
 
-            {isLoading ? ListView() : CommonLoaders.RideHistoryLoader()}
+            {isLoading ? rideList.length ? ListView() : CommonLoaders.NoDataInList('No rides found') : CommonLoaders.RideHistoryLoader()}
 
 
 

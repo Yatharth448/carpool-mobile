@@ -45,7 +45,7 @@ export default function RequestedRides({ selectedRequest }) {
     const listView = () => {
         return (
             <FlatList
-                data={requestedArr}
+                data={requestedArr.reverse()}
                 // refreshControl={
                 //     <RefreshControl
                 //         onRefresh={() => this.getCartList()}
@@ -64,9 +64,10 @@ export default function RequestedRides({ selectedRequest }) {
                     <Pressable onPress={() => selectedRequest(item)} style={{ width: Dimensions.get('window').width, alignItems: 'center', marginTop: 10, marginBottom: 10 }}>
                         <Surface elevation={4} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
                             <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
-                                <View style={{ justifyContent: 'center' }}>
+                                <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
 
-                                    <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(item.date).format('DD MMM YYYY, HH:mm')}</Text>
+                                    <Text style={{ width: '80%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(item.date).format('DD MMM YYYY, HH:mm')}</Text>
+                                    <Text style={{ height: 20, paddingLeft: 5, paddingRight: 5, borderRadius: 5, fontFamily: AppFontFamily.PopinsBold, fontSize: 12, color: AppColors.themePrimaryColor, borderColor: AppColors.themePrimaryColor, borderWidth: 1 }}>{item?.status}</Text>
 
                                 </View>
                             </View>
@@ -101,14 +102,14 @@ export default function RequestedRides({ selectedRequest }) {
                                         <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginTop: 20, marginBottom: 0 }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.origin_address}</Text>
+                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.pick_main_text ?? item.origin_address}</Text>
                                             </View>
                                         </View>
                                         <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
                                         <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginBottom: 20, marginTop: 20 }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.destination_address}</Text>
+                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.drop_main_text ?? item.destination_address}</Text>
                                             </View>
                                         </View>
 
@@ -131,7 +132,7 @@ export default function RequestedRides({ selectedRequest }) {
     return (
         <View style={{ height: Dimensions.get('window').height * .78 }}>
 
-{isLoading ? listView() : CommonLoaders.RideHistoryLoader()}
+{isLoading ? requestedArr.length ? listView() : CommonLoaders.NoDataInList('No requested ride found') : CommonLoaders.RideHistoryLoader()}
         </View>
     )
 }

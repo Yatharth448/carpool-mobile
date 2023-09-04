@@ -27,22 +27,23 @@ export default function OfferedRideDetails({ navigation, route }) {
 
             //Put your logic here
 
+            _unsubscribe = navigation.addListener('focus', async () => {
 
+                const result = await hitApiToGetOfferedRideDetails(id)
 
-            const result = await hitApiToGetOfferedRideDetails(id)
-
-            if (result.status) {
-                setRideData(result.data.rideData)
-                setCotravellerArray(result.data?.cotravellerData)
-                setAcceptedData(result.data?.acceptedCotravellerData)
-                setIsLoading(true)
-                console.log(result.data.acceptedCotravellerData, 'accepted cotraveller \n', result.data?.cotravellerData, 'cotraveller data \n', result.data.rideData, 'ride data' , result.data)
-            }
-
+                if (result.status) {
+                    setRideData(result.data.rideData)
+                    setCotravellerArray(result.data?.cotravellerData)
+                    setAcceptedData(result.data?.acceptedCotravellerData)
+                    setIsLoading(true)
+                    console.log(result.data.acceptedCotravellerData, 'accepted cotraveller \n', result.data?.cotravellerData, 'cotraveller data \n', result.data.rideData, 'ride data', result.data)
+                }
+            })
         })();
 
         return () => {
             // clear/remove event listener
+            _unsubscribe();
 
         }
     }, []);
@@ -104,8 +105,11 @@ export default function OfferedRideDetails({ navigation, route }) {
                         <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginLeft: 10, marginTop: 20 }}>
                             <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} />
                             <View style={{ justifyContent: 'center' }}>
+                                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                                    <Text style={{ width: '60%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.name ?? "Sachin Gupta"}</Text>
+                                    <Text style={{ paddingLeft: 5, paddingRight: 5, paddingTop: 5, borderRadius: 5, fontFamily: AppFontFamily.PopinsBold, fontSize: 12, color: AppColors.themePrimaryColor, borderColor: AppColors.themePrimaryColor, borderWidth: 1 }}>{'Confirmed'}</Text>
+                                </View>
 
-                                <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.name ?? "Sachin Gupta"}</Text>
                                 <View style={{ paddingLeft: 10, flexDirection: 'row', alignItems: 'center' }}>
                                     <Image source={require('../../assets/Star.png')} style={{ marginRight: 5, width: 12, height: 12, marginBottom: 3, resizeMode: 'contain' }} />
                                     <Text style={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{'4.5 rating'}</Text>
@@ -303,7 +307,7 @@ export default function OfferedRideDetails({ navigation, route }) {
 
             <>
 
-                <View style={{ height: Dimensions.get('window').height * .86, marginTop: 10 }}>
+                <View style={{ height: Dimensions.get('window').height * .89, marginTop: 10 }}>
 
                     <FlatList
                         // contentContainerStyle={{alignItems: 'center', width: Dimensions.get('window').width,}}
@@ -337,6 +341,7 @@ export default function OfferedRideDetails({ navigation, route }) {
 
     const RideDetailView = () => {
         return (
+
             <View style={{ width: Dimensions.get('screen').width, alignItems: 'center', justifyContent: 'center', paddingBottom: 10 }}>
 
                 <Surface elevation={4} style={{ width: '90%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
@@ -400,8 +405,8 @@ export default function OfferedRideDetails({ navigation, route }) {
                         <View style={{ justifyContent: 'flex-start', width: '95%' }}>
 
                             <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{"Ride cost: "}
-                                <Text style={{ fontFamily: AppFontFamily.PopinsBold, fontSize: 11, color: AppColors.themeText2Color }}> {AppTexts.Rupee_Symbol} </Text>
-                                <Text style={{ fontFamily: AppFontFamily.PopinsSemiBold, fontSize: 18, color: AppColors.themeText2Color }}> {Number(rideData[0].journey_expected_price_per_seat).toFixed(0)}</Text>
+                                {/* <Text style={{ fontFamily: AppFontFamily.PopinsBold, fontSize: 11, color: AppColors.themeText2Color }}> {AppTexts.Rupee_Symbol} </Text> */}
+                                <Text style={{ fontFamily: AppFontFamily.PopinsSemiBold, fontSize: 18, color: AppColors.themeText2Color }}> {AppTexts.Rupee_Symbol + ' ' + Number(rideData[0].journey_expected_price_per_seat).toFixed(0)}</Text>
                             </Text>
 
                             <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{Number(rideData[0].journey_approx_time / 60).toFixed(2) + " mins"}</Text>
@@ -412,6 +417,7 @@ export default function OfferedRideDetails({ navigation, route }) {
                 </Surface >
 
                 {cotravellerArray.length ? <ViewRideRequestBtn /> : null}
+
                 {acceptedData.length ? <CustomerInfoView /> : null}
 
             </View>
@@ -422,16 +428,16 @@ export default function OfferedRideDetails({ navigation, route }) {
         <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
             <Header isBack={true} close={() => navigation.goBack()} text='Ride Details' />
 
-         
 
 
-            { isLoading ?
+
+            {isLoading ?
                 rideData.length ?
                     <CotravellerList cotravellerArray={acceptedData} />
                     :
                     null : CommonLoaders.RideDetailLoader()
             }
-           
+
 
 
         </View>

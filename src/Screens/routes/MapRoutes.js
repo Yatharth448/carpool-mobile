@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, Image, Pressable, FlatList, Dimensions, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, Image, Pressable, FlatList, Dimensions, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader';
 import { hitApiToRequestGetEstimatedPrice, hitApiToRequestUpdateEstimatedPrice, hitApiToSaveRide } from '../home/RideModal';
@@ -11,8 +11,9 @@ export default function MapRoutes({ navigation, route }) {
     // let  path1 = [];
     const mapRef = React.useRef(null);
 
-    const { pick, drop, date, seat, routeData, price } = route.params;
+    const { pick, drop, date, seat, routeData, pickMainText, dropMainText } = route.params;
     const [selectedIndex, setSelectedIndex] = React.useState(0)
+    const [selectedDistance, setSelectedDistance] = React.useState(0)
     const [openPrice, setOpenPrice] = React.useState(false)
     const [estimatedPrice, setEstimatedPrice] = React.useState('')
     const [journeyId, setJourneyId] = React.useState('')
@@ -22,10 +23,16 @@ export default function MapRoutes({ navigation, route }) {
 
         (async () => {
 
-            // console.log(routeData, 'new data')
+            console.log(routeData[0].distance, 'new data')
 
+            // const result = await hitApiToRequestGetEstimatedPrice(routeData[0]?.distance ?? 0)
 
-            console.log(price, 'abc')
+            // console.log(result.data, 'price result')
+            // setEstimatedPrice(String(result.data))
+
+            const item = { 'distance': routeData[0].distance }
+            // console.log(price, 'abc')
+            setData(0, item)
 
 
         })();
@@ -34,7 +41,7 @@ export default function MapRoutes({ navigation, route }) {
             // clear/remove event listener
 
         }
-    }, [journeyId, estimatedPrice, selectedIndex, openPrice]);
+    }, []);
 
 
     const handleMapLayout = () => {
@@ -53,47 +60,18 @@ export default function MapRoutes({ navigation, route }) {
 
     const saveRide = async () => {
 
-        const result = await hitApiToSaveRide(pick, drop, seat, date, selectedIndex, price)
+        const result = await hitApiToSaveRide(pick, drop, seat, date, selectedIndex, estimatedPrice, pickMainText, dropMainText)
         console.log(result)
         if (result.status) {
 
-            setJourneyId(result.data.rideId)
-            const price = await hitApiToRequestGetEstimatedPrice(result.data.rideId)
-            if (price.status) {
-
-                // {"data": 952.4361, "status": true} 
-                setOpenPrice(true)
-                setEstimatedPrice(String(price.data))
-                // navigation.goBack()
-            }
-            console.log(price, 'result')
-
-        }
-        else {
-            Toast.showWithGravity(result.message ?? result.error ?? 'Something went wrong', 2, Toast.TOP);
-        }
-
-    }
-
-
-    const updateEstimatedRide = async (estimatedPrice) => {
-
-        const result = await hitApiToRequestUpdateEstimatedPrice(journeyId, estimatedPrice)
-        console.log(result)
-        if (result.status) {
-
-
-            // {"data": 952.4361, "status": true} 
             let itemData = {
                 'price': estimatedPrice,
-                'pick' : pick,
-                'drop' : drop,
+                'pick': pick,
+                'drop': drop,
 
             }
 
             navigation.navigate('Success', { item: itemData })
-            setOpenPrice(false)
-
 
         }
         else {
@@ -101,6 +79,33 @@ export default function MapRoutes({ navigation, route }) {
         }
 
     }
+
+
+    // const updateEstimatedRide = async (estimatedPrice) => {
+
+    //     const result = await hitApiToRequestUpdateEstimatedPrice(journeyId, estimatedPrice)
+    //     console.log(result)
+    //     if (result.status) {
+
+
+    //         // {"data": 952.4361, "status": true} 
+    //         let itemData = {
+    //             'price': estimatedPrice,
+    //             'pick': pick,
+    //             'drop': drop,
+
+    //         }
+
+    //         navigation.navigate('Success', { item: itemData })
+    //         setOpenPrice(false)
+
+
+    //     }
+    //     else {
+    //         Toast.showWithGravity(result.message ?? result.error ?? 'Something went wrong', 2, Toast.TOP);
+    //     }
+
+    // }
 
     const save = (val) => {
         if (!val) {
@@ -120,6 +125,16 @@ export default function MapRoutes({ navigation, route }) {
     }
     const closeEstimatePopup = () => {
         setOpenPrice(false)
+    }
+
+    const setData = async (index, item) => {
+
+        const result = await hitApiToRequestGetEstimatedPrice(item.distance)
+
+        console.log(result.data, 'price result')
+        setEstimatedPrice(String(result.data))
+        setSelectedIndex(index)
+        // setSelectedDistance(item.distance)
     }
 
     return (
@@ -156,7 +171,7 @@ export default function MapRoutes({ navigation, route }) {
                 <Header close={() => { navigation.goBack() }} text='Select your route' />
             </View>
 
-            <View style={{ marginTop: -30, backgroundColor: AppColors.themesWhiteColor, height: Dimensions.get('window').height / 2 + 30, borderTopRightRadius: 30, borderTopLeftRadius: 30 }}>
+            <View style={{ marginTop: -30, backgroundColor: AppColors.themesWhiteColor, height: Dimensions.get('window').height / 1.5, borderTopRightRadius: 30, borderTopLeftRadius: 30 }}>
 
 
                 <FlatList
@@ -168,10 +183,10 @@ export default function MapRoutes({ navigation, route }) {
                     renderItem={({ item, index }) => (
                         <>
                             <View style={{ width: '100%', padding: 20, backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
-                                <Pressable onPress={() => { setSelectedIndex(index) }} style={{ flexDirection: 'row', }}>
+                                <Pressable onPress={() => { setData(index, item) }} style={{ flexDirection: 'row', }}>
                                     <View style={{ width: '90%', justifyContent: 'center' }}>
-                                        <Text numberOfLines={3} style={{ fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeBlackColor, fontSize: 16,  }}>{item.duration}
-                                            <Text numberOfLines={3} style={{fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeText2Color, fontSize: 12, }}>{" (" + item.distance + ")"}</Text>
+                                        <Text numberOfLines={3} style={{ fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeBlackColor, fontSize: 16, }}>{item.duration}
+                                            <Text numberOfLines={3} style={{ fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeText2Color, fontSize: 12, }}>{" (" + item.distance + ")"}</Text>
                                         </Text>
                                         <Text numberOfLines={3} style={{ fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeText2Color, fontSize: 12 }}>{item.summary}</Text>
                                     </View>
@@ -186,15 +201,30 @@ export default function MapRoutes({ navigation, route }) {
                     )}
                 />
 
-                <View style={{ justifyContent: 'center', alignItems: 'center', width: Dimensions.get('window').width, height: Dimensions.get('window').height / 5 }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', width: Dimensions.get('window').width, height: Dimensions.get('window').height / 3 }}>
+                    <View style={{ width: '95%' }}>
+                        <Text style={{ marginTop: 0, marginBottom: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeBlackColor }}>{'Price per seat'}</Text>
+                    </View>
+                    <View style={{ backgroundColor: AppColors.themePickupDropSearchBg, width: '95%', borderRadius: 10 }}>
+                        <TextInput
+                            onChangeText={text => setEstimatedPrice(text)}
+                            value={estimatedPrice}
+                            placeholder={"Price per seat"}
+                            placeholderTextColor={AppColors.themeTextGrayColor}
+                            style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '95%', fontSize: 14, textAlign: 'left' }}
+                            keyboardType={
+                                Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                            }
+                        />
+                    </View>
 
-                    <TouchableOpacity onPress={() => saveRide()} style={{ marginTop: 20, backgroundColor: AppColors.themePrimaryColor, width: '95%', height: 50, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => saveRide()} style={{ marginTop: 10, backgroundColor: AppColors.themePrimaryColor, width: '95%', height: 50, borderRadius: 10, justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
                         <Text style={{ fontSize: 16, fontWeight: '600', color: AppColors.themesWhiteColor }}>{'Proceed'}</Text>
                     </TouchableOpacity>
 
                 </View>
 
-                {PriceSelection('Estimated Price', openPrice ? true : false, closeEstimatePopup, selectedPrice, estimatedPrice, price, save)}
+                {/* {PriceSelection('Estimated Price', openPrice ? true : false, closeEstimatePopup, selectedPrice, estimatedPrice, price, save)} */}
 
             </View>
         </View>
@@ -206,6 +236,6 @@ const styles = StyleSheet.create({
     },
     maps: {
         width: Dimensions.get('screen').width,
-        height: (Dimensions.get('screen').height / 2),
+        height: (Dimensions.get('screen').height / 2.5),
     },
 });

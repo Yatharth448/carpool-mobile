@@ -9,6 +9,7 @@ import { Surface } from 'react-native-paper';
 export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionPress }) => {
     const [selectedInput, setSelectedInput] = useState(null);
     const [pick, setPick] = useState('');
+    const [pickMain, setPickMain] = useState('');
     const [drop, setDrop] = useState('');
     const [predictions, setPredictions] = useState([]);
 
@@ -47,17 +48,18 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
         fetchPredictions(text);
     };
 
-    const setPickup = (v) => {
-        console.log(selectedInput, 'sel')
+    const setPickup = (v, mainText) => {
+        console.log(selectedInput, mainText, 'sel')
         setPredictions([])
         if (selectedInput === '1') {
             setPick(v)
+            setPickMain(mainText)
         }
         else {
             setDrop(v)
 
 
-            onSelectionPress({ pick: pick, drop: v })
+            onSelectionPress({ pick: pick, pickMain: pickMain, drop: v, dropMain: mainText })
         }
     }
 
@@ -168,7 +170,7 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
                                 renderItem={({ item }) => (
                                     <>
 
-                                        <Pressable onPress={() => setPickup(item.description)} style={{ flexDirection: 'row', width: '100%' }}>
+                                        <Pressable onPress={() => setPickup(item.description, item.structured_formatting.main_text)} style={{ flexDirection: 'row', width: '100%' }}>
                                             <View style={{ width: '15%', justifyContent: 'center' }}>
                                                 <Image source={require('../../assets/searchlist.png')} style={{ marginLeft: 0, width: 40, height: 40, resizeMode: 'contain' }} />
                                             </View>

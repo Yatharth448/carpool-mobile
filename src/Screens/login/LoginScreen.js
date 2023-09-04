@@ -4,14 +4,17 @@ import { AppColors } from '../../components/constants/AppColor'
 // import { TextInput } from 'react-native-paper'
 import Toast from 'react-native-simple-toast'
 // import Icon from 'react-native-vector-icons/MaterialIcons'
-import { hitApiForLogin } from './loginModal'
+import { hitApiForGoogleLogin, hitApiForLogin } from './loginModal'
 import Storage from '../../components/localStorage/storage'
 import { AppKeys } from '../../components/constants/AppKeys'
 import { Checkbox, Button, Surface } from 'react-native-paper';
 import { InputView } from '../../components/Input/InputView'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from '../../components/constants/AppFonts'
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {
+    GoogleSignin,
+    statusCodes,
+} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { CommonActions } from '@react-navigation/native';
@@ -30,30 +33,78 @@ export default function LoginScreen({ navigation }) {
     useEffect(() => {
         // Configure Google Sign-In
         GoogleSignin.configure({
-          webClientId: '330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com', // Replace with your Web Client ID from the Firebase Console
-          offlineAccess: true, // To enable offline access
-          forceCodeForRefreshToken: true, // [Android] If true, will request authorization code instead of access token on refresh
+            scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
+            webClientId:
+                '330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+            offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
         });
       }, []);
 
-
-      const signInWithGoogle = async () => {
+      _signIn = async () => {
         try {
-          // Start the Google Sign-In process
-          await GoogleSignin.signIn();
-    
-          // Get the Google Sign-In user details
-          const { idToken } = await GoogleSignin.getTokens();
-          console.log(idToken, 'token')
-          const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    
-          console.log(idToken, googleCredential, 'google')
-          // Sign in with Firebase using the Google credential
-          await auth().signInWithCredential(googleCredential);
+            await signOut()
+            await GoogleSignin.hasPlayServices();
+            console.log('success 1')
+            // const { accessToken, idToken } = await GoogleSignin.signIn();
+            const userInfo = await GoogleSignin.signIn();
+            if (userInfo?.user)
+            {
+
+                await userGoogleLogin(userInfo)
+            }
+            console.log(userInfo, 'success')
+            setloggedIn(true);
         } catch (error) {
-          console.error('Error signing in with Google:', error);
+
+            console.log(error, 'error')
+
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                // user cancelled the login flow
+                alert('Cancel');
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                alert('Signin in progress');
+                // operation (f.e. sign in) is in progress already
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                alert('PLAY_SERVICES_NOT_AVAILABLE');
+                // play services not available or outdated
+            } else {
+                // some other error happened
+            }
+        }
+    };
+
+    signOut = async () => {
+        try {
+          await GoogleSignin.revokeAccess();
+          await GoogleSignin.signOut();
+        //   setloggedIn(false);
+        //   setuserInfo([]);
+        } catch (error) {
+          console.error(error);
         }
       };
+
+
+    const userGoogleLogin = async (userInfo) => {
+
+        const result = await hitApiForGoogleLogin(userInfo.user.email, userInfo.user.id)
+ console.log(result, 'login Respnse')
+            if (result.status) {
+                Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'RideDrawer' }],
+                    })
+                );
+
+            }
+            else {
+               
+                Toast.showWithGravity(result.message, 2, Toast.TOP);
+            }
+
+    }
 
     const userLogin = async () => {
 
@@ -147,7 +198,7 @@ export default function LoginScreen({ navigation }) {
 
                 </View>
             </View>
-            <Pressable onPress={signInWithGoogle} style={{ width: '100%', marginTop: 40, alignItems: 'center' }}>
+            <Pressable onPress={()=> _signIn()} style={{ width: '100%', marginTop: 40, alignItems: 'center' }}>
 
                 <Surface style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 47, borderRadius: 5 }} elevation={2}>
 

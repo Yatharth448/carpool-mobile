@@ -71,7 +71,7 @@ function ProfileScreen({ data, loading, error, getProfileDataRequest, navigation
                         </View>
 
                     </View>
-                    <View style={{ marginTop: 10, marginBottom: 15, marginLeft: 45, width: '88%', height: 1, backgroundColor: AppColors.themeCardBorderColor }}></View>
+                    {/* <View style={{ marginTop: 10, marginBottom: 15, marginLeft: 45, width: '88%', height: 1, backgroundColor: AppColors.themeCardBorderColor }}></View>
 
 
                     <View style={{ width: '80%', flexDirection: 'row', }}>
@@ -83,7 +83,7 @@ function ProfileScreen({ data, loading, error, getProfileDataRequest, navigation
                             <Text style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeText2Color }}>{data.name}</Text>
                         </View>
 
-                    </View>
+                    </View> */}
 
 
                 </Surface>

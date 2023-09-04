@@ -29,6 +29,7 @@ import { reducer } from '../../redux/reducers/reducers'
 import { getProfileDataRequest, getExistingDataRequest } from '../../redux/actions/actions';
 import { AppFontFamily } from "../../components/constants/AppFonts";
 import { AddVehiclePopup } from "../../components/popupComponents/AddVehiclePopup";
+import CommonLoaders from "../../components/loader/Loader";
 
 class FindRide extends Component {
 
@@ -101,6 +102,8 @@ class FindRide extends Component {
             loading: false,
             openAddVeh: false,
             vehicleArray: [],
+            pickMainText: '',
+            dropMainText: '',
 
 
             // const [location, setLocation] = React.useState({ latitude: 28.693072, longitude: 76.981635 })
@@ -140,7 +143,7 @@ class FindRide extends Component {
         if (result.status) {
 
             const vehData = result.data?.vehicle_info
-
+            console.log(result.data, 'all vehicle')
             for (const data of vehData) {
                 data.label = data.vehicle_name
             }
@@ -224,11 +227,11 @@ class FindRide extends Component {
         this.setState({ openSearch: '' })
     }
     onSelectionPress = (val) => {
-        console.log(this.openSearch, val, 'gog')
+        console.log(val, 'gog')
         // openSearch == 'pick' ? setPickupLocation(val.pick) : openSearch == 'drop' ? setDropLocation(val.drop) : ''
 
-        this.setState({ pickupLocation: val.pick })
-        this.setState({ dropLocation: val.drop })
+        this.setState({ pickupLocation: val.pick, pickMainText: val.pickMain })
+        this.setState({ dropLocation: val.drop, dropMainText: val.dropMain })
 
         this.setState({ openSearch: '' })
 
@@ -339,10 +342,10 @@ class FindRide extends Component {
 
             <View style={{
                 alignItems: 'center', backgroundColor: AppColors.themesWhiteColor, marginTop: 0,
-                width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, height: Dimensions.get('window').height * .32, justifyContent: 'center'
+                width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, height: Dimensions.get('window').height * .35, justifyContent: 'center'
             }}>
 
-                <Surface style={{ width: '95%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', borderRadius: 10 }} elevation={4}>
+                {/* <Surface style={{ width: '95%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', borderRadius: 10 }} elevation={4}>
 
 
                     <View style={{ width: '15%', alignItems: 'center' }}>
@@ -380,7 +383,8 @@ class FindRide extends Component {
                         onPress={() => this.setState({ isSearch: 'cancel' })}
                         loader={false}
                     />
-                </View>
+                </View> */}
+                <CommonLoaders.SearchRide/>
 
             </View>
 
@@ -392,7 +396,7 @@ class FindRide extends Component {
 
             <View style={{
                 alignItems: 'center', backgroundColor: AppColors.themesWhiteColor, marginTop: 0,
-                width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, height: Dimensions.get('window').height * .32, justifyContent: 'center'
+                width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, height: Dimensions.get('window').height * .35, justifyContent: 'center'
             }}>
 
                 <View style={{ width: '95%', justifyContent: 'center', alignItems: 'center' }} elevation={4}>
@@ -456,16 +460,26 @@ class FindRide extends Component {
 
             Toast.showWithGravity('Select no of seats available', 2, Toast.TOP);
         }
-        else if (this.state.perSeat.length < 1) {
+        // else if (this.state.perSeat.length < 1) {
 
-            Toast.showWithGravity('Enter price per seat', 2, Toast.TOP);
-        }
+        //     Toast.showWithGravity('Enter price per seat', 2, Toast.TOP);
+        // }
         else {
 
             // console.log(pickupLocation, dropLocation,selectedDate, 'check data')
             const routeData = await this.getPolylineCoordinats(this.state.pickupLocation, this.state.dropLocation)
 
-            this.props.navigation.navigate('MapRoutes', { pick: this.state.pickupLocation, drop: this.state.dropLocation, date: this.state.rawDate, seat: this.state.avilSeat, routeData, price: this.state.perSeat })
+            this.props.navigation.navigate('MapRoutes',
+                {
+                    pick: this.state.pickupLocation,
+                    pickMainText: this.state.pickMainText,
+                    drop: this.state.dropLocation,
+                    dropMainText: this.state.dropMainText,
+                    date: this.state.rawDate,
+                    seat: this.state.avilSeat,
+                    routeData,
+                    // price: this.state.perSeat
+                })
         }
 
     }
@@ -611,11 +625,7 @@ class FindRide extends Component {
                                         />
                                     </View>
 
-                                    <View style={{ width: '100%', height: 1, marginBottom: 20, backgroundColor: AppColors.themeCardBorderColor }} />
 
-                                    <View style={{ width: '100%', alignItems: 'flex-start', marginBottom: 20 }}>
-                                        <RecentHorizontal recentArray={['1', '2']} onPress={() => console.log('item pressed')} />
-                                    </View>
 
                                 </>
 
@@ -638,6 +648,11 @@ class FindRide extends Component {
                                 </View>
 
                             }
+                            <View style={{ width: '100%', height: 1, marginBottom: 20, backgroundColor: AppColors.themeCardBorderColor }} />
+
+                            <View style={{ width: '100%', alignItems: 'flex-start', marginBottom: 20 }}>
+                                <RecentHorizontal recentArray={['1', '2']} onPress={() => console.log('item pressed')} />
+                            </View>
 
                         </View>
 
@@ -670,7 +685,7 @@ class FindRide extends Component {
     offerRideView = () => {
         return (
             <View style={{ width: '100%' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, marginBottom: 10 }}>
 
                     <Pressable onPress={() => this.setState({ openAddVeh: true })} style={{ paddingLeft: 10, justifyContent: 'center', backgroundColor: AppColors.themePickupDropSearchBg, height: 50, width: '48%', borderRadius: 10 }}>
 
@@ -707,8 +722,8 @@ class FindRide extends Component {
 
                 </View>
 
-                <View>
-                    <View style={{ backgroundColor: AppColors.themePickupDropSearchBg, width: '100%', borderRadius: 10, marginTop: 20, marginBottom: 10 }}>
+                {/* <View>
+                    <View style={{ backgroundColor: AppColors.themesWhiteColor, width: '100%', height: 40, borderRadius: 10, marginTop: 20, marginBottom: 10 }}>
                         <TextInput
                             onChangeText={text => this.setState({ perSeat: text })}
                             value={this.state.perSeat}
@@ -720,7 +735,7 @@ class FindRide extends Component {
                             }
                         />
                     </View>
-                </View>
+                </View> */}
 
                 {/* resturn Trip View */}
                 {/* <View>

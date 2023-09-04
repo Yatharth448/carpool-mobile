@@ -8,6 +8,7 @@ import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { connect } from 'react-redux';
 import { getProfileDataRequest } from '../../redux/actions/actions';
 import { Header } from '../../components/commomheader/CommonHeader'
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 function Success({ data, loading, error, getProfileDataRequest, navigation, route }) {
 
@@ -17,7 +18,7 @@ function Success({ data, loading, error, getProfileDataRequest, navigation, rout
         <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
         <Header close={()=> navigation.pop(2)}/>
 
-            <View style={{ width: Dimensions.get('screen').width, height: Dimensions.get('window').height * .6, alignItems: 'center', justifyContent: 'center', paddingBottom: 10, marginTop: 30 }}>
+            <View style={{ width: Dimensions.get('screen').width, height: Dimensions.get('window').height * .6, alignItems: 'center', justifyContent: 'center', paddingBottom: 10, marginTop: 50 }}>
                 {/* <ImageBackground source={require('../../assets/paymentcardbg.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover', alignItems: 'center' }}> */}
                 <Surface elevation={4} style={{ padding: 10, width: '90%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
 
@@ -100,6 +101,8 @@ function Success({ data, loading, error, getProfileDataRequest, navigation, rout
 
                 {/* </ImageBackground> */}
             </View>
+
+            <ConfettiCannon count={200} origin={{x: -10, y: 0}} />
         </View>
     )
 }

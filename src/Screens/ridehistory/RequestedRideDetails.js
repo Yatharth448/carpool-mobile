@@ -31,34 +31,38 @@ export default function RequestedRideDetails({ navigation, route }) {
 
 
 
+            _unsubscribe = navigation.addListener('focus', async () => {
+                getRideDetail()
 
-
-            const result = await hitApiToGetRequestedRideDetails(id)
-           
-            // console.log(result.data.rideData, result.data.cotravellerData, 'request')
-
-
-
-
-
-            if (result.status) {
-                setRideData(result.data.rideData)
-                setCotraveller(result.data.cotravellerData)
-                setUserData(result.data.userData)
-                setIsLoading(true)
-
-                console.log(result.data.acceptedCotravellerData, 'accepted cotraveller \n', result.data?.cotravellerData, 'cotraveller data \n', result.data.rideData, 'ride data \n', result.data.userData, '\nuser data\n')
-            }
+            })
 
         })();
 
         return () => {
             // clear/remove event listener
-
+            _unsubscribe();
         }
     }, []);
 
 
+    const getRideDetail = async () => {
+        const result = await hitApiToGetRequestedRideDetails(id)
+
+        // console.log(result.data.rideData, result.data.cotravellerData, 'request')
+
+
+
+
+
+        if (result.status) {
+            setRideData(result.data.rideData)
+            setCotravellerArray(result.data.cotravellerData)
+            setUserData(result.data.userData)
+            setIsLoading(true)
+
+            console.log(result.data.acceptedCotravellerData, 'accepted cotraveller \n', result.data?.cotravellerData, 'cotraveller data \n', result.data.rideData, 'ride data \n', result.data.userData, '\nuser data\n')
+        }
+    }
 
     const CustomerInfoView = ({ item }) => {
 
@@ -67,7 +71,7 @@ export default function RequestedRideDetails({ navigation, route }) {
             <View style={{ width: '90%', marginTop: 10 }}>
 
                 <Text style={{ marginTop: 10, fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
-                    {'Customer Info'}
+                    {'Co-travellers'}
                 </Text>
             </View>
             // </View>
@@ -75,49 +79,50 @@ export default function RequestedRideDetails({ navigation, route }) {
 
     }
 
-    const acceptRide = async () => {
+    const acceptRide = async (ind) => {
 
-        const result = await hitApiToAcceptRequestedRide(userData[0].ride_id, userData[0].user_id, rideData[0].journey_published_by )
+        const result = await hitApiToAcceptRequestedRide(userData[0].ride_id, userData[0].user_id, rideData[0].journey_published_by)
         console.log(result, 'vvv')
         if (result.status) {
 
 
             const updatedArray = userData.map((obj, index) =>
-                index === ind ? { ...obj, status: 'accepted' } : obj);
+                index === 0 ? { ...obj, status: 'accepted' } : obj);
 
             // console.log(updatedArray, 'arr')
             setCotravellerArray(updatedArray)
 
-
+            getRideDetail()
             // navigation.goBack()
         }
 
+        // getRideDetail()
     }
 
     const ViewRideRequestBtn = ({ }) => {
-        if (userData[0].status == 'accepted')
-            return (
-                <View style={{ width: '100%', alignItems: 'center', marginTop: 20, justifyContent: 'center' }}>
+        // if (userData[0].status == 'accepted')
+        //     return (
+        //         <View style={{ width: '100%', paddingLeft: 20, alignItems: 'center', marginTop: 20, justifyContent: 'center' }}>
 
-                    <ButtonPrimary
-                        style={{ width: '90%' }}
-                        text={'Accept the ride'}
-                        onPress={() => acceptRide()}
-                        loader={false}
-                    />
+        //             <ButtonPrimary
+        //                 style={{ width: '90%' }}
+        //                 text={'Accept the ride'}
+        //                 onPress={() => acceptRide()}
+        //                 loader={false}
+        //             />
 
-                </View>
-            )
-        else
-            return (
-                <View style={{ width: '88%', alignItems: 'left', marginTop: 20, justifyContent: 'center' }}>
+        //         </View>
+        //     )
+        // else
+        return (
+            <View style={{ paddingLeft: 20, width: '88%', alignItems: 'left', marginTop: 10, marginBottom: 20, justifyContent: 'center' }}>
 
-                    <Text style={{ fontSize: 14, fontFamily: AppFontFamily.PopinsBold, color: AppColors.themeBlackColor }}>
-                        { userData[0].status == 'confirmed'  ? 'Ride Confirmed' : 'Awaited from rider'}
-                    </Text>
+                <Text style={{ fontSize: 14, fontFamily: AppFontFamily.PopinsBold, color: AppColors.themeBlackColor }}>
+                    {userData[0].status == 'confirmed' ? 'Ride Confirmed' : userData[0].status == 'accepted' ? 'Accepted by ' + rideData[0].name : 'Awaited from ' + rideData[0].name}
+                </Text>
 
-                </View>
-            )
+            </View>
+        )
 
     }
 
@@ -195,14 +200,14 @@ export default function RequestedRideDetails({ navigation, route }) {
 
                         </View>
                         <View style={{ width: '100%', marginTop: 10, marginBottom: 5, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
-                        <View style={{ justifyContent: 'center', width: '95%', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
-                            <View style={{ width: '60%', justifyContent: 'center' }}>
+                        <View style={{ justifyContent: 'flex-end', width: '95%', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
+                            {/* <View style={{ width: '60%', justifyContent: 'center' }}>
                                 <Text style={{ paddingLeft: 20, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{"Ride cost: "}
                                     <Text style={{ fontFamily: AppFontFamily.PopinsBold, fontSize: 11, color: AppColors.themeText2Color }}> {AppTexts.Rupee_Symbol} </Text>
                                     <Text style={{ fontFamily: AppFontFamily.PopinsSemiBold, fontSize: 18, color: AppColors.themeText2Color }}> {Number(item.price).toFixed(0)}</Text>
                                 </Text>
 
-                            </View>
+                            </View> */}
                             <Pressable onPress={() => Linking.openURL(`tel:${item?.phoneNumber}`)} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
 
                                 <Image source={require('../../assets/btncall.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
@@ -237,63 +242,6 @@ export default function RequestedRideDetails({ navigation, route }) {
             </View>
         );
     }
-
-    const _acceptOfferedRide = async (item, ind) => {
-        const result = await hitApiToAcceptOfferedRide(item.ride_id, item.user_id)
-        console.log(result, 'vvv')
-        if (result.status) {
-
-
-            const updatedArray = data.map((obj, index) =>
-                index === ind ? { ...obj, status: 'accepted' } : obj);
-
-            // console.log(updatedArray, 'arr')
-            setCotravellerArray(updatedArray)
-
-
-            navigation.goBack()
-        }
-
-    }
-
-    const _acceptRequestRide = async (item, ind) => {
-        const result = await hitApiToAcceptRequestedRide(item._id, item.user_id, item.journey_published_by)
-        console.log(result, 'vvv')
-        if (result.status) {
-
-
-            const updatedArray = data.map((obj, index) =>
-                index === ind ? { ...obj, status: 'accepted' } : obj);
-
-            // console.log(updatedArray, 'arr')
-            setCotravellerArray(updatedArray)
-
-
-            navigation.goBack()
-        }
-
-    }
-
-    const _acceptRequestRide1 = async (item, ind) => {
-        const result = await hitApiToAcceptRequestedRide(item._id, '', item.journey_published_by)
-        console.log(result, 'vvv')
-        if (result.status) {
-
-
-            const updatedArray = data.map((obj, index) =>
-                index === ind ? { ...obj, status: 'accepted' } : obj);
-
-            // console.log(updatedArray, 'arr')
-            setCotravellerArray(updatedArray)
-
-
-            navigation.goBack()
-        }
-
-    }
-
-
-
 
 
     const CotravellerList = ({ cotravellerArray }) => {
@@ -337,65 +285,67 @@ export default function RequestedRideDetails({ navigation, route }) {
 
     const RideDetailView = () => {
         return (
-            <View style={{ width: Dimensions.get('screen').width, alignItems: 'center', justifyContent: 'center', paddingBottom: 10 }}>
+            <>
+                {userData.length ? <ViewRideRequestBtn /> : null}
+                <View style={{ width: Dimensions.get('screen').width, alignItems: 'center', justifyContent: 'center', paddingBottom: 10 }}>
 
-                <Surface elevation={4} style={{ width: '90%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
-                    <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
-                        <View style={{ justifyContent: 'center' }}>
+                    <Surface elevation={4} style={{ width: '90%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
+                        <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
+                            <View style={{ justifyContent: 'center' }}>
 
-                            <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(rideData[0].date).format('DD MMM YYYY, HH:mm')}</Text>
+                                <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(rideData[0].date).format('DD MMM YYYY, HH:mm')}</Text>
 
+                            </View>
                         </View>
-                    </View>
-                    <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
+                        <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
 
-                    <View style={{ flexDirection: 'row', width: '100%', marginTop: 0, justifyContent: 'center' }}>
+                        <View style={{ flexDirection: 'row', width: '100%', marginTop: 0, justifyContent: 'center' }}>
 
-                        <View style={{ width: '92%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{ width: '92%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
 
 
-                            <View style={{ width: '10%', alignItems: 'center', justifyContent: 'center' }}>
+                                <View style={{ width: '10%', alignItems: 'center', justifyContent: 'center' }}>
 
-                                <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
 
-                                    <Image source={require('../../assets/dotone.png')} style={{ width: 10, height: 10, resizeMode: 'contain' }} />
-                                </View>
-                                <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row', marginBottom: 5, marginTop: 5 }}>
-
-                                    <View style={{ width: 2, height: 45, backgroundColor: AppColors.themeBlackColor }}>
+                                        <Image source={require('../../assets/dotone.png')} style={{ width: 10, height: 10, resizeMode: 'contain' }} />
                                     </View>
-                                    {/* <Image source={require('../../assets/dotline.png')} style={{ marginLeft: 0, width: 5, height: 50, resizeMode: 'contain' }} /> */}
-                                </View>
-                                <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row', marginBottom: 5, marginTop: 5 }}>
 
-                                    <Image source={require('../../assets/triangle.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
+                                        <View style={{ width: 2, height: 45, backgroundColor: AppColors.themeBlackColor }}>
+                                        </View>
+                                        {/* <Image source={require('../../assets/dotline.png')} style={{ marginLeft: 0, width: 5, height: 50, resizeMode: 'contain' }} /> */}
+                                    </View>
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+
+                                        <Image source={require('../../assets/triangle.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
+                                    </View>
+
+                                </View>
+
+                                <View style={{ marginLeft: 5, width: '90%', justifyContent: 'center', alignItems: 'center' }}>
+
+                                    <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginTop: 20, marginBottom: 0 }}>
+
+                                        <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+                                            <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 16 }}>{rideData[0].journey_origin_address}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
+                                    <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginBottom: 20, marginTop: 20 }}>
+
+                                        <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+                                            <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 16 }}>{rideData[0].journey_destination_address}</Text>
+                                        </View>
+                                    </View>
+
                                 </View>
 
                             </View>
 
-                            <View style={{ marginLeft: 5, width: '90%', justifyContent: 'center', alignItems: 'center' }}>
-
-                                <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginTop: 20, marginBottom: 0 }}>
-
-                                    <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                        <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 16 }}>{rideData[0].journey_origin_address}</Text>
-                                    </View>
-                                </View>
-                                <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
-                                <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginBottom: 20, marginTop: 20 }}>
-
-                                    <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                        <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 16 }}>{rideData[0].journey_destination_address}</Text>
-                                    </View>
-                                </View>
-
-                            </View>
-
                         </View>
 
-                    </View>
-
-                    <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginLeft: 10, marginTop: 10 }}>
+                        <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginLeft: 10, marginTop: 10 }}>
                             <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} />
                             <View style={{ justifyContent: 'center' }}>
 
@@ -408,27 +358,40 @@ export default function RequestedRideDetails({ navigation, route }) {
                         </View>
 
 
-                    <View style={{ width: '100%', marginTop: 10, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
-                    <View style={{ width: '95%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
-                        <View style={{ justifyContent: 'flex-start', width: '95%' }}>
+                        <View style={{ width: '100%', marginTop: 10, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
+                        <View style={{ width: '95%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
+                            <View style={{ justifyContent: 'flex-start', width: '95%' }}>
 
-                            <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{"Ride cost: "}
-                                <Text style={{ fontFamily: AppFontFamily.PopinsBold, fontSize: 11, color: AppColors.themeText2Color }}> {AppTexts.Rupee_Symbol} </Text>
-                                <Text style={{ fontFamily: AppFontFamily.PopinsSemiBold, fontSize: 18, color: AppColors.themeText2Color }}> {Number(rideData[0].journey_expected_price_per_seat).toFixed(0)}</Text>
-                            </Text>
+                                <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{"Ride cost: "}
+                                    <Text style={{ fontFamily: AppFontFamily.PopinsBold, fontSize: 11, color: AppColors.themeText2Color }}> {AppTexts.Rupee_Symbol} </Text>
+                                    <Text style={{ fontFamily: AppFontFamily.PopinsSemiBold, fontSize: 18, color: AppColors.themeText2Color }}> {Number(rideData[0].journey_expected_price_per_seat).toFixed(0)}</Text>
+                                </Text>
 
-                            <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{Number(rideData[0].journey_approx_time / 60).toFixed(2) + " mins"}</Text>
+                                <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{Number(rideData[0].journey_approx_time / 60).toFixed(2) + " mins"}</Text>
+                            </View>
+
                         </View>
 
-                    </View>
+                    </Surface >
 
-                </Surface >
+                    {userData[0].status == 'accepted' ?
 
-                {userData.length ? <ViewRideRequestBtn /> : null}
+                        <View style={{ width: '100%', alignItems: 'center', marginTop: 20, justifyContent: 'center' }}>
 
-                {acceptedData.length ? <CustomerInfoView /> : null}
+                            <ButtonPrimary
+                                style={{ width: '90%' }}
+                                text={'Accept the ride'}
+                                onPress={() => acceptRide()}
+                                loader={false}
+                            />
 
-            </View>
+                        </View> : null}
+
+
+                    {cotravellerArray.length ? <CustomerInfoView /> : null}
+
+                </View>
+            </>
         )
     }
 
@@ -441,9 +404,9 @@ export default function RequestedRideDetails({ navigation, route }) {
             {/* <RideDetailView /> */}
 
 
-            { isLoading ?
+            {isLoading ?
                 rideData.length ?
-                    <CotravellerList cotravellerArray={acceptedData} />
+                    <CotravellerList cotravellerArray={cotravellerArray} />
                     :
                     null : CommonLoaders.RideDetailLoader()
             }

@@ -19,3 +19,23 @@ export const hitApiForLogin = async (email, password) => {
     }
 
 }
+
+export const hitApiForGoogleLogin = async (email, id) => {
+
+    try {
+        const loginData = await connection.postAPI('/api/auth/login/google', { 'email': email, 'id': id })
+
+        if (loginData.success) {
+            return loginData
+        }
+        else {
+            return loginData
+        }
+
+    } catch (error) {
+
+        console.error('login modal', error);
+        throw error
+    }
+
+}
