@@ -23,20 +23,18 @@ export const AddVehiclePopup = ({ data, headerText, isLoading, closePopup, selec
                     <View style={styles.smallCont}>
 
                         <View style={{ width: '100%', height: 60, justifyContent: 'center', backgroundColor: AppColors.themePrimaryColor }}>
-                            <View  style={{ marginLeft: 20, flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{ marginLeft: 20, flexDirection: 'row', alignItems: 'center' }}>
                                 <Pressable onPress={closePopup} style={{ width: '20%' }}>
 
                                     <Image source={require('../../assets/close.png')} style={{ marginRight: 10, width: 15, height: 15, resizeMode: 'contain' }} />
                                 </Pressable>
                                 <View style={{ width: '60%', alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 18, color: AppColors.themesWhiteColor }}>
+                                    <Text style={{ fontSize: 18, color: AppColors.themesWhiteColor, fontFamily: AppFontFamily.PopinsMedium }}>
                                         {headerText}
                                     </Text>
 
                                 </View>
-                                <Pressable onPress={addCar} style={{ width: '20%' }}>
-                                    <Text style={{ color: AppColors.themesWhiteColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Add Car'}</Text>
-                                </Pressable>
+
                             </View>
 
                         </View>
@@ -62,6 +60,13 @@ export const AddVehiclePopup = ({ data, headerText, isLoading, closePopup, selec
 
 
 
+                        </View>
+
+                        <View style={{width: '100%', alignItems: 'center', marginBottom: 10}}>
+
+                            <Pressable onPress={addCar} style={{ width: '80%', height: 40, borderRadius: 5, alignItems: 'center', justifyContent: 'center', backgroundColor: AppColors.themePrimaryColor }}>
+                                <Text style={{ color: AppColors.themesWhiteColor, fontSize: 14, fontFamily: AppFontFamily.PopinsMedium }}>{'Add new vehicle'}</Text>
+                            </Pressable>
                         </View>
 
                     </View>

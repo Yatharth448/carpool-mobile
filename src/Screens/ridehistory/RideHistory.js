@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, TouchableOpacity, Text, Image } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader'
@@ -7,9 +7,18 @@ import OfferedRides from './OfferedRide'
 import { hitApiToGetRequestedRideDetails } from './RideHistoryModal'
 import { AppFontFamily } from '../../components/constants/AppFonts'
 
-export default function RideHistory({ navigation }) {
+export default function RideHistory({ navigation, route }) {
 
     const [isRequest, setIsRequest] = React.useState(true)
+    
+
+    useEffect(()=>{
+        
+        if (route.params?.from)
+        {
+            setIsRequest(route.params?.from == 'offered' ? false : true )
+        }
+    })
 
 
     const changeTab = async (val) => {

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import { Text, View, Image, TouchableOpacity, TextInput, Pressable, Dimensions } from 'react-native'
+import { Text, View, Image, TouchableOpacity, TextInput, Pressable, Dimensions, BackHandler } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 // import { TextInput } from 'react-native-paper'
 import Toast from 'react-native-simple-toast'
@@ -38,7 +38,20 @@ export default function LoginScreen({ navigation }) {
                 '330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
             offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
         });
-      }, []);
+
+        BackHandler.addEventListener("hardwareBackPress", backActionHandler);
+
+        return () => {
+			// clear/remove event listener
+			BackHandler.removeEventListener("hardwareBackPress", backActionHandler);
+		}
+
+      }, [backActionHandler]);
+
+      const backActionHandler = (async () => {
+		
+
+	});
 
       _signIn = async () => {
         try {
@@ -87,7 +100,8 @@ export default function LoginScreen({ navigation }) {
 
     const userGoogleLogin = async (userInfo) => {
 
-        const result = await hitApiForGoogleLogin(userInfo.user.email, userInfo.user.id)
+        const deviceToken = await Storage.getSavedItem('fcmToken')
+        const result = await hitApiForGoogleLogin(userInfo.user.email, userInfo.user.id, deviceToken)
  console.log(result, 'login Respnse')
             if (result.status) {
                 Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
@@ -115,8 +129,8 @@ export default function LoginScreen({ navigation }) {
         }
         else {
 
-
-            const loginRes = await hitApiForLogin(email, password)
+            const deviceToken = await Storage.getSavedItem('fcmToken')
+            const loginRes = await hitApiForLogin(email, password, deviceToken)
 
             console.log(loginRes, 'login Respnse')
             if (loginRes.status) {
@@ -161,12 +175,12 @@ export default function LoginScreen({ navigation }) {
         <View style={{ flex: 1, backgroundColor: AppColors.themesWhiteColor }}>
 
             <View style={{ width: '100%', height: '20%' }}>
-                <Image source={require('../../assets/logo.png')} style={{ width: '50%', marginTop: '5%', resizeMode: 'contain' }} />
+                <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 200, resizeMode: 'contain' }} />
             </View>
 
             <View style={{ width: '100%', alignItems: 'center' }}>
                 <View style={{ width: '90%', justifyContent: 'center' }}>
-                    <Text style={{ fontSize: 26, fontWeight: 'bold', color: AppColors.themeBlackColor }}>
+                    <Text style={{ fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium  }}>
                         {'Login'}
                     </Text>
                     <InputView left={require('../../assets/sms.png')} headText={'Email Id'} placeHolder={'Enter email id'} val={email} onChange={onChangeEmail} />

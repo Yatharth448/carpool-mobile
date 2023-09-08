@@ -2,20 +2,20 @@ import React, {useEffect} from 'react';
 import { FlatList, View, Text, Alert, Image, TouchableOpacity, StyleSheet, Dimensions, Pressable } from 'react-native';
 import { AppColors } from '../constants/AppColor';
 import { AppFontFamily } from '../constants/AppFonts';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
 import { getProfileDataRequest } from '../../redux/actions/actions';
 import reducer from '../../redux/reducers/reducers';
 
 const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
 
-    const [menu, setMenu] = React.useState([{ 'screen': 'FindRide', 'name': 'HOME' }, { 'screen': 'RideHistory', 'name': 'RIDE HISTORY' }, { 'screen': 'Payment', 'name': 'PAYMENT' }, { 'screen': 'support', 'name': 'SUPPORT' },])
+    const [menu, setMenu] = React.useState([{ 'screen': 'FindRide', 'name': 'HOME' }, { 'screen': 'RideHistory', 'name': 'RIDE HISTORY' }, { 'screen': 'MessageRoom', 'name': 'MESSAGES' }, { 'screen': 'Payment', 'name': 'PAYMENT' }, { 'screen': 'Support', 'name': 'SUPPORT' },])
     const [ind, setInd] = React.useState(0)
     const handleDrawerItemPress = (screenName, index) => {
         selectedInd(index)
-        if (screenName == 'Payment' || screenName == 'support')
+        if (screenName == 'Payment')
         {
-
+            
         }
         else{
 
@@ -81,7 +81,7 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
                     <>
 
                         <TouchableOpacity
-                            style={{ width: '100%', height: 80, justifyContent: 'flex-end', alignItems: 'center' }}
+                            style={{ width: '100%', height: 80, justifyContent: 'center', alignItems: 'center' }}
                             onPress={() => handleDrawerItemPress(item.screen, index)}
                         >
                             <Text style={{ fontFamily: AppFontFamily.PopinsBold, width: '80%', color: index == ind ? AppColors.themePrimaryColor : AppColors.themeText2Color, fontSize: 14 }}>{item.name}</Text>

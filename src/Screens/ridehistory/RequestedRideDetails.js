@@ -360,7 +360,8 @@ export default function RequestedRideDetails({ navigation, route }) {
 
                         <View style={{ width: '100%', marginTop: 10, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
                         <View style={{ width: '95%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
-                            <View style={{ justifyContent: 'flex-start', width: '95%' }}>
+
+                            <View style={{ justifyContent: 'flex-start', width: '55%' }}>
 
                                 <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{"Ride cost: "}
                                     <Text style={{ fontFamily: AppFontFamily.PopinsBold, fontSize: 11, color: AppColors.themeText2Color }}> {AppTexts.Rupee_Symbol} </Text>
@@ -370,52 +371,68 @@ export default function RequestedRideDetails({ navigation, route }) {
                                 <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{Number(rideData[0].journey_approx_time / 60).toFixed(2) + " mins"}</Text>
                             </View>
 
-                        </View>
 
-                    </Surface >
+                            <View style={{ justifyContent: 'flex-end', width: '45%', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
+                                <Pressable onPress={() => Linking.openURL(`tel:${rideData[0]?.contact}`)} style={{ width: '35%', justifyContent: 'center', alignItems: 'center' }}>
 
-                    {userData[0].status == 'accepted' ?
+                                    <Image source={require('../../assets/btncall.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
+                                </Pressable>
+                                <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': rideData[0].id, 'id': rideData[0]._id, 'cotravellerName': rideData[0].name, from: 'chat' })} style={{ width: '35%', justifyContent: 'center', alignItems: 'center' }}>
 
-                        <View style={{ width: '100%', alignItems: 'center', marginTop: 20, justifyContent: 'center' }}>
+                                    <Image source={require('../../assets/btnchat.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
+                                </Pressable>
+                            </View>
 
-                            <ButtonPrimary
-                                style={{ width: '90%' }}
-                                text={'Accept the ride'}
-                                onPress={() => acceptRide()}
-                                loader={false}
-                            />
-
-                        </View> : null}
-
-
-                    {cotravellerArray.length ? <CustomerInfoView /> : null}
+                       
 
                 </View>
+
+            </Surface >
+
+            {
+                userData[0].status == 'accepted' ?
+
+                    <View style={{ width: '100%', alignItems: 'center', marginTop: 20, justifyContent: 'center' }}>
+
+                        <ButtonPrimary
+                            style={{ width: '90%' }}
+                            text={'Accept the ride'}
+                            onPress={() => acceptRide()}
+                            loader={false}
+                        />
+
+                    </View> : null
+            }
+
+
+        { cotravellerArray.length ? <CustomerInfoView /> : null }
+
+                </View >
             </>
         )
-    }
+}
 
-    return (
-        <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
-            <Header isBack={true} close={() => navigation.goBack()} text='Ride Details' />
+return (
+    <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
+        <Header isBack={true} close={() => navigation.goBack()} text='Ride Details' />
 
-            {/* <ScrollView contentContainerStyle={{ width: Dimensions.get('window').width, alignItems: 'center' }}> */}
+        {/* <ScrollView contentContainerStyle={{ width: Dimensions.get('window').width, alignItems: 'center' }}> */}
 
-            {/* <RideDetailView /> */}
-
-
-            {isLoading ?
-                rideData.length ?
-                    <CotravellerList cotravellerArray={cotravellerArray} />
-                    :
-                    null : CommonLoaders.RideDetailLoader()
-            }
-            {/* </ScrollView> */}
+        {/* <RideDetailView /> */}
 
 
+        {isLoading ?
+            rideData.length ?
+                <CotravellerList cotravellerArray={cotravellerArray} />
+                :
+                null : CommonLoaders.RideDetailLoader()
+        }
+        {/* </ScrollView> */}
 
-        </View>
-    )
+
+
+    </View>
+)
 }
 
 const styles = StyleSheet.create({

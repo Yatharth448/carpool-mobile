@@ -40,10 +40,30 @@ export const hitApiForVerifyAdhaarOTP = async (clientId, otp) => {
 
 }
 
-export const hitApiForKYCSetup = async (name, email, dob) => {
+export const hitApiForDLKYC = async (licenceNumber, dob, identityName) => {
 
     try {
-        const accountData = await connection.postAPI('/api/auth/send/otp', { 'name': name, 'email': email, 'date_of_birth': dob})
+        const accountData = await connection.postAPI('/api/kyc/verify/kyc/driving/license', { 'licenseNumber': licenceNumber, 'dob': dob, 'identityName': identityName})
+
+        if (accountData.success) {
+            return accountData
+        }
+        else {
+            return accountData
+        }
+
+    } catch (error) {
+
+        console.error('login modal', error);
+        throw error
+    }
+
+}
+
+export const hitApiForUploadDocument = async (params, onUploadProgress) => {
+
+    try {
+        const accountData = await connection.uploadDocument('/api/kyc/verify/kyc/upload/document',params , onUploadProgress)
 
         if (accountData.success) {
             return accountData

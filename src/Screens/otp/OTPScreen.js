@@ -35,16 +35,16 @@ export default function OTPScreen({ navigation, route }) {
       if (result.status) {
         Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
 
-        // if (result.kyc_status) {
+        if (result.kyc_status) {
           navigation.reset({
             index: 0,
             routes: [{ name: 'RideDrawer' }],
           })
-        // }
-        // else {
-        //   navigation.navigate('AcccountSetupScreen')
+        }
+        else {
+          navigation.navigate('KycScreen')
 
-        // }
+        }
       }
       else {
 
@@ -76,14 +76,14 @@ export default function OTPScreen({ navigation, route }) {
     <View style={{ flex: 1, backgroundColor: AppColors.themesWhiteColor }}>
 
       <View style={{ width: '100%', height: '20%' }}>
-        <Image source={require('../../assets/logo.png')} style={{ width: '50%', marginTop: '5%', resizeMode: 'contain' }} />
+        <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, marginTop: 200, resizeMode: 'contain' }} />
       </View>
 
 
 
       <View style={{ width: '100%', alignItems: 'center' }}>
         <View style={{ width: '90%', justifyContent: 'center' }}>
-          <Text style={{ fontSize: 26, fontWeight: 'bold', color: AppColors.themeBlackColor }}>
+          <Text style={{ fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
             {'Check your email'}
           </Text>
           <Text style={{ fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular }}>

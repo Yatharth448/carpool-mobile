@@ -1,9 +1,9 @@
 import connection from "../../network/connection"
 
-export const hitApiForLogin = async (email, password) => {
+export const hitApiForLogin = async (email, password, token) => {
 
     try {
-        const loginData = await connection.postAPI('/api/auth/verify/email/login', { 'email': email, 'password': password })
+        const loginData = await connection.postAPI('/api/auth/verify/email/login', { 'email': email, 'password': password, 'device_token': token })
 
         if (loginData.success) {
             return loginData
@@ -20,10 +20,10 @@ export const hitApiForLogin = async (email, password) => {
 
 }
 
-export const hitApiForGoogleLogin = async (email, id) => {
+export const hitApiForGoogleLogin = async (email, id, token) => {
 
     try {
-        const loginData = await connection.postAPI('/api/auth/login/google', { 'email': email, 'id': id })
+        const loginData = await connection.postAPI('/api/auth/login/google', { 'email': email, 'id': id, 'device_token': token })
 
         if (loginData.success) {
             return loginData

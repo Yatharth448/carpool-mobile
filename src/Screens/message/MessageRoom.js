@@ -49,7 +49,7 @@ export default function MessageRoom({ navigation, route }) {
 
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
-            <Header close={() => { navigation.goBack() }} text='Messages' isBack={false}/>
+            <Header close={() => { navigation.goBack() }} text='Messages' isBack={true}/>
             <FlatList
                 data={message ?? []}
                 refreshControl={
@@ -68,7 +68,7 @@ export default function MessageRoom({ navigation, route }) {
                 // onEndReached={() => this.getCartList()}
                 renderItem={({ item, index }) => (
                     <View style={{ width: Dimensions.get('window').width, alignItems: 'center', marginTop: 10 }}>
-                        <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.cotraveller_id, 'id': item._id, 'cotravellerName': item.cotraveller_name })} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
+                        <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.cotraveller_id, 'id': item._id, 'cotravellerName': item.cotraveller_name, from: 'chat' })} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
 
                             <View style={{ width: '100%', justifyContent: 'center', padding: 10 }}>
                                 <View style={{ width: '100%', alignItems: 'flex-start' }}>

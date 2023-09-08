@@ -5,7 +5,7 @@ import { PermissionsAndroid } from 'react-native';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import firebase from '@react-native-firebase/app'
 import messaging from '@react-native-firebase/messaging';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 // Must be outside of any component LifeCycle (such as `componentDidMount`).

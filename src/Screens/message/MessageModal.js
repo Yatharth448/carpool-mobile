@@ -43,7 +43,27 @@ export const hitApiToGetChatList = async () => {
 export const hitApiToMessageForParticularUser = async (id) => {
 
     try {
-        const loginData = await connection.getAPI('/api/chat/message/' + id )
+        const loginData = await connection.getAPI('/api/chat/message/' + id)
+
+        if (loginData.success) {
+            return loginData
+        }
+        else {
+            return loginData
+        }
+
+    } catch (error) {
+
+        console.error('login modal', error);
+        throw error
+    }
+
+}
+
+export const hitApiToChackeChatExist = async (coTravellerId) => {
+
+    try {
+        const loginData = await connection.postAPI('/api/chat/exist', { 'coTravellerId': coTravellerId })
 
         if (loginData.success) {
             return loginData

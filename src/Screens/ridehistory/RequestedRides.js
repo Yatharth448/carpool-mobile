@@ -81,7 +81,7 @@ export default function RequestedRides({ selectedRequest }) {
                                     <View style={{ width: '25%', alignItems: 'center', justifyContent: 'center' }}>
 
                                         <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 13 }}>{moment(item.date).format('HH:mm') + '   '}</Text>
+                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 13 }}>{moment(item.journey_start_at).format('HH:mm') + '   '}</Text>
                                             <Image source={require('../../assets/dotone.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
                                         </View>
                                         <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>

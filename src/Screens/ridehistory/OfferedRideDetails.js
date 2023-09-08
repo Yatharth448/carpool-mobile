@@ -175,7 +175,7 @@ export default function OfferedRideDetails({ navigation, route }) {
 
                                 <Image source={require('../../assets/btncall.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
                             </Pressable>
-                            <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.user_id, 'id': item._id, 'cotravellerName': item.name })} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
+                            <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.user_id, 'id': item._id, 'cotravellerName': item.name, from: 'chat' })} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
 
                                 <Image source={require('../../assets/btnchat.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
                             </Pressable>

@@ -19,6 +19,7 @@ import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { ScrollView } from 'react-native-gesture-handler'
 import { hitApiForGoogleSignUp, hitApiForSignUp } from './SignupModal'
 import { FindRideFilterView } from '../findridelist/FindRideComp'
+import { CommonActions } from '@react-navigation/native'
 // import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 // Configure Google Sign-In
@@ -96,8 +97,8 @@ export default function SignupScreen({ navigation }) {
 
 
     const userGoogleSignup = async (userInfo) => {
-
-        const result = await hitApiForGoogleSignUp( userInfo.email, userInfo.familyName, userInfo.givenName, userInfo.id, userInfo.photo, )
+        const deviceToken = await Storage.getSavedItem('fcmToken')
+        const result = await hitApiForGoogleSignUp( userInfo.email, userInfo.familyName, userInfo.givenName, userInfo.id, userInfo.photo, deviceToken )
         console.log(result, 'login Respnse')
         if (result.status) {
             Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
@@ -186,12 +187,12 @@ export default function SignupScreen({ navigation }) {
         <View style={{ flex: 1, backgroundColor: AppColors.themesWhiteColor }}>
             <ScrollView>
                 <View style={{ width: '100%', height: 120 }}>
-                    <Image source={require('../../assets/logo.png')} style={{ width: '50%', marginTop: '5%', resizeMode: 'contain' }} />
+                    <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 200, resizeMode: 'contain' }} />
                 </View>
 
                 <View style={{ width: '100%', alignItems: 'center' }}>
                     <View style={{ width: '90%', justifyContent: 'center' }}>
-                        <Text style={{ fontSize: 26, fontWeight: 'bold', color: AppColors.themeBlackColor }}>
+                        <Text style={{ fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
                             {'Sign up'}
                         </Text>
                         <InputView headText={'Full Name'} placeHolder={'Enter Full Name'} val={fullName} onChange={onChangeFullName} />

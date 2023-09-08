@@ -3,7 +3,7 @@ import connection from "../../network/connection"
 export const hitApiForSignUp = async (name, email, password, mobile, gender) => {
 
     try {
-        const signupData = await connection.postAPI('/api/auth/send/email/otp', {'name': name, 'email': email, 'password': password, 'contactNumber': mobile, gender: gender })
+        const signupData = await connection.postAPI('/api/auth/send/email/otp', {'name': name, 'email': email, 'password': password, 'contactNumber': mobile, gender: gender})
 
         if (signupData.success) {
             return signupData
@@ -20,10 +20,10 @@ export const hitApiForSignUp = async (name, email, password, mobile, gender) => 
 
 }
 
-export const hitApiForGoogleSignUp = async ( email, firstName, givenName, id, photo) => {
+export const hitApiForGoogleSignUp = async ( email, firstName, givenName, id, photo, token) => {
 
     try {
-        const signupData = await connection.postAPI('/api/auth/signup/google', { 'email': email, 'firstName': firstName, 'givenName': givenName, id: id, 'photo': photo })
+        const signupData = await connection.postAPI('/api/auth/signup/google', { 'email': email, 'firstName': firstName, 'givenName': givenName, id: id, 'photo': photo, 'device_token': token  })
 
         if (signupData.success) {
             return signupData

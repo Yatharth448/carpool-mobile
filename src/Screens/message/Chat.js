@@ -4,14 +4,17 @@ import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader';
 import moment from 'moment';
 import Toast from 'react-native-simple-toast'
-import messaging from '@react-native-firebase/messaging';
-import PushNotification from 'react-native-push-notification';
-import { hitApiToMessageForParticularUser, hitApiToSendMessage } from './MessageModal';
+// import messaging from '@react-native-firebase/messaging';
+// import PushNotification from 'react-native-push-notification';
+import { hitApiToChackeChatExist, hitApiToMessageForParticularUser, hitApiToSendMessage } from './MessageModal';
 import { Surface } from 'react-native-paper';
+import { AppFontFamily } from '../../components/constants/AppFonts';
+import CommonLoaders from '../../components/loader/Loader';
 export default function Chat({ navigation, route }) {
     const [refreshPage, setRefreshPage] = React.useState(false);
     const [message, setMessage] = React.useState([])
-    const { id, coTravellerId, cotravellerName } = route.params;
+    const { coTravellerId, cotravellerName, from } = route.params;
+    let { id } = route.params;
     const [text, setText] = React.useState('')
     const [fetching, setFetching] = React.useState(false)
     const listViewRef = useRef()
@@ -21,7 +24,7 @@ export default function Chat({ navigation, route }) {
         (async () => {
 
             //Put your logic here
-            await getAllMsg()
+
 
             // setTimeout(() => {
             //     // listViewRef.scrollToEnd();
@@ -32,6 +35,17 @@ export default function Chat({ navigation, route }) {
             //     await getAllMsg()
 
             // })
+            if (from == 'chat') {
+                const result = await hitApiToChackeChatExist(coTravellerId)
+                console.log(result)
+                if (result?.data) {
+                    id = result.data._id
+
+                    await getAllMsg()
+                }
+                // console.log('exist', result)
+            }
+
 
 
 
@@ -40,29 +54,29 @@ export default function Chat({ navigation, route }) {
 
         return () => {
             // clear/remove event listener
-            unsubscribeOnMessage();
+            // unsubscribeOnMessage();
         }
-    }, [refreshPage]);
+    }, []);
 
 
 
-    const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
+    // const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
 
-        console.log("DEBUG: Received FCM message: " + JSON.stringify(remoteMessage));
+    // console.log("DEBUG: Received FCM message: " + JSON.stringify(remoteMessage));
 
-        // Function to process new message and insert into local storage
-        // if (refreshPage)
-        // {
+    // Function to process new message and insert into local storage
+    // if (refreshPage)
+    // {
 
-            await getAllMsg();
-        // }
+    // await getAllMsg();
+    // }
 
-        // Display notification to user
+    // Display notification to user
 
-        // Trigger refresh of FlatList component with setState
-        // setRefreshPage(Math.random() * 100);
+    // Trigger refresh of FlatList component with setState
+    // setRefreshPage(Math.random() * 100);
 
-    });
+    // });
 
     const scrollToBottom = (msg) => {
         //OnCLick of down button we scrolled the list to bottom
@@ -74,15 +88,15 @@ export default function Chat({ navigation, route }) {
 
 
     const getAllMsg = async (fetching = '') => {
-        if (fetching) {
-            setFetching(true)
-        }
+
+        setFetching(true)
+
         const result = await hitApiToMessageForParticularUser(id);
-        // console.log("ride list", result.data, id);
+        console.log("ride list", result);
         if (result.status) {
             setMessage((result.data[0]?.messages.reverse()) ?? [])
             setFetching(false)
-            scrollToBottom(result.data[0]?.messages)
+            // scrollToBottom(result.data[0]?.messages)
         }
         else {
             console.log(result)
@@ -96,9 +110,13 @@ export default function Chat({ navigation, route }) {
         }
         else {
 
+            setFetching(true)
             const result = await hitApiToSendMessage(coTravelerId, msg)
+            console.log(result, 'send')
             if (result.status) {
                 setText('')
+                id = result.data
+                // setFetching(false)
                 await getAllMsg()
             }
             else {
@@ -108,25 +126,94 @@ export default function Chat({ navigation, route }) {
 
     }
 
-    const rightBubble = (item) => {
-        return (
-            <View style={{ width: '98%', alignItems: item.right ? 'flex-end' : 'flex-start', paddingBottom: 0 }}>
 
-                <View style={{ justifyContent: 'center', padding: 10, backgroundColor: item.right ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, borderRadius: 10 }}>
-                    <View style={{ width: '100%', alignItems: item.right ? 'flex-end' : 'flex-start' }}>
+    const TopHeader = () => {
+        return (
+            <View style={{ backgroundColor: AppColors.themesWhiteColor, height: 70, width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                <Pressable onPress={() => navigation.goBack()} style={{ width: '25%', height: 70, alignItems: 'flex-start', paddingLeft: 10, justifyContent: 'center' }}>
+
+                    <Surface style={{ backgroundColor: AppColors.themesWhiteColor, width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }} elevation={4}>
+                        <Image source={require('../../assets/bckarrow.png')} style={{ width: 40, height: 40 }} />
+                    </Surface>
+
+                </Pressable>
+                <View style={{ width: '50%', height: 60, alignItems: 'center', paddingRight: 20, justifyContent: 'center' }}>
+                    <Text style={{ fontFamily: AppFontFamily.PopinsBold, fontSize: 20, color: AppColors.themeBlackColor }}>{cotravellerName}</Text>
+                </View>
+                <Pressable style={{ width: '25%', height: 50, alignItems: 'flex-end', paddingRight: 20, justifyContent: 'center' }}>
+
+                    {/* <Surface style={{ backgroundColor: AppColors.themesWhiteColor, marginBottom: 10, width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }} elevation={4}>
+                        <Image source={require('../../assets/bckarrow.png')} style={{ width: 25, height: 25 }} />
+                    </Surface> */}
+                </Pressable>
+
+            </View>
+        )
+    }
+
+
+    const LeftBubble = ({ item }) => {
+        return (
+            <View style={{ width: '98%', alignItems: 'flex-start', paddingBottom: 0 }}>
+
+                <View style={{ justifyContent: 'center', padding: 10, backgroundColor: AppColors.themesWhiteColor, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, borderTopRightRadius: 10 }}>
+                    <View style={{ width: '100%', alignItems: 'flex-start' }}>
                         {/* {console.log(item)} */}
                         {/* <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: item.right ? AppColors.themesWhiteColor : AppColors.themeBlackColor }}>{(item.from_name)}</Text> */}
-                        <Text style={{ width: '100%', marginTop: 0, fontWeight: '600', fontSize: 14, color: item.right ? AppColors.themesWhiteColor : AppColors.themeText2Color }}>{(item.message)}</Text>
+                        <Text style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', marginTop: 0, fontSize: 15, color: AppColors.themeText2Color }}>{(item.message)}</Text>
 
                     </View>
-                    {item.time ? <Text style={{ paddingLeft:  item.right ? 0 : 5, paddingRight:  item.right ? 5 : 0, textAlign: 'left', width: '100%', marginTop: 10, fontWeight: '400', fontSize: 12, color: item.right ? AppColors.themesWhiteColor : AppColors.themeText2Color }}>{item.time ? (moment(item.time).format('hh:mm A')) : null}</Text> : null}
-
 
                 </View>
-                <View style={item.right ? styles.rightArrow : styles.leftArrow}>
+
+
+                {item.time ?
+                    <Text style={{
+                        fontFamily: AppFontFamily.PopinsRegular,
+                        paddingLeft: 5,
+                        paddingRight: 0,
+                        textAlign: 'left',
+                        width: '100%',
+                        marginTop: 5,
+                        fontSize: 11,
+                        color: AppColors.themeText2Color
+                    }}>
+                        {item.time ? (moment(item.time).format('hh:mm A')) : null}
+                    </Text> : null}
+
+            </View>
+        )
+    }
+
+    const RightBubble = ({ item }) => {
+        return (
+            <View style={{ width: '98%', alignItems: 'flex-end', paddingBottom: 0 }}>
+
+                <View style={{ justifyContent: 'center', padding: 10, backgroundColor: AppColors.themePrimaryColor, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, borderTopLeftRadius: 10 }}>
+                    <View style={{ width: '100%', alignItems: 'flex-end' }}>
+                        {/* {console.log(item)} */}
+                        {/* <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: item.right ? AppColors.themesWhiteColor : AppColors.themeBlackColor }}>{(item.from_name)}</Text> */}
+                        <Text style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', marginTop: 0, fontSize: 15, color: AppColors.themesWhiteColor }}>{(item.message)}</Text>
+
+                    </View>
 
                 </View>
-                <View style={item.right ? styles.rightArrowOverlap : styles.leftArrowOverlap}></View>
+
+
+                {item.time ?
+                    <Text style={{
+                        fontFamily: AppFontFamily.PopinsRegular,
+                        paddingLeft: 0,
+                        paddingRight: 5,
+                        textAlign: 'right',
+                        width: '100%',
+                        marginTop: 5,
+                        fontSize: 11,
+                        color: AppColors.themeText2Color
+                    }}>
+                        {item.time ? (moment(item.time).format('hh:mm A')) : null}
+                    </Text> : null}
+
             </View>
         )
     }
@@ -134,8 +221,11 @@ export default function Chat({ navigation, route }) {
 
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
-            <Header close={() => { navigation.goBack() }} text={cotravellerName} />
-            <View style={{ height: '83%' }}>
+            <TopHeader />
+
+
+
+            <View style={{ height: '85%' }}>
                 <FlatList
                     data={message}
                     // refreshControl={
@@ -157,32 +247,35 @@ export default function Chat({ navigation, route }) {
                     // onEndReached={() => this.getCartList()}
                     renderItem={({ item, index }) => (
                         <View style={{ width: Dimensions.get('window').width, alignItems: 'center', padding: 10, paddingBottom: 0 }}>
-                            {rightBubble(item)}
+                            {item.right ? <RightBubble item={item} /> : <LeftBubble item={item} />}
                         </View>
                     )}
 
                 />
             </View>
 
+            <CommonLoaders.ChatLoader isLoading={fetching} loaderText={'Loading... messages'} />
 
-            <Surface style={{ position: 'absolute', bottom: 0, width: '100%', height: 60, flexDirection: 'row', alignItems: 'center' }}>
 
-                <View style={{ width: '15%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
+
+            <Surface style={{ width: '100%', height: 60, flexDirection: 'row', alignItems: 'center' }}>
+
+                <View style={{ width: '10%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
                     <Image source={require('../../assets/add.png')} style={{ borderColor: AppColors.themeCardBorderColor, width: 30, height: 30, resizeMode: 'contain' }} />
                 </View>
-                <View style={{ width: '65%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ width: '75%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
                     <TextInput
                         onChangeText={text => setText(text)}
                         value={text}
                         placeholder={"Enter message"}
                         placeholderTextColor={AppColors.themeText2Color}
-                        style={{ color: AppColors.themeBlackColor, paddingLeft: 10, paddingRight: 10, width: '100%', fontSize: 16, textAlign: 'left', fontWeight: '700', borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 5 }}
+                        style={{ color: AppColors.themeBlackColor, padding: 10, width: '100%', fontSize: 16, textAlign: 'left', borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 30, height: 40 }}
                     />
                 </View>
-                <Pressable onPress={() => sendMessage(coTravellerId, text)} style={{ width: '20%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: AppColors.themePrimaryColor, fontWeight: '700', fontSize: 16 }}>
-                        {'SEND'}
-                    </Text>
+                <Pressable onPress={() => sendMessage(coTravellerId, text)} style={{ width: '15%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 20, backgroundColor: AppColors.themePrimaryColor }}>
+                        <Image source={require('../../assets/sendmsg.png')} style={{ tintColor: AppColors.themesWhiteColor, width: 20, height: 20, resizeMode: 'contain' }} />
+                    </View>
                 </Pressable>
 
             </Surface>

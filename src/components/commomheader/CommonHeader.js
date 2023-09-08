@@ -3,7 +3,7 @@ import { View, Text, Pressable, Image } from "react-native";
 import { AppColors } from "../constants/AppColor";
 import { Surface } from "react-native-paper";
 import { AppFontFamily } from "../constants/AppFonts";
-export const Header = ({ isBack = true, close, text = '', isRight= false, right }) => {
+export const Header = ({ isBack = true, close, text = '', isRight= false, right , rightClick}) => {
 
 
     return (
@@ -24,7 +24,7 @@ export const Header = ({ isBack = true, close, text = '', isRight= false, right 
             <View style={{ width: '50%', height: 60, alignItems: 'center', paddingRight: 20, justifyContent: 'center' }}>
                 <Text style={{ fontFamily: AppFontFamily.PopinsMedium, fontSize: 18, color: AppColors.themeBlackColor }}>{text}</Text>
             </View>
-            <Pressable style={{ width: '25%', height: 50, alignItems: 'flex-end', paddingRight: 20, justifyContent: 'center' }}>
+            <Pressable onPress={rightClick} style={{ width: '25%', height: 50, alignItems: 'flex-end', paddingRight: 20, justifyContent: 'center' }}>
             {
                     isRight ?
                 <Surface style={{ backgroundColor: AppColors.themesWhiteColor, marginBottom: 10, width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }} elevation={4}>

@@ -30,6 +30,7 @@ import { getProfileDataRequest, getExistingDataRequest } from '../../redux/actio
 import { AppFontFamily } from "../../components/constants/AppFonts";
 import { AddVehiclePopup } from "../../components/popupComponents/AddVehiclePopup";
 import CommonLoaders from "../../components/loader/Loader";
+import { decode } from "@mapbox/polyline";
 
 class FindRide extends Component {
 
@@ -384,7 +385,7 @@ class FindRide extends Component {
                         loader={false}
                     />
                 </View> */}
-                <CommonLoaders.SearchRide/>
+                <CommonLoaders.SearchRide />
 
             </View>
 
@@ -484,11 +485,33 @@ class FindRide extends Component {
 
     }
 
+    getCoords(result) {
+
+        let coordsArray = []
+        for (let data of result) {
+
+            let points = decode(data.overview_polyline.points);
+            // console.log(points);
+            let coords = points.map((point, index) => {
+                return {
+                    latitude: point[0],
+                    longitude: point[1]
+                };
+            });
+            coordsArray.push(coords)
+        }
+        
+        return coordsArray
+    }
 
     getPolylineCoordinats = async (pick, drop) => {
 
         const result = await hitApiToGetRoutes(pick, drop)
         console.log(result.data)
+        const coordsData = this.getCoords(result.data)
+        // console.log(coordsArray, 'coords array')
+
+
         let myData = []
         let i = 0;
         for (let data of result.data) {
@@ -505,6 +528,8 @@ class FindRide extends Component {
                 }
 
                 let abc = {
+                    'selected' : i == 0 ? 'yes' : 'no',
+                    'coords': coordsData[i],
                     "cords": arr,
                     "distance": leg.distance.text,
                     "duration": leg.duration.text,
@@ -542,9 +567,17 @@ class FindRide extends Component {
 
     onViewClick() {
 
-        const from = this.state.existingData?.from
+        if(this.state.existingData?.multi)
+        {
+            this.props.navigation.navigate('RideHistory', { from: this.state.existingData?.from })
+        }
+        else{
+            const from = this.state.existingData?.from
+    
+            this.props.navigation.navigate(this.state.existingData?.screenname, { id: this.state.existingData?.id, from: from })
 
-        this.props.navigation.navigate(this.state.existingData?.screenname, { id: this.state.existingData?.id, from: from })
+        }
+
     }
 
     checkExistingRequest() {
@@ -680,6 +713,7 @@ class FindRide extends Component {
         this.setState({ openAddVeh: false })
     }
     addCar() {
+        this.closeVehPopUp()
         this.props.navigation.navigate('AddVehicle')
     }
     offerRideView = () => {
@@ -767,7 +801,9 @@ class FindRide extends Component {
                         null}
 
                 </View>
-
+                <View style={{ position: 'absolute', width: '100%', backgroundColor: 'transparent' }}>
+                    <Header isBack={false} close={() => this.props.navigation.openDrawer()} isRight={true} right={require('../../assets/notification.png')} />
+                </View>
 
 
                 {this.state.isSearch == 'cancel' ? this.SearchOffer(name, gender) : this.state.isSearch == 'start' ? this.searchLoaderScreen() : this.NoRideFound()}
@@ -812,9 +848,7 @@ class FindRide extends Component {
                     )}
                 />
 
-                <View style={{ width: '100%', position: 'absolute', top: 0 }}>
-                    <Header isBack={false} close={() => this.props.navigation.openDrawer()} isRight={true} right={require('../../assets/notification.png')} />
-                </View>
+
 
                 < SearchLocation
                     headerText={'Select address'}

@@ -26,7 +26,7 @@ export default function OfferedRides({ selectedData }) {
 
                 setOfferedArr(result.data)
                 setIsLoading(true)
-                // console.log(result.data, 'offered')
+                console.log(result, 'offered')
                 // console.log(result.data.cotravellerData, 'cotraveller data', result.data.rideData, 'ride data')
             }
 
@@ -39,6 +39,15 @@ export default function OfferedRides({ selectedData }) {
         }
     }, []);
 
+
+    const calculatedJourneyEndTime = (startTime, approxTime) => {
+
+
+        let finishTime = new Date(startTime)
+        finishTime.setUTCMilliseconds(approxTime)
+        return(moment(finishTime).format('HH:mm'))
+
+    }
 
     const listView = () => {
         return (
@@ -65,7 +74,7 @@ export default function OfferedRides({ selectedData }) {
                             <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
                                 <View style={{ justifyContent: 'center' }}>
 
-                                    <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(item.date).format('DD MMM YYYY, HH:mm')}</Text>
+                                    <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(item.journey_start_at).format('DD MMM YYYY, HH:mm')}</Text>
 
                                 </View>
                             </View>
@@ -79,7 +88,7 @@ export default function OfferedRides({ selectedData }) {
                                     <View style={{ width: '25%', alignItems: 'center', justifyContent: 'center' }}>
 
                                         <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 13 }}>{moment(item.date).format('HH:mm') + '   '}</Text>
+                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 13 }}>{moment(item.journey_start_at).format('HH:mm') + '   '}</Text>
                                             <Image source={require('../../assets/dotone.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
                                         </View>
                                         <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
@@ -89,7 +98,7 @@ export default function OfferedRides({ selectedData }) {
                                             {/* <Image source={require('../../assets/dotline.png')} style={{ marginLeft: 0, width: 5, height: 50, resizeMode: 'contain' }} /> */}
                                         </View>
                                         <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 13 }}>{moment(item.date).format('HH:mm') + '   '}</Text>
+                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 13 }}>{calculatedJourneyEndTime(item.journey_start_at, item.journey_approx_time) + '   '}</Text>
                                             <Image source={require('../../assets/triangle.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
                                         </View>
 
