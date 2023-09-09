@@ -4,7 +4,7 @@ import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader';
 import moment from 'moment';
 import Toast from 'react-native-simple-toast'
-// import messaging from '@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
 // import PushNotification from 'react-native-push-notification';
 import { hitApiToChackeChatExist, hitApiToMessageForParticularUser, hitApiToSendMessage } from './MessageModal';
 import { Surface } from 'react-native-paper';
@@ -54,21 +54,21 @@ export default function Chat({ navigation, route }) {
 
         return () => {
             // clear/remove event listener
-            // unsubscribeOnMessage();
+            unsubscribeOnMessage();
         }
     }, []);
 
 
 
-    // const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
+    const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
 
-    // console.log("DEBUG: Received FCM message: " + JSON.stringify(remoteMessage));
+    console.log("DEBUG: Received FCM message: " + JSON.stringify(remoteMessage));
 
     // Function to process new message and insert into local storage
     // if (refreshPage)
     // {
 
-    // await getAllMsg();
+    await getAllMsg();
     // }
 
     // Display notification to user
@@ -76,7 +76,7 @@ export default function Chat({ navigation, route }) {
     // Trigger refresh of FlatList component with setState
     // setRefreshPage(Math.random() * 100);
 
-    // });
+    });
 
     const scrollToBottom = (msg) => {
         //OnCLick of down button we scrolled the list to bottom
@@ -225,7 +225,7 @@ export default function Chat({ navigation, route }) {
 
 
 
-            <View style={{ height: '85%' }}>
+            <View style={{ height: '83%' }}>
                 <FlatList
                     data={message}
                     // refreshControl={
@@ -260,10 +260,10 @@ export default function Chat({ navigation, route }) {
 
             <Surface style={{ width: '100%', height: 60, flexDirection: 'row', alignItems: 'center' }}>
 
-                <View style={{ width: '10%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                {/* <View style={{ width: '10%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
                     <Image source={require('../../assets/add.png')} style={{ borderColor: AppColors.themeCardBorderColor, width: 30, height: 30, resizeMode: 'contain' }} />
-                </View>
-                <View style={{ width: '75%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                </View> */}
+                <View style={{ width: '85%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
                     <TextInput
                         onChangeText={text => setText(text)}
                         value={text}
