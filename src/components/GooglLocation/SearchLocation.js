@@ -15,7 +15,7 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
     console.log(lat, lng, 'lat')
     const fetchPredictions = async (text) => {
         console.log(text, 'search text')
-        const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${AppKeys.API_KEY}&input=${text}&types=establishment&components=country:in`;
+        const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${AppKeys.API_KEY}&input=${text}&types=establishment&components=country:in&location=${lat},${lng}&radius=5000`;
 
         try {
             const response = await fetch(apiUrl);
