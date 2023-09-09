@@ -17,6 +17,7 @@ export default function UploadDocuments({ navigation, route }) {
     const [docNumber, setDocNumber] = React.useState('')
     const [rawDate, setRawDate] = React.useState('')
     const [licenceName, setLicenceName] = React.useState('')
+    const [aadharName, setAadharName] = React.useState('')
     const screenWidth = Dimensions.get('screen').width / 2 - 35
     const [openPhoto, setOpenPhoto] = React.useState(false)
     const [openDOB, setDOB] = React.useState(false)
@@ -46,25 +47,36 @@ export default function UploadDocuments({ navigation, route }) {
             if (data.index == 0) {
                 // console.log(data, 'data')
 
-                if (docNumber.length == 12) {
+                if (docNumber.length < 1) {
 
-                    AadharCardKYC()
-                    setIsLoading(true)
+                    Alert.alert('Enter valid aadhar number')
+
+                }
+                else if (aadharName < 4) {
+                    Alert.alert('Enter full name as per aadhar card')
                 }
                 else {
-                    Alert.alert('Enter valid aadhar nuber')
+                    AadharCardKYC()
+                    setIsLoading(true)
                 }
             }
             else {
                 // console.log(data, 'data')
 
-                if (docNumber.length > 12) {
+                if (docNumber.length < 12) {
 
-                    DrivingLicenceKYC()
-                    setIsLoading(true)
+                    Alert.alert('Enter valid licence number')
+
+                }
+                else if (selectedDate == 'DOB as per Driving Licence') {
+                    Alert.alert('Enter DOB')
+                }
+                else if (licenceName < 4) {
+                    Alert.alert('Enter full name as per driving licence')
                 }
                 else {
-                    Alert.alert('Enter valid licence nuber')
+                    DrivingLicenceKYC()
+                    setIsLoading(true)
                 }
             }
 
@@ -117,7 +129,7 @@ export default function UploadDocuments({ navigation, route }) {
         const result = await hitApiForVerifyAdhaarNumber(docNumber)
         setIsLoading(false)
         console.log(result, 'verify doc result')
-        navigation.navigate('VerifyAadharOTP', { clientId: result.clientId })
+        navigation.navigate('VerifyAadharOTP', { clientId: result.clientId, name: aadharName, aadharNumber: docNumber })
     }
 
     const DrivingLicenceKYC = async () => {
@@ -333,11 +345,11 @@ export default function UploadDocuments({ navigation, route }) {
                                 </Text>
                             </View>
 
-                            <View style={{ width: '60%', alignItems: 'flex-end' }}>
+                            <Pressable onPress={()=> navigation.goBack()} style={{ width: '60%', alignItems: 'flex-end' }}>
                                 <Text style={{ marginLeft: 20, fontFamily: AppFontFamily.PopinsRegular, fontSize: 10, color: AppColors.themeTextGrayColor }}>
                                     {'Change'}
                                 </Text>
-                            </View>
+                            </Pressable>
 
                         </View>
                         <View style={{ width: '100%', height: 1, backgroundColor: AppColors.themeCardBorderColor }}></View>
@@ -353,6 +365,28 @@ export default function UploadDocuments({ navigation, route }) {
                                     onChangeText={text => setDocNumber(text)}
                                     value={docNumber}
                                     placeholder={"Enter " + data.type}
+                                    placeholderTextColor={AppColors.themeTextGrayColor}
+                                    style={{ backgroundColor: AppColors.themesWhiteColor, borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 5, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '100%', fontSize: 12, textAlign: 'left' }}
+                                    keyboardType={
+                                        Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                                    }
+                                />
+
+                            </View>
+
+                        </View>
+
+                        <View style={{ width: '92%', flexDirection: 'row', height: 100, alignItems: 'center' }}>
+
+                            <View style={{ width: '100%', justifyContent: 'center' }}>
+                                <Text style={{ margintop: 0, marginBottom: 5, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeBlackColor }}>
+                                    {'Name as per Aadhar Card'}
+                                </Text>
+
+                                <TextInput
+                                    onChangeText={text => setAadharName(text)}
+                                    value={aadharName}
+                                    placeholder={"Enter name as per Aadhar Card"}
                                     placeholderTextColor={AppColors.themeTextGrayColor}
                                     style={{ backgroundColor: AppColors.themesWhiteColor, borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 5, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '100%', fontSize: 12, textAlign: 'left' }}
                                     keyboardType={

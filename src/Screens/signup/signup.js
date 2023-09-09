@@ -102,12 +102,13 @@ export default function SignupScreen({ navigation }) {
         console.log(result, 'login Respnse')
         if (result.status) {
             Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
-            navigation.dispatch(
-                CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: 'RideDrawer' }],
-                })
-            );
+            navigation.navigate('KycScreen')
+            // navigation.dispatch(
+            //     CommonActions.reset({
+            //         index: 0,
+            //         routes: [{ name: 'RideDrawer' }],
+            //     })
+            // );
 
         }
         else {

@@ -12,13 +12,15 @@ import { AppKeys } from '../../components/constants/AppKeys'
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { AppFontFamily } from '../../components/constants/AppFonts'
 import { hitApiForSignUp } from '../signup/SignupModal'
-import { hitApiForVerifyAdhaarOTP } from './KycModal'
+import { hitApiForVerifyAdhaarNumber, hitApiForVerifyAdhaarOTP } from './KycModal'
+import CommonLoaders from '../../components/loader/Loader'
 
 export default function VerifyAadharOTP({ navigation, route }) {
     const [otp, setOtp] = React.useState("");
-    const [newSecret, setNewSecter] = React.useState("");
+    const [isLoading, setIsLoading] = React.useState(false)
     console.log(route.params, 'route')
-    const { clientId } = route.params;
+    const { name, aadharNumber } = route.params;
+    let { clientId } = route.params;
 
     useEffect(() => {
 
@@ -31,12 +33,12 @@ export default function VerifyAadharOTP({ navigation, route }) {
 
         // const deviceToken = await Storage.getSavedItem('fcmToken')
         if ((!(otp) == '') && (otp.length == 6)) {
-
-            const result = await hitApiForVerifyAdhaarOTP(clientId, otp)
+            setIsLoading(true)
+            const result = await hitApiForVerifyAdhaarOTP(clientId, otp, name)
             console.log(result, 'kyc result')
             if (result.status) {
                 // Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
-
+                setIsLoading(false)
                 // if (result.kyc_status) {
                 navigation.reset({
                     index: 0,
@@ -49,7 +51,7 @@ export default function VerifyAadharOTP({ navigation, route }) {
                 // }
             }
             else {
-
+                setIsLoading(false)
                 Toast.showWithGravity('Invalid otp', 2, Toast.TOP);
                 // Toast.show(themes.appCustomTexts.InvalidOTPText);
             }
@@ -61,13 +63,14 @@ export default function VerifyAadharOTP({ navigation, route }) {
     }
 
 
-    const resendOTP = async () => {
+    const resendAadharOTP = async () => {
 
-        const result = await hitApiForVerifyAdhaarOTP( clientId, otp)
+        const result = await hitApiForVerifyAdhaarNumber(aadharNumber)
 
         if (result.status) {
-           
-            
+
+            clientId = result.clientId
+            Toast.showWithGravity('OTP successfully sent to the number associated with your aadhar card', 2, Toast.TOP);
             console.log(result, 'result')
         }
 
@@ -77,7 +80,7 @@ export default function VerifyAadharOTP({ navigation, route }) {
         <View style={{ flex: 1, backgroundColor: AppColors.themesWhiteColor }}>
 
             <View style={{ width: '100%', height: '20%' }}>
-                <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, marginTop: 200, resizeMode: 'contain' }} />
+                <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 200, resizeMode: 'contain' }} />
             </View>
 
 
@@ -85,19 +88,19 @@ export default function VerifyAadharOTP({ navigation, route }) {
             <View style={{ width: '100%', alignItems: 'center' }}>
                 <View style={{ width: '90%', justifyContent: 'center' }}>
                     <Text style={{ fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
-                        {'Check your email'}
+                        {'Check your SMS'}
                     </Text>
                     <Text style={{ fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular }}>
                         {'We’ve sent a 6-digit confirmation code to the phone number linked with your aadhar card'}
                     </Text>
-                    <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 20, height: 200 }}>
+                    <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 20, height: 200 }}>
                         <OTPInputView
-                            style={{ width: '80%', height: 40, marginRight: 60 }}
+                            style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}
                             pinCount={6}
                             autoFocusOnLoad
                             textContentType={'oneTimeCode'}
                             onCodeChanged={(otpNumber) => setOtp(otpNumber)}
-                            codeInputFieldStyle={{ width: 50, borderWidth: 1, borderRadius: 5, height: 70, marginLeft: 10, color: AppColors.themeBlackColor, fontSize: 28, borderColor: AppColors.themeTextGrayColor, backgroundColor: AppColors.themeCardBorderColor }}
+                            codeInputFieldStyle={{ width: 50, borderWidth: 1, borderRadius: 5, height: 70, marginLeft: 5, marginRight: 5, color: AppColors.themeBlackColor, fontSize: 28, borderColor: AppColors.themeTextGrayColor, backgroundColor: AppColors.themeCardBorderColor }}
                             codeInputHighlightStyle={{ borderBottomWidth: 1.5, borderBottomColor: AppColors.themePrimaryColor }}
                             keyboardType="numeric"
                             code={otp}
@@ -170,12 +173,14 @@ export default function VerifyAadharOTP({ navigation, route }) {
 
 
             <View style={{ width: '100%', alignItems: 'center', height: 50, position: 'absolute', bottom: 0 }}>
-                <TouchableOpacity onPress={() => resendOTP()} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
+                <TouchableOpacity onPress={() => resendAadharOTP()} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ fontSize: 16, color: AppColors.themeTextGrayColor }}>{"Didn't receive code? "}
                         <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{' Resend Code'}</Text>
                     </Text>
                 </TouchableOpacity>
             </View>
+
+            <CommonLoaders.ChatLoader isLoading={isLoading} loaderText={'OTP verification in process...Please wait'} />
 
 
         </View>

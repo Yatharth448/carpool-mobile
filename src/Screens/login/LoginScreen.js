@@ -105,12 +105,17 @@ export default function LoginScreen({ navigation }) {
  console.log(result, 'login Respnse')
             if (result.status) {
                 Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
-                navigation.dispatch(
-                    CommonActions.reset({
-                        index: 0,
-                        routes: [{ name: 'RideDrawer' }],
+                
+                if (result?.kyc_status) {
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'RideDrawer' }],
                     })
-                );
+                  }
+                  else {
+                    navigation.navigate('KycScreen')
+          
+                  }
 
             }
             else {

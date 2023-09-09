@@ -35,7 +35,7 @@ export default function OTPScreen({ navigation, route }) {
       if (result.status) {
         Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
 
-        if (result.kyc_status) {
+        if (result?.kyc_status) {
           navigation.reset({
             index: 0,
             routes: [{ name: 'RideDrawer' }],
