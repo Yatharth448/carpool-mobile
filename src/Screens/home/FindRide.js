@@ -802,7 +802,8 @@ class FindRide extends Component {
 
                 </View>
                 <View style={{ position: 'absolute', width: '100%', backgroundColor: 'transparent' }}>
-                    <Header isBack={false} close={() => this.props.navigation.openDrawer()} isRight={true} right={require('../../assets/notification.png')} />
+                    <Header isBack={false} close={() => this.props.navigation.openDrawer()} isRight={true} right={require('../../assets/notification.png')}/>
+                    {/* <Header isBack={false} close={() => this.props.navigation.openDrawer()} isRight={true} right={require('../../assets/notification.png')} rightClick={()=> this.props.navigation.navigate('KycScreen')}/> */}
                 </View>
 
 

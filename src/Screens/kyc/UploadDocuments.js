@@ -10,6 +10,7 @@ import { hitApiForDLKYC, hitApiForUploadDocument, hitApiForVerifyAdhaarNumber } 
 import moment from 'moment';
 import DOBView from '../../components/datetimeview/DOBView'
 import { CommonActions } from '@react-navigation/native'
+import CommonLoaders from '../../components/loader/Loader'
 
 export default function UploadDocuments({ navigation, route }) {
 
@@ -24,15 +25,16 @@ export default function UploadDocuments({ navigation, route }) {
     const [isFront, setIsFront] = React.useState(true)
     const [frontImg, setFrontImg] = React.useState(null)
     const [bckImg, setBackImg] = React.useState(null)
+    const [isLoading, setIsLoading] = React.useState(false)
     const { data } = route.params;
-    
+
     const onNextPress = async () => {
 
         if (docNumber == '') {
 
             if (frontImg && bckImg) {
                 uploadDoc()
-
+                setIsLoading(true)
             }
             else {
                 Alert.alert('Front/Back image is necessary')
@@ -47,7 +49,7 @@ export default function UploadDocuments({ navigation, route }) {
                 if (docNumber.length == 12) {
 
                     AadharCardKYC()
-
+                    setIsLoading(true)
                 }
                 else {
                     Alert.alert('Enter valid aadhar nuber')
@@ -59,6 +61,7 @@ export default function UploadDocuments({ navigation, route }) {
                 if (docNumber.length > 12) {
 
                     DrivingLicenceKYC()
+                    setIsLoading(true)
                 }
                 else {
                     Alert.alert('Enter valid licence nuber')
@@ -90,14 +93,14 @@ export default function UploadDocuments({ navigation, route }) {
 
         const result = await hitApiForUploadDocument(params, onUploadProgress)
         if (result.status) {
-
+            setIsLoading(false)
             console.log(result, 'upload doc result')
             navigation.dispatch(
                 CommonActions.reset({
-                  index: 0,
-                  routes: [{ name: 'RideDrawer' }],
+                    index: 0,
+                    routes: [{ name: 'RideDrawer' }],
                 })
-              );
+            );
 
         }
 
@@ -112,7 +115,7 @@ export default function UploadDocuments({ navigation, route }) {
     const AadharCardKYC = async () => {
 
         const result = await hitApiForVerifyAdhaarNumber(docNumber)
-
+        setIsLoading(false)
         console.log(result, 'verify doc result')
         navigation.navigate('VerifyAadharOTP', { clientId: result.clientId })
     }
@@ -120,6 +123,7 @@ export default function UploadDocuments({ navigation, route }) {
     const DrivingLicenceKYC = async () => {
 
         const result = await hitApiForDLKYC(docNumber, rawDate, licenceName)
+        setIsLoading(false)
         console.log(result, 'DL KYC')
     }
 
@@ -410,6 +414,7 @@ export default function UploadDocuments({ navigation, route }) {
                     onPressGal={() => { openGall() }}
                 />
 
+                <CommonLoaders.ChatLoader isLoading={isLoading} loaderText={'Updating KYC...Please wait'} />
 
             </View>
         </ScrollView>
