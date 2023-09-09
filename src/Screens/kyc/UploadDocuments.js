@@ -289,9 +289,9 @@ export default function UploadDocuments({ navigation, route }) {
                             placeholder={"Enter name as per DL"}
                             placeholderTextColor={AppColors.themeTextGrayColor}
                             style={{ backgroundColor: AppColors.themesWhiteColor, borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 5, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '100%', fontSize: 12, textAlign: 'left' }}
-                            keyboardType={
-                                Platform.OS === 'android' ? 'numeric' : 'number-pad'
-                            }
+                            // keyboardType={
+                            //     Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                            // }
                         />
 
                     </View>
@@ -389,9 +389,9 @@ export default function UploadDocuments({ navigation, route }) {
                                     placeholder={"Enter name as per Aadhar Card"}
                                     placeholderTextColor={AppColors.themeTextGrayColor}
                                     style={{ backgroundColor: AppColors.themesWhiteColor, borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 5, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '100%', fontSize: 12, textAlign: 'left' }}
-                                    keyboardType={
-                                        Platform.OS === 'android' ? 'numeric' : 'number-pad'
-                                    }
+                                    // keyboardType={
+                                    //     Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                                    // }
                                 />
 
                             </View>

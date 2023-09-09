@@ -6,16 +6,16 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { AppFontFamily } from '../constants/AppFonts';
 import { Surface } from 'react-native-paper';
 
-export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionPress }) => {
+export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionPress, lat, lng }) => {
     const [selectedInput, setSelectedInput] = useState(null);
     const [pick, setPick] = useState('');
     const [pickMain, setPickMain] = useState('');
     const [drop, setDrop] = useState('');
     const [predictions, setPredictions] = useState([]);
-
+    console.log(lat, lng, 'lat')
     const fetchPredictions = async (text) => {
         console.log(text, 'search text')
-        const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${AppKeys.API_KEY}&input=${text}&types=address`;
+        const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${AppKeys.API_KEY}&input=${text}&types=establishment&components=country:in`;
 
         try {
             const response = await fetch(apiUrl);
@@ -164,7 +164,7 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
 
 
                             <FlatList
-                                contentContainerStyle={{ height: Dimensions.get('window').height * .73 , marginTop: 20}}
+                                contentContainerStyle={{ height: Dimensions.get('window').height * .73, marginTop: 20 }}
                                 data={predictions}
                                 keyboardShouldPersistTaps={'always'}
                                 renderItem={({ item }) => (

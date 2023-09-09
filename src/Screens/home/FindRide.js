@@ -124,6 +124,7 @@ class FindRide extends Component {
     }
     async componentDidMount() {
 
+        console.log(this.state.location, 'loc')
         this._unsubscribe = this.props.navigation.addListener('focus', async () => {
 
             await this.getRideNotificationData()
@@ -856,6 +857,8 @@ class FindRide extends Component {
                     isLoading={this.state.openSearch ? true : false}
                     closePopup={this.openLocationSearch}
                     onSelectionPress={this.onSelectionPress}
+                    lat={this.state.location.latitude}
+                    lng={this.state.location.longitude}
                 />
             </View >
         )
