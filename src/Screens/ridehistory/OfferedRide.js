@@ -7,6 +7,7 @@ import { AppTexts } from '../../components/constants/AppTexts'
 import moment from 'moment'
 import { hitApiToGetOfferedRide } from './RideHistoryModal'
 import CommonLoaders from '../../components/loader/Loader'
+import { calculatedJourneyEndTime } from '../../components/commonfunction/CommonFunctions'
 
 export default function OfferedRides({ selectedData }) {
 
@@ -40,14 +41,7 @@ export default function OfferedRides({ selectedData }) {
     }, []);
 
 
-    const calculatedJourneyEndTime = (startTime, approxTime) => {
-
-
-        let finishTime = new Date(startTime)
-        finishTime.setUTCMilliseconds(approxTime)
-        return(moment(finishTime).format('HH:mm'))
-
-    }
+    
 
     const listView = () => {
         return (

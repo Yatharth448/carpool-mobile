@@ -8,9 +8,9 @@ const width = Dimensions.get('window').width - 40
 const CommonLoaders =
 {
 
-    NoDataInList: (message) => {
+    NoDataInList: (message, style) => {
         return (
-            <View style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+            <View style={[{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }, style]}>
                 <Text style={{ fontFamily: AppFontFamily.PopinsBold, fontSize: 24, color: AppColors.themeTextGrayColor }}>{message}</Text>
             </View>
         )

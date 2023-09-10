@@ -53,7 +53,8 @@ export default function FindRideList({ navigation, route }) {
 
     const requestRide = async (item, itemIndex) => {
         const result = await hitApiToRequestARide(
-            item._id, seat,
+            item._id, 
+            seat,
             item.intresected_source_lat,
             item.intresected_source_long,
             item.intresected_destination_lat,

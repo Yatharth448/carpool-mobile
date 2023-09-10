@@ -130,9 +130,9 @@ export default function RequestedRides({ selectedRequest }) {
 
 
     return (
-        <View style={{ height: Dimensions.get('window').height * .78 }}>
+        <View style={{ height: Dimensions.get('window').height * .83 }}>
 
-{isLoading ? requestedArr.length ? listView() : CommonLoaders.NoDataInList('No requested ride found') : CommonLoaders.RideHistoryLoader()}
+            {isLoading ? requestedArr.length ? listView() : CommonLoaders.NoDataInList('No requested ride found') : CommonLoaders.RideHistoryLoader()}
         </View>
     )
 }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,20 +10,20 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {AppColors} from '../../components/constants/AppColor';
+import { AppColors } from '../../components/constants/AppColor';
 import moment from 'moment';
-import {Header} from '../../components/commomheader/CommonHeader';
+import { Header } from '../../components/commomheader/CommonHeader';
 import {
   hitApiToRequestGetEstimatedPrice,
   hitApiToRequestUpdateEstimatedPrice,
   hitApiToSaveRide,
 } from '../home/RideModal';
 import Toast from 'react-native-simple-toast';
-import MapView, {Polyline, Marker} from 'react-native-maps';
-import {PriceSelection} from '../../components/priceselection/PriceSelection';
-import {AppFontFamily} from '../../components/constants/AppFonts';
-import {apigetRideDetails} from './StartRideModel';
-import {ButtonPrimary} from '../../components/button/buttonPrimary';
+import MapView, { Polyline, Marker } from 'react-native-maps';
+import { PriceSelection } from '../../components/priceselection/PriceSelection';
+import { AppFontFamily } from '../../components/constants/AppFonts';
+import { apigetRideDetails } from './StartRideModel';
+import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import {
   GetCurrentLocation,
   checkLocationPermission,
@@ -38,7 +38,7 @@ function calculateLatLongDelta() {
   const latDelta = northeastLat - southwestLat;
   const lngDelta = latDelta * ASPECT_RATIO;
 }
-export default function StartRideCarpooler({navigation, route}) {
+export default function StartRideCarpooler({ navigation, route }) {
   // let  path1 = [];
   const mapRef = React.useRef(null);
 
@@ -85,7 +85,7 @@ export default function StartRideCarpooler({navigation, route}) {
     }, []);
 
     mapRef.current.fitToCoordinates(coordinates, {
-      edgePadding: {top: 50, right: 50, bottom: 50, left: 100},
+      edgePadding: { top: 50, right: 50, bottom: 50, left: 100 },
       animated: true,
     });
   };
@@ -109,7 +109,7 @@ export default function StartRideCarpooler({navigation, route}) {
         drop: drop,
       };
 
-      navigation.navigate('Success', {item: itemData});
+      navigation.navigate('Success', { item: itemData });
     } else {
       Toast.showWithGravity(
         result.message ?? result.error ?? 'Something went wrong',
@@ -201,7 +201,7 @@ export default function StartRideCarpooler({navigation, route}) {
             <Marker coordinate={routeData.paths[routeData.paths.length - 1]}>
               <Image
                 source={require('../../assets/mapmarker3.png')}
-                style={{width: 30, height: 33}}
+                style={{ width: 30, height: 33 }}
                 resizeMode="contain"
               />
             </Marker>
@@ -216,7 +216,7 @@ export default function StartRideCarpooler({navigation, route}) {
               latitudeDelta: 0.922,
               longitudeDelta: 0.0421,
             }}
-            markers={{latitude: 28.6539952, longitude: 76.973255}}
+            markers={{ latitude: 28.6539952, longitude: 76.973255 }}
             loading={false}
             customMapStyle={[
               {
@@ -251,10 +251,11 @@ export default function StartRideCarpooler({navigation, route}) {
         </View>
       )}
 
-      <View style={{position: 'absolute', top: 0}}>
+      <View style={{ position: 'absolute', top: 0 }}>
         <Header
+          isBack={false}
           close={() => {
-            navigation.goBack();
+            navigation.openDrawer();
           }}
           text=""
         />
@@ -340,7 +341,7 @@ export default function StartRideCarpooler({navigation, route}) {
               </Text>
             </View>
 
-            <View style={{width: 'auto'}}>
+            <View style={{ width: 'auto' }}>
               <Text
                 style={{
                   width: '100%',
@@ -474,7 +475,7 @@ export default function StartRideCarpooler({navigation, route}) {
                   </Text>
                 </View>
               </View>
-              <View style={{marginLeft: 0, width: '100%', height: 0}}></View>
+              <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
               <View
                 style={{
                   width: '100%',
@@ -515,7 +516,7 @@ export default function StartRideCarpooler({navigation, route}) {
               alignItems: 'center',
             }}>
             <ButtonPrimary
-              style={{width: '90%'}}
+              style={{ width: '90%' }}
               text={'Start Ride'}
               onPress={() => this.searchRide()}
               loader={false}

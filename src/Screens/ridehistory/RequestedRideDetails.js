@@ -92,9 +92,9 @@ export default function RequestedRideDetails({ navigation, route }) {
             // console.log(updatedArray, 'arr')
             setCotravellerArray(updatedArray)
 
-            getRideDetail()
             // navigation.goBack()
         }
+        getRideDetail()
 
         // getRideDetail()
     }
@@ -244,20 +244,20 @@ export default function RequestedRideDetails({ navigation, route }) {
     }
 
 
-    const CotravellerList = ({ cotravellerArray }) => {
+    const CotravellerList = ({ cotravellrArray }) => {
 
-        console.log(cotravellerArray.length, 'len')
+        console.log(cotravellrArray.length, 'len')
         return (
 
             <>
 
-                <View style={{ height: Dimensions.get('window').height * .9, marginTop: 10 }}>
+                <View style={{ height: cotravellerArray.length > 0 ?  Dimensions.get('window').height * .9 :  Dimensions.get('window').height * .6, marginTop: 10 }}>
 
                     <FlatList
                         // contentContainerStyle={{alignItems: 'center', width: Dimensions.get('window').width,}}
                         ref={flatListRef}
                         ListHeaderComponent={<RideDetailView />}
-                        data={cotravellerArray}
+                        data={cotravellrArray}
                         renderItem={AcceptedRideView}
                         // horizontal
                         // pagingEnabled
@@ -265,17 +265,7 @@ export default function RequestedRideDetails({ navigation, route }) {
                     // onMomentumScrollEnd={handlePageChange}
                     />
                 </View>
-                {/* <View style={styles.paginationContainer}>
-                    {cotravellerArray.map((_, index) => (
-                        <View
-                            key={index}
-                            style={[
-                                styles.paginationDot,
-                                index === currentIndex && styles.activePaginationDot,
-                            ]}
-                        />
-                    ))}
-                </View> */}
+                { cotravellerArray.length > 0 ? null : CommonLoaders.NoDataInList('No co-traveller found', {height: '25%'})}
 
             </>
 
@@ -377,7 +367,7 @@ export default function RequestedRideDetails({ navigation, route }) {
 
                                     <Image source={require('../../assets/btncall.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
                                 </Pressable>
-                                <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': rideData[0].id, 'id': rideData[0]._id, 'cotravellerName': rideData[0].name, from: 'chat' })} style={{ width: '35%', justifyContent: 'center', alignItems: 'center' }}>
+                                <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': rideData[0].id, 'id': rideData[0]._id, 'cotravellerName': rideData[0].name, from: 'chat', phone: rideData[0].contact })} style={{ width: '35%', justifyContent: 'center', alignItems: 'center' }}>
 
                                     <Image source={require('../../assets/btnchat.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
                                 </Pressable>
@@ -423,7 +413,7 @@ return (
 
         {isLoading ?
             rideData.length ?
-                <CotravellerList cotravellerArray={cotravellerArray} />
+                <CotravellerList cotravellrArray={cotravellerArray} />
                 :
                 null : CommonLoaders.RideDetailLoader()
         }

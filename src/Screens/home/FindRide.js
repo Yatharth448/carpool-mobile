@@ -31,6 +31,7 @@ import { AppFontFamily } from "../../components/constants/AppFonts";
 import { AddVehiclePopup } from "../../components/popupComponents/AddVehiclePopup";
 import CommonLoaders from "../../components/loader/Loader";
 import { decode } from "@mapbox/polyline";
+// import { data } from "../../data";
 
 class FindRide extends Component {
 
@@ -124,8 +125,8 @@ class FindRide extends Component {
     }
     async componentDidMount() {
 
-        console.log(this.state.location, 'loc')
         this._unsubscribe = this.props.navigation.addListener('focus', async () => {
+            console.log( this.props.data, 'profile')
 
             await this.getRideNotificationData()
             await this.getSavedVehicles()
@@ -837,7 +838,7 @@ class FindRide extends Component {
                     // columnWrapperStyle={{ flexWrap: 'wrap' }}
                     // numColumns={5}
                     contentContainerStyle={{ width: Dimensions.get('window').width }}
-                    ListHeaderComponent={<this.HeaderView name={data.name} gender={data.gender} />}
+                    ListHeaderComponent={<this.HeaderView name={data?.name} gender={data?.gender} />}
                     keyExtractor={(item, index) => index}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (

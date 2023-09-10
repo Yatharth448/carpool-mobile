@@ -45,7 +45,10 @@ function RideDrawer() {
       screenOptions={{headerShown: false}}>
       <Drawer.Screen name="FindRide" component={FindRide} />
       <Drawer.Screen name="RideHistory" component={RideHistory} />
-
+      <Drawer.Screen
+          name="ActiveRideCarpooler"
+          component={StartRideCarpooler}
+        />
       <Drawer.Screen name="Payment" component={Payment} />
       {/* <Drawer.Screen name='MapRoutes' component={MapRoutes} />
                 <Drawer.Screen name='ProfileScreen' component={ProfileScreen} /> */}
@@ -85,10 +88,6 @@ export default function RootNav() {
         />
         <Stack.Screen name="KycScreen" component={KycScreen} />
         <Stack.Screen name="SignupScreen" component={SignupScreen} />
-        <Stack.Screen
-          name="ActiveRideCarpooler"
-          component={StartRideCarpooler}
-        />
         <Stack.Screen name="FindRideList" component={FindRideList} />
         <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />

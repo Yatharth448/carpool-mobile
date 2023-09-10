@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { Text, View, Image, TouchableOpacity, TextInput, Pressable, Dimensions, BackHandler } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 // import { TextInput } from 'react-native-paper'
@@ -42,26 +42,25 @@ export default function LoginScreen({ navigation }) {
         BackHandler.addEventListener("hardwareBackPress", backActionHandler);
 
         return () => {
-			// clear/remove event listener
-			BackHandler.removeEventListener("hardwareBackPress", backActionHandler);
-		}
+            // clear/remove event listener
+            BackHandler.removeEventListener("hardwareBackPress", backActionHandler);
+        }
 
-      }, [backActionHandler]);
+    }, [backActionHandler]);
 
-      const backActionHandler = (async () => {
-		
+    const backActionHandler = (async () => {
 
-	});
 
-      _signIn = async () => {
+    });
+
+    _signIn = async () => {
         try {
             await signOut()
             await GoogleSignin.hasPlayServices();
             console.log('success 1')
             // const { accessToken, idToken } = await GoogleSignin.signIn();
             const userInfo = await GoogleSignin.signIn();
-            if (userInfo?.user)
-            {
+            if (userInfo?.user) {
 
                 await userGoogleLogin(userInfo)
             }
@@ -88,40 +87,40 @@ export default function LoginScreen({ navigation }) {
 
     signOut = async () => {
         try {
-          await GoogleSignin.revokeAccess();
-          await GoogleSignin.signOut();
-        //   setloggedIn(false);
-        //   setuserInfo([]);
+            await GoogleSignin.revokeAccess();
+            await GoogleSignin.signOut();
+            //   setloggedIn(false);
+            //   setuserInfo([]);
         } catch (error) {
-          console.error(error);
+            console.error(error);
         }
-      };
+    };
 
 
     const userGoogleLogin = async (userInfo) => {
 
         const deviceToken = await Storage.getSavedItem('fcmToken')
         const result = await hitApiForGoogleLogin(userInfo.user.email, userInfo.user.id, deviceToken)
- console.log(result, 'login Respnse')
-            if (result.status) {
-                Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
-                
-                if (result?.kyc_status) {
-                    navigation.reset({
-                      index: 0,
-                      routes: [{ name: 'RideDrawer' }],
-                    })
-                  }
-                  else {
-                    navigation.navigate('KycScreen')
-          
-                  }
+        console.log(result, 'login Respnse')
+        if (result.status) {
+            Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
 
+            if (result?.kyc_status) {
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'RideDrawer' }],
+                })
             }
             else {
-               
-                Toast.showWithGravity(result.message, 2, Toast.TOP);
+                navigation.navigate('KycScreen')
+
             }
+
+        }
+        else {
+
+            Toast.showWithGravity(result.message, 2, Toast.TOP);
+        }
 
     }
 
@@ -149,7 +148,7 @@ export default function LoginScreen({ navigation }) {
 
             }
             else {
-               
+
                 Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
             }
             //    
@@ -183,11 +182,44 @@ export default function LoginScreen({ navigation }) {
                 <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 200, resizeMode: 'contain' }} />
             </View>
 
+            <View style={{ width: '90%',  justifyContent: 'center' }}>
+                <Text style={{marginLeft: 20, fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
+                    {'Login'}
+                </Text>
+            </View>
+
             <View style={{ width: '100%', alignItems: 'center' }}>
+
+                <Pressable onPress={() => _signIn()} style={{ width: '100%', marginTop: 40, alignItems: 'center' }}>
+
+                    <Surface style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 47, borderRadius: 5 }} elevation={2}>
+
+                        <View style={{ width: '30%', justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={require('../../assets/googlelogo.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
+                        </View>
+                        <View style={{ width: '60%', justifyContent: 'center', justifyContent: 'center' }}>
+                            <Text style={{ color: AppColors.themeCardBorderColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Sign in with Google'}</Text>
+                        </View>
+
+                    </Surface>
+
+                </Pressable>
+
+                <View style={{ width: '100%', marginTop: 40 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+
+                        <View style={{ width: '25%', height: 2, backgroundColor: AppColors.themeCardBorderColor }} />
+                        <Text style={{ color: AppColors.themeCardBorderColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'   or continue with   '}</Text>
+                        <View style={{ width: '25%', height: 2, backgroundColor: AppColors.themeCardBorderColor }} />
+
+                    </View>
+                </View>
+
                 <View style={{ width: '90%', justifyContent: 'center' }}>
-                    <Text style={{ fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium  }}>
-                        {'Login'}
-                    </Text>
+
+
+
+
                     <InputView left={require('../../assets/sms.png')} headText={'Email Id'} placeHolder={'Enter email id'} val={email} onChange={onChangeEmail} />
                     <InputView headText={'Password'} placeHolder={'Enter Password'} val={password} onChange={onChangePassword} right={showPassword ? 'eye-off-outline' : 'eye-outline'} rightClick={rightClick} secureText={showPassword} />
 
@@ -208,29 +240,8 @@ export default function LoginScreen({ navigation }) {
                 </View>
             </View>
 
-            <View style={{ width: '100%', marginTop: 40 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
 
-                    <View style={{ width: '25%', height: 2, backgroundColor: AppColors.themeCardBorderColor }} />
-                    <Text style={{ color: AppColors.themeCardBorderColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'   or continue with   '}</Text>
-                    <View style={{ width: '25%', height: 2, backgroundColor: AppColors.themeCardBorderColor }} />
 
-                </View>
-            </View>
-            <Pressable onPress={()=> _signIn()} style={{ width: '100%', marginTop: 40, alignItems: 'center' }}>
-
-                <Surface style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 47, borderRadius: 5 }} elevation={2}>
-
-                    <View style={{ width: '30%', justifyContent: 'center', alignItems: 'center' }}>
-                        <Image source={require('../../assets/googlelogo.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
-                    </View>
-                    <View style={{ width: '60%', justifyContent: 'center', justifyContent: 'center' }}>
-                        <Text style={{ color: AppColors.themeCardBorderColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Sign in with Google'}</Text>
-                    </View>
-
-                </Surface>
-
-            </Pressable>
 
             <View style={{ width: '100%', alignItems: 'center', height: 50, position: 'absolute', bottom: 0 }}>
                 <TouchableOpacity onPress={() => navigation.navigate('SignupScreen')} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>

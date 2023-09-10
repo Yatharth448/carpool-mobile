@@ -67,7 +67,7 @@ setCotravellerArray(data)
             return(
 
                 <ButtonPrimary
-                style={{ width: '100%' }}
+                style={{ width: '45%' }}
                 text={'Accept Ride'}
                 onPress={()=> _acceptOfferedRide(item, index)}
                 loader={false}
@@ -147,16 +147,16 @@ setCotravellerArray(data)
                     </View>
 
 
-                    <View style={{ width: '100%', flexDirection: 'row', height: 70, alignItems: 'center', marginTop: 30, justifyContent: 'space-between' }}>
+                    <View style={{ width: '100%', flexDirection: 'row', height: 70, alignItems: 'center', marginTop: 30, justifyContent: 'space-around' }}>
 
                         { acceptBtn(item, index)}
 
-                        {/* <ButtonPrimary
-                            style={{ width: '48%', backgroundColor: 'red' }}
+                        <ButtonPrimary
+                            style={{ width: '45%', backgroundColor: 'red' }}
                             text={'Reject ride'}
                             onPress={() => console.log('confirm', item)}
                             loader={false}
-                        /> */}
+                        />
 
                     </View>
 
