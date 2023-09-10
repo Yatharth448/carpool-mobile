@@ -27,7 +27,7 @@ export default function MapRoutes({navigation, route}) {
 
   const {pick, drop, date, seat, routeData, pickMainText, dropMainText} =
     route.params;
-  console.log('router data ', Object.keys(routeData));
+  console.log('router data ', routeData[0].coords);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [selectedDistance, setSelectedDistance] = React.useState(0);
   const [openPrice, setOpenPrice] = React.useState(false);
