@@ -25,8 +25,16 @@ export default function MapRoutes({navigation, route}) {
   // let  path1 = [];
   const mapRef = React.useRef(null);
 
-  const {pick, drop, date, seat, routeData, pickMainText, dropMainText} =
-    route.params;
+  const {
+    pick,
+    drop,
+    date,
+    seat,
+    routeData,
+    pickMainText,
+    dropMainText,
+    vehicle,
+  } = route.params;
   console.log('router data ', routeData[0].coords);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [selectedDistance, setSelectedDistance] = React.useState(0);
@@ -76,6 +84,7 @@ export default function MapRoutes({navigation, route}) {
       estimatedPrice,
       pickMainText,
       dropMainText,
+      vehicle,
     );
     console.log(result);
     if (result.status) {
