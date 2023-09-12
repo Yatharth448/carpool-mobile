@@ -6,7 +6,6 @@ import moment from 'moment';
 import Toast from 'react-native-simple-toast'
 import messaging from '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
-// import PushNotification from 'react-native-push-notification';
 import { hitApiToChackeChatExist, hitApiToMessageForParticularUser, hitApiToSendMessage } from './MessageModal';
 import { Surface } from 'react-native-paper';
 import { AppFontFamily } from '../../components/constants/AppFonts';
@@ -59,8 +58,6 @@ export default function Chat({ navigation, route }) {
         }
     }, []);
 
-
-
     const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
 
         console.log("DEBUG: Received FCM message: " + JSON.stringify(remoteMessage));
@@ -84,6 +81,11 @@ export default function Chat({ navigation, route }) {
         // setRefreshPage(Math.random() * 100);
 
     });
+
+     // messaging().onMessage(async (remoteMessage) => {
+    //     console.log('Received foreground notification: ', remoteMessage);
+    // });
+
 
     const scrollToBottom = (msg) => {
         //OnCLick of down button we scrolled the list to bottom

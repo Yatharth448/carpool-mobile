@@ -31,20 +31,20 @@ export default function MessageRoom({ navigation, route }) {
     }, []);
 
     const getChat = async (fetching = '') => {
-       
-            setFetching(true)
-        
+
+        setFetching(true)
+
 
         const result = await hitApiToGetChatList();
         console.log("msg room", result.data);
         if (result.status) {
             setMessage(result.data ?? [])
-            setFetching(false)
+
         }
         else {
             console.log(result)
         }
-
+        setFetching(false)
 
     }
 
@@ -87,7 +87,7 @@ export default function MessageRoom({ navigation, route }) {
                 )}
             />
 
-            {fetching ? CommonLoaders.ChatLoader() : null}
+            <CommonLoaders.ChatLoader isLoading={fetching} text={'Loading messages'}/>
 
 
         </View>

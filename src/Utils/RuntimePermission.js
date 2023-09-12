@@ -29,7 +29,7 @@ export async function request_storage_runtime_permission() {
 export const galleryPermission = async () => {
 
   const permission = await request(Platform.OS == 'ios' ? PERMISSIONS.IOS.PHOTO_LIBRARY : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE)
-  console.log(permission, 'gal')
+  console.log(permission, 'gal permission')
   if (permission == 'blocked' || permission == 'unavailable' || permission == 'denied') {
     return false
   }
@@ -40,7 +40,18 @@ export const galleryPermission = async () => {
 export const cameraPermission = async () => {
 
   const permission = await request(Platform.OS == 'ios' ? PERMISSIONS.IOS.CAMERA: PERMISSIONS.ANDROID.CAMERA)
-  console.log(permission, 'gal')
+  console.log(permission, 'cam permission')
+  if (permission == 'blocked' || permission == 'unavailable' || permission == 'denied') {
+    return false
+  }
+  else return true
+
+}
+
+export const puchNotificationPermission = async () => {
+
+  const permission = await request(Platform.OS == 'ios' ? PERMISSIONS.IOS.CAMERA: PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
+  console.log(permission, 'push permission')
   if (permission == 'blocked' || permission == 'unavailable' || permission == 'denied') {
     return false
   }

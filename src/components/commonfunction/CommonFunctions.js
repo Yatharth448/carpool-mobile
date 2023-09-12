@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { Alert } from 'react-native';
 export const convertToKms = (val) => {
 
     const km = Number(val) / 1000;
@@ -15,3 +16,22 @@ export const calculatedJourneyEndTime = (startTime, approxTime) => {
     
 
 }
+
+export const alertWithNav = (title = '', message, okPress) => {
+    //function to make three option alert
+    Alert.alert(
+      //title
+      title,
+      //body
+      message,
+      [
+        {
+          text: 'Cancel', onPress: () => console.log('Yes Pressed')
+        },
+        {
+          text: 'OK', onPress: okPress
+        },
+      ],
+      {cancelable: true},
+    );
+  };

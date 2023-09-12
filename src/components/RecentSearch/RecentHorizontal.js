@@ -1,4 +1,5 @@
 import React from "react"
+import moment from "moment";
 import { Text, Image, View, FlatList, Pressable, Dimensions } from "react-native"
 import { AppColors } from "../../components/constants/AppColor"
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -21,10 +22,10 @@ export const RecentHorizontal = ({ recentArray, onPress }) => {
 
             </View>
 
-            <View style={{ width: '100%', justifyContent: 'center', marginTop: 10}}>
+            <View style={{ width: '100%', justifyContent: 'center', marginTop: 10 }}>
 
                 <FlatList
-                    data={['1', '2', '3', '4']}
+                    data={recentArray}
                     // columnWrapperStyle={{ flexWrap: 'wrap' }}
                     // numColumns={4}
                     keyExtractor={(item, index) => index}
@@ -33,7 +34,7 @@ export const RecentHorizontal = ({ recentArray, onPress }) => {
                     renderItem={({ item, index }) => (
                         <>
                             <View style={{ padding: 0 }}>
-                                <Pressable onPress={onPress} style={{ marginRight: 5, backgroundColor: AppColors.themePickupDropSearchBg, borderRadius: 5, width: Dimensions.get('screen').width * .6 }}>
+                                <Pressable onPress={() => onPress(item)} style={{ marginRight: 5, backgroundColor: AppColors.themePickupDropSearchBg, borderRadius: 5, width: Dimensions.get('screen').width * .6 }}>
                                     <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
 
                                         <View style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
@@ -44,10 +45,10 @@ export const RecentHorizontal = ({ recentArray, onPress }) => {
 
                                         <View style={{ width: '80%', justifyContent: 'center' }}>
                                             <Text style={{ fontSize: 12, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
-                                                {'Gol Market, Merrut'}
+                                                {item?.pick_main_text}
                                             </Text>
                                             <Text style={{ marginTop: 5, fontSize: 12, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
-                                                {'Sector 29, Mumbai'}
+                                                {item?.drop_main_text}
                                             </Text>
                                         </View>
 
@@ -55,30 +56,30 @@ export const RecentHorizontal = ({ recentArray, onPress }) => {
 
                                     <View style={{ flexDirection: 'row', width: '100%', marginTop: 20, borderTopColor: AppColors.themeCardBorderColor, borderTopWidth: 0.3 }}>
 
-                                        <View style={{ width: '33.3%', borderRightColor: AppColors.themeCardBorderColor, borderRightWidth: 1, padding: 10 }}>
+                                        <View style={{ width: '50%', borderRightColor: AppColors.themeCardBorderColor, borderRightWidth: 1, padding: 10 }}>
                                             <Text style={{ fontSize: 10, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
                                                 {'Time'}
                                             </Text>
-                                            <Text style={{ marginTop: 5, fontSize: 10, color: AppColors.themeText2Color , fontFamily: AppFontFamily.PopinsRegular}}>
-                                                {'6:30 PM'}
+                                            <Text style={{ marginTop: 5, fontSize: 10, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
+                                                {moment(new Date(item?.journey_start_at)).format('HH:mm')}
                                             </Text>
                                         </View>
-                                        <View style={{ width: '33.3%', borderRightColor: AppColors.themeCardBorderColor, borderRightWidth: 1, padding: 10 }}>
+                                        <View style={{ width: '50%', padding: 10 }}>
                                             <Text style={{ fontSize: 10, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
                                                 {'Seats'}
                                             </Text>
-                                            <Text style={{ marginTop: 5, fontSize: 10, color: AppColors.themeText2Color , fontFamily: AppFontFamily.PopinsRegular}}>
-                                                {'02/05'}
+                                            <Text style={{ marginTop: 5, fontSize: 10, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
+                                                {item?.seat_available}
                                             </Text>
                                         </View>
-                                        <View style={{ width: '33.3%', padding: 10 }}>
+                                        {/* <View style={{ width: '33.3%', padding: 10 }}>
                                             <Text style={{ fontSize: 10, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
                                                 {'Pay'}
                                             </Text>
                                             <Text style={{ marginTop: 5, fontSize: 10, color: AppColors.themeText2Color, fontFamily: AppFontFamily.PopinsRegular }}>
                                                 {'500 INR'}
                                             </Text>
-                                        </View>
+                                        </View> */}
 
                                     </View>
 

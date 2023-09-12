@@ -13,6 +13,7 @@ import Storage from '../../components/localStorage/storage';
 import { AppKeys } from '../../components/constants/AppKeys';
 import { AppColors } from '../../components/constants/AppColor';
 import {getToken, configureNotification} from '../../Utils/PushNotification';
+import { puchNotificationPermission } from '../../Utils/RuntimePermission';
 
 
 
@@ -46,6 +47,7 @@ export default class SplashScreen extends Component {
 	getSavedToken = async () => {
 		getToken()
 		configureNotification()
+		puchNotificationPermission()
 		let token
 		token = await Storage.getSavedItem(AppKeys.SECRET_KEY)
 		return token

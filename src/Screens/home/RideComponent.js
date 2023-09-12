@@ -33,7 +33,7 @@ export const SeatsView = ({ data, selectedIndex, setSelectedIndex }) => {
 
             <View style={{ width: '40%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
 
-                <Image source={require('../../assets/carseat.png')} style={{  width: 20, height: 20, resizeMode: 'contain'  }} />
+                <Image source={require('../../assets/carseat.png')} style={{ width: 20, height: 20, resizeMode: 'contain' }} />
                 <Text style={{ marginLeft: 10, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 14 }}>
                     {'Seats needed'}
                 </Text>
@@ -51,7 +51,7 @@ export const SeatsView = ({ data, selectedIndex, setSelectedIndex }) => {
                     renderItem={({ item, index }) => (
                         <>
                             <View style={{ padding: 0 }}>
-                                <Pressable onPress={()=> setSelectedIndex(index)} style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 5, width: 26, height: 26, backgroundColor: selectedIndex == index ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, borderRadius: 5, borderWidth: 1.5, borderColor: AppColors.themePrimaryColor }}>
+                                <Pressable onPress={() => setSelectedIndex(index)} style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 5, width: 26, height: 26, backgroundColor: selectedIndex == index ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, borderRadius: 5, borderWidth: 1.5, borderColor: AppColors.themePrimaryColor }}>
                                     {/* <View style={{ padding: 10 }}> */}
                                     <Text numberOfLines={1} style={{ marginTop: 2, fontFamily: AppFontFamily.PopinsRegular, color: selectedIndex == index ? AppColors.themesWhiteColor : AppColors.themePrimaryColor, fontSize: 14 }}>{item}</Text>
                                     {/* </View> */}
@@ -74,7 +74,7 @@ export const CotravellerView = ({ onCheck, image }) => {
         <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
             <View style={{ width: '68%', flexDirection: 'row', alignItems: 'center' }}>
 
-                <Image source={require('../../assets/cotraveller.png')} style={{ width: 18, resizeMode: 'contain'}} />
+                <Image source={require('../../assets/cotraveller.png')} style={{ width: 18, resizeMode: 'contain' }} />
                 <Text style={{ marginLeft: 10, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 16 }}>
                     {'Need a female co traveller'}
                 </Text>
@@ -82,6 +82,25 @@ export const CotravellerView = ({ onCheck, image }) => {
 
             <Pressable onPress={onCheck} style={{ width: '27%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
                 <Icon name={image} size={24} color={AppColors.themePrimaryColor} />
+            </Pressable>
+
+        </View>
+    )
+
+}
+
+export const PendingKYC = ({ message, onOkPress }) => {
+    return (
+        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', marginTop: 0, backgroundColor: '#ffcc00', height: 30 }}>
+
+            <View style={{ width: '85%',alignItems: 'flex-start', justifyContent: 'center' }}>
+                <Text style={{ marginLeft: 10, color: AppColors.themesWhiteColor, fontFamily: AppFontFamily.PopinsBold, fontSize: 12 }}>
+                    {message}
+                </Text>
+            </View>
+
+            <Pressable onPress={onOkPress} style={{ width: '15%', alignItems: 'flex-end', justifyContent: 'center' }}>
+                <Image source={require('../../assets/close.png')} style={{ marginRight: 10, width: 10, resizeMode: 'contain' }} />
             </Pressable>
 
         </View>

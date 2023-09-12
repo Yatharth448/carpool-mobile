@@ -42,8 +42,8 @@ function RideDrawer() {
     <Drawer.Navigator
       drawerContent={props => <DrawerScreen {...props} />}
       initialRouteName="FindRide"
-      screenOptions={{headerShown: false}}>
-      <Drawer.Screen name="FindRide" component={FindRide} />
+      screenOptions={{headerShown: false, swipeEnabled: false}}>
+      <Drawer.Screen name="FindRide" component={FindRide} options={{swipeEnabled: false}}/>
       <Drawer.Screen name="RideHistory" component={RideHistory} />
       <Drawer.Screen
           name="ActiveRideCarpooler"
@@ -111,7 +111,7 @@ export default function RootNav() {
         <Stack.Screen
           name="RideDrawer"
           component={RideDrawer}
-          options={{animationEnabled: false}}
+          options={{animationEnabled: false, swipeEnabled: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>

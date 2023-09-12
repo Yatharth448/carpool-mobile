@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   FlatList,
   View,
@@ -10,27 +10,33 @@ import {
   Dimensions,
   Pressable,
 } from 'react-native';
-import {AppColors} from '../constants/AppColor';
-import {AppFontFamily} from '../constants/AppFonts';
+import { AppColors } from '../constants/AppColor';
+import { AppFontFamily } from '../constants/AppFonts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {connect} from 'react-redux';
-import {getProfileDataRequest} from '../../redux/actions/actions';
+import { connect } from 'react-redux';
+import { getProfileDataRequest } from '../../redux/actions/actions';
 import reducer from '../../redux/reducers/reducers';
 
-const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
+const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
   const [menu, setMenu] = React.useState([
-    {screen: 'FindRide', name: 'HOME'},
-    {screen: 'ActiveRideCarpooler', name: 'Active Ride'},
-    {screen: 'RideHistory', name: 'RIDE HISTORY'},
-    {screen: 'MessageRoom', name: 'MESSAGES'},
-    {screen: 'Payment', name: 'PAYMENT'},
-    {screen: 'Support', name: 'SUPPORT'},
+    { screen: 'FindRide', name: 'HOME' },
+    { screen: 'ActiveRideCarpooler', name: 'Active Ride' },
+    { screen: 'RideHistory', name: 'RIDE HISTORY' },
+    { screen: 'MessageRoom', name: 'MESSAGES' },
+    { screen: 'Payment', name: 'PAYMENT' },
+    { screen: 'Support', name: 'SUPPORT' },
+    { screen: 'Signout', name: 'Sign out' },
+
   ]);
   const [ind, setInd] = React.useState(0);
   const handleDrawerItemPress = (screenName, index) => {
     selectedInd(index);
     if (screenName == 'Payment') {
-    } else {
+    }
+    else if (screenName == 'Signout') {
+
+    }
+    else {
       navigation.navigate(screenName);
     }
   };
@@ -52,7 +58,7 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
       .then(() =>
         nav.reset({
           index: 0,
-          routes: [{name: 'SplashScreen'}],
+          routes: [{ name: 'SplashScreen' }],
         }),
       );
   };
@@ -61,7 +67,10 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
     Alert.alert(
       '',
       'Are you sure you want to logout ?',
-      [{text: 'OK', onPress: () => clearAllData(navigation)}],
+      [
+        { text: 'cancel' },
+        { text: 'OK', onPress: () => clearAllData(navigation) }
+      ],
       {
         cancelable: false,
       },
@@ -80,8 +89,8 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
         }}>
         <Pressable
           onPress={() => navigation.navigate('ProfileScreen')}
-          style={{width: '80%', height: '90%', justifyContent: 'center'}}>
-          <View style={{width: 80, height: 80, marginBottom: 10}}>
+          style={{ width: '80%', height: '90%', justifyContent: 'center' }}>
+          <View style={{ width: 80, height: 80, marginBottom: 10 }}>
             <Image
               source={require('../../assets/avtar.png')}
               style={{
@@ -129,63 +138,62 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
       </View>
 
       <FlatList
-        contentContainerStyle={{height: Dimensions.get('window').height * 0.6}}
+        contentContainerStyle={{ height: Dimensions.get('window').height * 0.6 }}
         data={menu}
         keyExtractor={(item, index) => index}
-        renderItem={({item, index}) => (
+        renderItem={({ item, index }) => (
           <>
-            <TouchableOpacity
+            {item.screen == 'Signout' ? <TouchableOpacity
               style={{
                 width: '100%',
                 height: 80,
-                justifyContent: 'center',
                 alignItems: 'center',
               }}
-              onPress={() => handleDrawerItemPress(item.screen, index)}>
+              onPress={() => LogoutAlert(navigation)}>
               <Text
                 style={{
-                  fontFamily: AppFontFamily.PopinsBold,
                   width: '80%',
-                  color:
-                    index == ind
-                      ? AppColors.themePrimaryColor
-                      : AppColors.themeText2Color,
+                  color: AppColors.themePrimaryColor,
+                  fontFamily: AppFontFamily.PopinsMedium,
                   fontSize: 14,
                 }}>
-                {item.name}
+                Sign out
               </Text>
-            </TouchableOpacity>
+              <View style={{ width: '80%' }}>
+                <View
+                  style={{
+                    width: '28%',
+                    height: 1,
+                    backgroundColor: AppColors.themePrimaryColor,
+                  }}></View>
+              </View>
+            </TouchableOpacity> :
+              <TouchableOpacity
+                style={{
+                  width: '100%',
+                  height: 80,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                onPress={() => handleDrawerItemPress(item.screen, index)}>
+                <Text
+                  style={{
+                    fontFamily: AppFontFamily.PopinsBold,
+                    width: '80%',
+                    color:
+                      index == ind
+                        ? AppColors.themePrimaryColor
+                        : AppColors.themeText2Color,
+                    fontSize: 14,
+                  }}>
+                  {item.name}
+                </Text>
+              </TouchableOpacity>}
           </>
         )}
       />
 
-      <TouchableOpacity
-        style={{
-          width: '100%',
-          position: 'absolute',
-          bottom: 30,
-          height: 40,
-          alignItems: 'center',
-        }}
-        onPress={() => LogoutAlert(navigation)}>
-        <Text
-          style={{
-            width: '80%',
-            color: AppColors.themePrimaryColor,
-            fontFamily: AppFontFamily.PopinsMedium,
-            fontSize: 14,
-          }}>
-          Sign out
-        </Text>
-        <View style={{width: '80%'}}>
-          <View
-            style={{
-              width: '28%',
-              height: 1,
-              backgroundColor: AppColors.themePrimaryColor,
-            }}></View>
-        </View>
-      </TouchableOpacity>
+
 
       {/* Add more drawer items as needed */}
     </View>

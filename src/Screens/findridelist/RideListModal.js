@@ -1,9 +1,9 @@
 import connection from "../../network/connection"
 
-export const hitApiToGetRideList = async (pickUp, drop, date, seat) => {
+export const hitApiToGetRideList = async (pickUp, drop, date, seat, pickMainText, dropMainText) => {
 
     try {
-        const result = await connection.postAPI('/api/ride/request/list', { 'journey_start_from': pickUp, 'journey_end_to': drop, 'journey_start_at': date, 'seat_available': seat, 'route': 0})
+        const result = await connection.postAPI('/api/ride/request/list', { 'journey_start_from': pickUp, 'journey_end_to': drop, 'journey_start_at': date, 'seat_available': seat, 'route': 0, 'pick_main_text': pickMainText, 'drop_main_text': dropMainText})
 
         if (result.success) {
             return result

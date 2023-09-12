@@ -136,6 +136,12 @@ export default function UploadDocuments({ navigation, route }) {
 
         const result = await hitApiForDLKYC(docNumber, rawDate, licenceName)
         setIsLoading(false)
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'RideDrawer' }],
+            })
+        );
         console.log(result, 'DL KYC')
     }
 
@@ -256,6 +262,32 @@ export default function UploadDocuments({ navigation, route }) {
     }
 
 
+    const AadharView = () => {
+        return (
+            <View style={{ width: '92%', flexDirection: 'row', height: 100, alignItems: 'center' }}>
+
+                <View style={{ width: '100%', justifyContent: 'center' }}>
+                    <Text style={{ margintop: 0, marginBottom: 5, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeBlackColor }}>
+                        {'Name as per Aadhar Card'}
+                    </Text>
+
+                    <TextInput
+                        onChangeText={text => setAadharName(text)}
+                        value={aadharName}
+                        placeholder={"Enter name as per Aadhar Card"}
+                        placeholderTextColor={AppColors.themeTextGrayColor}
+                        style={{ backgroundColor: AppColors.themesWhiteColor, borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 5, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '100%', fontSize: 12, textAlign: 'left' }}
+                    // keyboardType={
+                    //     Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                    // }
+                    />
+
+                </View>
+
+            </View>
+        )
+    }
+
 
     const DlView = () => {
         return (
@@ -289,9 +321,9 @@ export default function UploadDocuments({ navigation, route }) {
                             placeholder={"Enter name as per DL"}
                             placeholderTextColor={AppColors.themeTextGrayColor}
                             style={{ backgroundColor: AppColors.themesWhiteColor, borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 5, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '100%', fontSize: 12, textAlign: 'left' }}
-                            // keyboardType={
-                            //     Platform.OS === 'android' ? 'numeric' : 'number-pad'
-                            // }
+                        // keyboardType={
+                        //     Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                        // }
                         />
 
                     </View>
@@ -345,7 +377,7 @@ export default function UploadDocuments({ navigation, route }) {
                                 </Text>
                             </View>
 
-                            <Pressable onPress={()=> navigation.goBack()} style={{ width: '60%', alignItems: 'flex-end' }}>
+                            <Pressable onPress={() => navigation.goBack()} style={{ width: '60%', alignItems: 'flex-end' }}>
                                 <Text style={{ marginLeft: 20, fontFamily: AppFontFamily.PopinsRegular, fontSize: 10, color: AppColors.themeTextGrayColor }}>
                                     {'Change'}
                                 </Text>
@@ -376,29 +408,9 @@ export default function UploadDocuments({ navigation, route }) {
 
                         </View>
 
-                        <View style={{ width: '92%', flexDirection: 'row', height: 100, alignItems: 'center' }}>
 
-                            <View style={{ width: '100%', justifyContent: 'center' }}>
-                                <Text style={{ margintop: 0, marginBottom: 5, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeBlackColor }}>
-                                    {'Name as per Aadhar Card'}
-                                </Text>
 
-                                <TextInput
-                                    onChangeText={text => setAadharName(text)}
-                                    value={aadharName}
-                                    placeholder={"Enter name as per Aadhar Card"}
-                                    placeholderTextColor={AppColors.themeTextGrayColor}
-                                    style={{ backgroundColor: AppColors.themesWhiteColor, borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 5, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '100%', fontSize: 12, textAlign: 'left' }}
-                                    // keyboardType={
-                                    //     Platform.OS === 'android' ? 'numeric' : 'number-pad'
-                                    // }
-                                />
-
-                            </View>
-
-                        </View>
-
-                        {data.index == 1 ? DlView() : null}
+                        {data.index == 1 ? DlView() : AadharView()}
 
 
                     </View>

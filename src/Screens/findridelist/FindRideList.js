@@ -11,6 +11,7 @@ import { FindRideFilterView } from './FindRideComp';
 import { Surface } from 'react-native-paper';
 import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import CommonLoaders from '../../components/loader/Loader';
+import { showNotification } from '../../components/notifications/LocalNotification';
 export default function FindRideList({ navigation, route }) {
 
 
@@ -22,7 +23,7 @@ export default function FindRideList({ navigation, route }) {
     useEffect(() => {
 
         (async () => {
-            console.log('find ride')
+            console.log(data, 'find ride')
 
             //Put your logic here
             // const result = await hitApiToGetRideList(pick, drop, date, seat);
@@ -68,6 +69,12 @@ export default function FindRideList({ navigation, route }) {
             );
             updatedArray.reverse()
             setRideList(updatedArray);
+
+            showNotification(
+                {
+                    'title': 'Congratulations!',
+                    'message': 'Your ride request has been sent succesfully to '+ item.user_name,
+                })
 
         }
         else {
