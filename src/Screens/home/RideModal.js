@@ -139,3 +139,19 @@ export const hitApiToAddVehicle = async (vehicleName, vehicleNumber) => {
     throw error;
   }
 };
+
+export const hitApiToGetRecentSearch = async () => {
+  try {
+    const result = await connection.getAPI('/api/recent/search');
+
+    if (result.success) {
+      return result;
+    } else {
+      return result;
+    }
+  } catch (error) {
+    console.error('login modal', error);
+    throw error;
+  }
+};
+

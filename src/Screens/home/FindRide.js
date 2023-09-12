@@ -297,7 +297,7 @@ class FindRide extends Component {
 
     getSearchData = async (pick, drop, date, seat) => {
 
-        if (this.props?.data?.kyc_status == 0) {
+        if (this.props?.data?.kyc_status == 1) {
 
             this.setState({ isSearch: 'start', loading: true })
             const result = await hitApiToGetRideList(pick, drop, date, seat, this.state.pickMainText, this.state.dropMainText);
@@ -446,7 +446,7 @@ class FindRide extends Component {
         }
         else {
 
-            if (this.props?.data?.kyc_status == 0) {
+            if (this.props?.data?.kyc_status == 1) {
                 this.setState({ offerSearchLoader: true })
                 const routeData = await this.getPolylineCoordinats(this.state.pickupLocation, this.state.dropLocation)
 
