@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,20 +10,20 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import { AppColors } from '../../components/constants/AppColor';
+import {AppColors} from '../../components/constants/AppColor';
 import moment from 'moment';
-import { Header } from '../../components/commomheader/CommonHeader';
+import {Header} from '../../components/commomheader/CommonHeader';
 import {
   hitApiToRequestGetEstimatedPrice,
   hitApiToRequestUpdateEstimatedPrice,
   hitApiToSaveRide,
 } from '../home/RideModal';
 import Toast from 'react-native-simple-toast';
-import MapView, { Polyline, Marker } from 'react-native-maps';
-import { PriceSelection } from '../../components/priceselection/PriceSelection';
-import { AppFontFamily } from '../../components/constants/AppFonts';
-import { apigetRideDetails } from './StartRideModel';
-import { ButtonPrimary } from '../../components/button/buttonPrimary';
+import MapView, {Polyline, Marker} from 'react-native-maps';
+import {PriceSelection} from '../../components/priceselection/PriceSelection';
+import {AppFontFamily} from '../../components/constants/AppFonts';
+import {apigetRideDetails} from './StartRideModel';
+import {ButtonPrimary} from '../../components/button/buttonPrimary';
 import {
   GetCurrentLocation,
   checkLocationPermission,
@@ -38,12 +38,13 @@ function calculateLatLongDelta() {
   const latDelta = northeastLat - southwestLat;
   const lngDelta = latDelta * ASPECT_RATIO;
 }
-export default function StartRideCarpooler({ navigation, route }) {
+export default function StartRideCarpooler({navigation, route}) {
   // let  path1 = [];
   const mapRef = React.useRef(null);
 
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [routeData, setRouteData] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
   const [selectedDistance, setSelectedDistance] = React.useState(0);
   const [openPrice, setOpenPrice] = React.useState(false);
   const [estimatedPrice, setEstimatedPrice] = React.useState('');
@@ -52,7 +53,7 @@ export default function StartRideCarpooler({ navigation, route }) {
 
   useEffect(() => {
     (async () => {
-      const result = await apigetRideDetails('64fd8b796937f41a077d91f4');
+      const result = await apigetRideDetails('64ff14fa2055c72a5a95faa7');
       if (result.status === false) {
         Toast.showWithGravity(
           result.message ?? result.error ?? 'Something went wrong',
@@ -60,14 +61,15 @@ export default function StartRideCarpooler({ navigation, route }) {
           Toast.TOP,
         );
       } else {
-        let path = result.lat_long_points.map(tempItem => {
+        let path = result.ride.lat_long_points.map(tempItem => {
           return {
             latitude: tempItem[0],
             longitude: tempItem[1],
           };
         });
+        setUserDetails(result.user);
         setRouteData({
-          ...result,
+          ...result.ride,
           paths: path,
         });
       }
@@ -85,7 +87,7 @@ export default function StartRideCarpooler({ navigation, route }) {
     }, []);
 
     mapRef.current.fitToCoordinates(coordinates, {
-      edgePadding: { top: 50, right: 50, bottom: 50, left: 100 },
+      edgePadding: {top: 50, right: 50, bottom: 50, left: 100},
       animated: true,
     });
   };
@@ -109,7 +111,7 @@ export default function StartRideCarpooler({ navigation, route }) {
         drop: drop,
       };
 
-      navigation.navigate('Success', { item: itemData });
+      navigation.navigate('Success', {item: itemData});
     } else {
       Toast.showWithGravity(
         result.message ?? result.error ?? 'Something went wrong',
@@ -201,7 +203,7 @@ export default function StartRideCarpooler({ navigation, route }) {
             <Marker coordinate={routeData.paths[routeData.paths.length - 1]}>
               <Image
                 source={require('../../assets/mapmarker3.png')}
-                style={{ width: 30, height: 33 }}
+                style={{width: 30, height: 33}}
                 resizeMode="contain"
               />
             </Marker>
@@ -216,7 +218,7 @@ export default function StartRideCarpooler({ navigation, route }) {
               latitudeDelta: 0.922,
               longitudeDelta: 0.0421,
             }}
-            markers={{ latitude: 28.6539952, longitude: 76.973255 }}
+            markers={{latitude: 28.6539952, longitude: 76.973255}}
             loading={false}
             customMapStyle={[
               {
@@ -251,7 +253,7 @@ export default function StartRideCarpooler({ navigation, route }) {
         </View>
       )}
 
-      <View style={{ position: 'absolute', top: 0 }}>
+      <View style={{position: 'absolute', top: 0}}>
         <Header
           isBack={false}
           close={() => {
@@ -269,97 +271,105 @@ export default function StartRideCarpooler({ navigation, route }) {
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
         }}>
-        <View
-          style={{
-            left: 0,
-            marginTop: 20,
-            backgroundColor: 'white',
-          }}>
+        {userDetails ? (
           <View
             style={{
-              width: 'auto',
-              display: 'inline-block',
+              left: 0,
+              marginTop: 20,
+              backgroundColor: 'white',
             }}>
             <View
               style={{
-                backgroundColor: 'white',
-                width: 100,
-                height: 100,
-                marginTop: -60,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 50,
+                width: 'auto',
+                display: 'inline-block',
               }}>
-              <Image
-                source={require('../../assets/avtar.png')}
+              <View
                 style={{
-                  width: 70,
-                  height: 70,
-                  borderRadius: 5,
-                  resizeMode: 'contain',
-                }}
-              />
+                  backgroundColor: 'white',
+                  width: 100,
+                  height: 100,
+                  marginTop: -60,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 50,
+                }}>
+                <Image
+                  source={require('../../assets/avtar.png')}
+                  style={{
+                    width: 70,
+                    height: 70,
+                    borderRadius: 5,
+                    resizeMode: 'contain',
+                  }}
+                />
+              </View>
             </View>
           </View>
-        </View>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <View>
-            <Text
-              style={{
-                width: '100%',
-                color: AppColors.themeBlackColor,
-                fontFamily: AppFontFamily.PopinsBold,
-                fontSize: 18,
-                marginLeft: 15,
-                color: AppColors.textColor,
-              }}>
-              {'Sarthak Kaushik'}
-            </Text>
-          </View>
+        ) : (
+          ''
+        )}
+        {routeData ? (
           <View
             style={{
-              marginRight: 10,
-              alignItems: 'flex-end',
-              justifyContent: 'center',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
             }}>
             <View>
               <Text
                 style={{
                   width: '100%',
                   color: AppColors.themeBlackColor,
-                  fontFamily: AppFontFamily.PopinsRegular,
-                  fontSize: 16,
+                  fontFamily: AppFontFamily.PopinsBold,
+                  fontSize: 18,
+                  marginLeft: 15,
                   color: AppColors.textColor,
                 }}>
-                {'Volkswagen Polo'}
+                {userDetails ? userDetails.name : ''}
               </Text>
             </View>
+            <View
+              style={{
+                marginRight: 10,
+                alignItems: 'flex-end',
+                justifyContent: 'center',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    width: '100%',
+                    color: AppColors.themeBlackColor,
+                    fontFamily: AppFontFamily.PopinsRegular,
+                    fontSize: 16,
+                    color: AppColors.textColor,
+                  }}>
+                  {routeData.vehicle_name}
+                </Text>
+              </View>
 
-            <View style={{ width: 'auto' }}>
-              <Text
-                style={{
-                  width: '100%',
-                  color: AppColors.themeBlackColor,
-                  fontFamily: AppFontFamily.PopinsExtraBold,
-                  fontSize: 16,
-                  textAlign: 'center',
-                  borderRadius: 20,
-                  padding: 5,
-                  paddingHorizontal: 15,
-                  backgroundColor: '#D5DDE0',
-                  color: AppColors.textColor,
-                }}>
-                {'HGVVK232'}
-              </Text>
+              <View style={{width: 'auto'}}>
+                <Text
+                  style={{
+                    width: '100%',
+                    color: AppColors.themeBlackColor,
+                    fontFamily: AppFontFamily.PopinsExtraBold,
+                    fontSize: 16,
+                    textAlign: 'center',
+                    borderRadius: 20,
+                    padding: 5,
+                    paddingHorizontal: 15,
+                    backgroundColor: '#D5DDE0',
+                    color: AppColors.textColor,
+                  }}>
+                  {routeData.vehicle_number}
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
+        ) : (
+          ''
+        )}
 
         {routeData ? (
           <View
@@ -475,7 +485,7 @@ export default function StartRideCarpooler({ navigation, route }) {
                   </Text>
                 </View>
               </View>
-              <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
+              <View style={{marginLeft: 0, width: '100%', height: 0}}></View>
               <View
                 style={{
                   width: '100%',
@@ -516,7 +526,7 @@ export default function StartRideCarpooler({ navigation, route }) {
               alignItems: 'center',
             }}>
             <ButtonPrimary
-              style={{ width: '90%' }}
+              style={{width: '90%'}}
               text={'Start Ride'}
               onPress={() => this.searchRide()}
               loader={false}
