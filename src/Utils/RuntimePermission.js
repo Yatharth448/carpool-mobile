@@ -1,7 +1,6 @@
 import React from 'react';
 import { Alert, PermissionsAndroid, Platform } from 'react-native';
 import { request, PERMISSIONS } from 'react-native-permissions';
-
 export async function request_storage_runtime_permission() {
 
   try {
@@ -17,6 +16,7 @@ export async function request_storage_runtime_permission() {
       Alert.alert("Storage Permission Granted.");
     }
     else {
+
 
       Alert.alert("Storage Permission Not Granted");
 
@@ -39,7 +39,7 @@ export const galleryPermission = async () => {
 
 export const cameraPermission = async () => {
 
-  const permission = await request(Platform.OS == 'ios' ? PERMISSIONS.IOS.CAMERA: PERMISSIONS.ANDROID.CAMERA)
+  const permission = await request(Platform.OS == 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA)
   console.log(permission, 'cam permission')
   if (permission == 'blocked' || permission == 'unavailable' || permission == 'denied') {
     return false
@@ -50,11 +50,37 @@ export const cameraPermission = async () => {
 
 export const puchNotificationPermission = async () => {
 
-  const permission = await request(Platform.OS == 'ios' ? PERMISSIONS.IOS.CAMERA: PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
-  console.log(permission, 'push permission')
-  if (permission == 'blocked' || permission == 'unavailable' || permission == 'denied') {
-    return false
+
+
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      {
+        'title': 'Notification Permission',
+        'message': 'App need permission to send you push notifications',
+        buttonPositive: 'Allow',
+        buttonNegative: 'Deny',
+      }
+    )
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+
+      // Alert.alert("Notification Permission Granted.");
+    }
+    else {
+
+      const permission = await request(Platform.OS == 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
+      console.log(permission, 'push permission')
+      if (permission == 'blocked' || permission == 'unavailable' || permission == 'denied') {
+        return false
+      }
+      else return true
+    }
+  } catch (err) {
+    console.warn(err)
   }
-  else return true
+
+
+
+
 
 }

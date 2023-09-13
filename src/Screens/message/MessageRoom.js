@@ -70,7 +70,7 @@ export default function MessageRoom({ navigation, route }) {
                 // onEndReached={() => this.getCartList()}
                 renderItem={({ item, index }) => (
                     <View style={{ width: Dimensions.get('window').width, alignItems: 'center', marginTop: 10 }}>
-                        <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.cotraveller_id, 'id': item._id, 'cotravellerName': item.cotraveller_name, from: 'chat', phone: item?.contact })} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
+                        <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.cotraveller_id, 'id': item._id, 'cotravellerName': item.cotraveller_name, from: 'chat', phone: item?.cotraveller_contact })} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
 
                             <View style={{ width: '100%', justifyContent: 'center', padding: 10 }}>
                                 <View style={{ width: '100%', alignItems: 'flex-start' }}>

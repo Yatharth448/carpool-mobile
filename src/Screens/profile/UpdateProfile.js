@@ -142,7 +142,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                         </View>
                         <View style={{ width: '80%', justifyContent: 'center' }}>
                             <TextInput
-                                style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeText2Color }}
+                                style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBtnDisableColor }}
                                 placeholder={'Enter mmobile'}
                                 placeholderTextColor={AppColors.themeTextGrayColor}
                                 value={email}

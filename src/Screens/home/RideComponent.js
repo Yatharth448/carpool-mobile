@@ -1,8 +1,10 @@
 import React from "react"
-import { Text, Image, View, FlatList, Pressable } from "react-native"
+import { Text, Image, View, FlatList, Pressable, Dimensions, TouchableOpacity } from "react-native"
 import { AppColors } from "../../components/constants/AppColor"
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from "../../components/constants/AppFonts"
+import { ButtonPrimary } from "../../components/button/buttonPrimary";
+import CommonLoaders from "../../components/loader/Loader";
 export const AvtarView = ({ image, name, type }) => {
     return (
         <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
@@ -107,3 +109,61 @@ export const PendingKYC = ({ message, onOkPress }) => {
     )
 
 }
+
+export const NoRideFound = ({chooseAnother}) => {
+    return (
+
+        <View style={{
+            alignItems: 'center', backgroundColor: AppColors.themesWhiteColor, marginTop: 0,
+            width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, height: Dimensions.get('window').height * .35, justifyContent: 'center'
+        }}>
+
+            <View style={{ width: '95%', justifyContent: 'center', alignItems: 'center' }} elevation={4}>
+
+
+                <View style={{ width: '100%', alignItems: 'center' }}>
+
+                    <Image source={require('../../assets/avtar.png')} style={{ borderRadius: 40, width: 80, height: 80, resizeMode: 'contain' }} />
+
+                </View>
+
+                <View style={{ width: '85%', justifyContent: 'center', alignItems: 'center' }}>
+
+                    <TouchableOpacity style={{ width: '70%', justifyContent: 'center', paddingTop: 10, paddingBottom: 10 }} >
+                        <Text style={{ textAlign: 'center', width: '100%', color: AppColors.themeTextGrayColor, fontSize: 16 }}>{'Sorry, there are no vehicles in the area'}</Text>
+                    </TouchableOpacity>
+
+
+                </View>
+
+            </View>
+
+            <View style={{ width: '95%', alignItems: 'center', marginTop: 20 }}>
+                <ButtonPrimary
+                    text={'Choose another location'}
+                    onPress={() => chooseAnother()}
+                    loader={false}
+                />
+            </View>
+
+        </View>
+
+    )
+}
+
+export const SearchLoaderScreen = () => {
+
+    return (
+
+        <View style={{
+            alignItems: 'center', backgroundColor: AppColors.themesWhiteColor, marginTop: 0,
+            width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, height: Dimensions.get('window').height * .35, justifyContent: 'center'
+        }}>
+
+            <CommonLoaders.SearchRide />
+
+        </View>
+
+    )
+}
+

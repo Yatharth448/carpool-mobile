@@ -54,7 +54,7 @@ export default function FindRideList({ navigation, route }) {
 
     const requestRide = async (item, itemIndex) => {
         const result = await hitApiToRequestARide(
-            item._id, 
+            item._id,
             seat,
             item.intresected_source_lat,
             item.intresected_source_long,
@@ -73,13 +73,12 @@ export default function FindRideList({ navigation, route }) {
             showNotification(
                 {
                     'title': 'Congratulations!',
-                    'message': 'Your ride request has been sent succesfully to '+ item.user_name,
+                    'message': 'Your ride request has been sent succesfully to ' + item.user_name,
                 })
 
         }
         else {
-            if (result.message == "Please add money to wallet")
-            {
+            if (result.message == "Please add money to wallet") {
                 console.log('open wallet')
             }
 
@@ -223,7 +222,7 @@ export default function FindRideList({ navigation, route }) {
 
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
-            <Header close={() => { navigation.goBack() }} text='Ride options' />
+            <Header close={() => { navigation.navigate('RideDrawer', { screen: 'FindRide', params: { from: 'reset' } }) }} text='Ride options' />
 
 
 

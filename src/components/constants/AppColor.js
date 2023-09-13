@@ -19,4 +19,6 @@ export const AppColors = {
   themeIdentityBgColor: '#f4f4f4',
   themePickupDropSearchBg: '#F7F7FC',
   themeNotificationBg: '#F9F9FF',
+  themeButtonRed: '#ff0e0e',
+
 };

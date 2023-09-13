@@ -5,17 +5,17 @@ export const showNotification = (data) => {
     PushNotification.localNotification({
         title: data.title,
         message: data.message,
-        channelId: AppKeys.LOCAL_NOTIFICATION,
-        //   channelName: 'Your Channel Name', // Replace with your channel name
+        channelId: AppKeys.LOCAL_NOTIFICATION_CHANNEL_ID,
+        channelName: AppKeys.LOCAL_NOTIFICATION_CHANNEL_NAME, // Replace with your channel name
         //   channelDescription: 'Your Channel Description',
     });
 };
 
-export const CreateNotificationChannel = () => {
+export const CreateNotificationChannel = async () => {
     PushNotification.createChannel(
         {
-            channelId: AppKeys.LOCAL_NOTIFICATION, // Replace with your channel ID
-            // channelName: 'Your Channel Name', // Replace with your channel name
+            channelId: AppKeys.LOCAL_NOTIFICATION_CHANNEL_ID, // Replace with your channel ID
+            channelName: AppKeys.LOCAL_NOTIFICATION_CHANNEL_NAME, // Replace with your channel name
             // channelDescription: 'Your Channel Description', // Replace with your channel description (optional)
             playSound: true, // (optional) default: true
             soundName: "default", // (optional) See `soundName` parameter of `localNotification` function

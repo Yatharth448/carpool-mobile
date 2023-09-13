@@ -8,7 +8,7 @@ import DateTimeView from "../../components/datetimeview/DateTimeView";
 import Toast from 'react-native-simple-toast'
 import { hitApiToAllGetVehicle, hitApiToCheckExistingRide, hitApiToGetRecentSearch, hitApiToGetRoutes } from "./RideModal";
 import { GetCurrentLocation, checkLocationPermission } from "../../components/location/GetCurrentLocation";
-import { AvtarView, CotravellerView, PendingKYC, SeatsView } from "./RideComponent";
+import { AvtarView, CotravellerView, NoRideFound, PendingKYC, SearchLoaderScreen, SeatsView } from "./RideComponent";
 import { ButtonPrimary } from "../../components/button/buttonPrimary";
 import { RecentHorizontal } from "../../components/RecentSearch/RecentHorizontal";
 import { SearchLocation } from "../../components/GooglLocation/SearchLocation";
@@ -24,7 +24,7 @@ import { decode } from "@mapbox/polyline";
 import { showMessage } from "react-native-flash-message";
 import { alertWithNav } from "../../components/commonfunction/CommonFunctions";
 import { hitApiToGetProfile } from "../profile/ProfileModal";
-import { showNotification } from "../../components/notifications/LocalNotification";
+import { CreateNotificationChannel, showNotification } from "../../components/notifications/LocalNotification";
 import PushNotification from 'react-native-push-notification';
 import { AppKeys } from "../../components/constants/AppKeys";
 class FindRide extends Component {
@@ -37,6 +37,7 @@ class FindRide extends Component {
         this.recentSearchPress = this.recentSearchPress.bind(this);
         this.okPress = this.okPress.bind(this);
         this.onOkPress = this.onOkPress.bind(this)
+        this.chooseAnother = this.chooseAnother.bind(this)
 
 
         this.state = {
@@ -106,7 +107,8 @@ class FindRide extends Component {
             dropMainText: '',
             recentSearchArray: [],
             offerSearchLoader: false,
-            kycStatus: 1
+            kycStatus: 1,
+           
 
         }
     }
@@ -128,31 +130,19 @@ class FindRide extends Component {
         this._unsubscribe = this.props.navigation.addListener('focus', async () => {
             BackHandler.addEventListener("hardwareBackPress", this.backActionHandler);
 
-           
-
+            this.props.getProfileDataRequest()
+            console.log('loaded', this.props?.route.params)
+            if (this.props.route.params?.from == 'reset')
+            {
+                this.setState({ pickupLocation: '', dropLocation: '', selectedIndex: 0, selectedDate: 'Date and time of departure' })
+            }
             this.setState({ kycStatus: this.props?.data?.kyc_status })
             const isKyc = this.props?.data?.kyc_status
-            if (isKyc == 0) {
 
 
-                // showMessage({
-                //     message: "Hey " + this.props?.data?.name,
-                //     description: "Your kyc is pending, Please update your kyc",
-                //     type: "none",
-                //     autoHide: false,
-                //     hideStatusBar: true
-                // });
-            }
-            else if (isKyc == 2) {
 
-            }
-            else {
-
-            }
-
-            getProfileDataRequest()
             const res = await hitApiToGetProfile()
-            // console.log(this.props.data, 'redux profile', res ,'profile')
+            console.log(this.props.data, 'redux profile', res, 'profile')
 
             await this.getRideNotificationData()
             await this.getSavedVehicles()
@@ -161,6 +151,7 @@ class FindRide extends Component {
 
         });
 
+        console.log('loaded')
         //    await this.getRideNotificationData()
 
 
@@ -174,6 +165,7 @@ class FindRide extends Component {
     async getSavedVehicles() {
 
         const result = await hitApiToAllGetVehicle()
+        // await CreateNotificationChannel()
         if (result.status) {
 
             const vehData = result.data?.vehicle_info
@@ -201,7 +193,7 @@ class FindRide extends Component {
 
     async getRideNotificationData() {
         const result = await hitApiToCheckExistingRide()
-        // console.log(result, 'data')
+        console.log(result, 'data')
         this.reloadMap()
         this.setState({ existingData: result })
     }
@@ -240,12 +232,12 @@ class FindRide extends Component {
 
 
     findRide = () => {
-        this.setState({ find: true })
+        this.setState({ find: true, selectedDate: 'Date and time of departure' })
     }
 
     offerRide = () => {
 
-        this.setState({ find: false })
+        this.setState({ find: false, selectedDate: 'Date and time of departure' })
 
     }
 
@@ -279,7 +271,8 @@ class FindRide extends Component {
         this.setState({
             openDate: false,
             date: date,
-            selectedDate: moment(date).format('DD-MM-YYYY HH:mm:ss A'),
+
+            selectedDate: this.state.find ? moment(date).format('ddd DD MMM YYYY ') : moment(date).format('ddd DD MMM YYYY HH:mm A'),
             rawDate: String(date)
         })
 
@@ -364,62 +357,7 @@ class FindRide extends Component {
     }
 
 
-    searchLoaderScreen = () => {
 
-        return (
-
-            <View style={{
-                alignItems: 'center', backgroundColor: AppColors.themesWhiteColor, marginTop: 0,
-                width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, height: Dimensions.get('window').height * .35, justifyContent: 'center'
-            }}>
-
-                <CommonLoaders.SearchRide />
-
-            </View>
-
-        )
-    }
-
-    NoRideFound = () => {
-        return (
-
-            <View style={{
-                alignItems: 'center', backgroundColor: AppColors.themesWhiteColor, marginTop: 0,
-                width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, height: Dimensions.get('window').height * .35, justifyContent: 'center'
-            }}>
-
-                <View style={{ width: '95%', justifyContent: 'center', alignItems: 'center' }} elevation={4}>
-
-
-                    <View style={{ width: '100%', alignItems: 'center' }}>
-
-                        <Image source={require('../../assets/avtar.png')} style={{ borderRadius: 40, width: 80, height: 80, resizeMode: 'contain' }} />
-
-                    </View>
-
-                    <View style={{ width: '85%', justifyContent: 'center', alignItems: 'center' }}>
-
-                        <TouchableOpacity style={{ width: '70%', justifyContent: 'center', paddingTop: 10, paddingBottom: 10 }} >
-                            <Text style={{ textAlign: 'center', width: '100%', color: AppColors.themeTextGrayColor, fontSize: 16 }}>{'Sorry, there are no vehicles in the area'}</Text>
-                        </TouchableOpacity>
-
-
-                    </View>
-
-                </View>
-
-                <View style={{ width: '95%', alignItems: 'center', marginTop: 20 }}>
-                    <ButtonPrimary
-                        text={'Choose another location'}
-                        onPress={() => this.chooseAnother()}
-                        loader={false}
-                    />
-                </View>
-
-            </View>
-
-        )
-    }
 
     chooseAnother = () => {
         this.setState({ openSearch: 'pick', isSearch: 'cancel' })
@@ -545,13 +483,12 @@ class FindRide extends Component {
     onViewClick() {
 
         if (this.state.existingData?.multi) {
-            this.props.navigation.navigate('RideHistory', { from: this.state.existingData?.from })
+            const from = this.state.existingData?.from
+            this.props.navigation.navigate('RideHistory', { from: from })
         }
         else {
             const from = this.state.existingData?.from
-
             this.props.navigation.navigate(this.state.existingData?.screenname, { id: this.state.existingData?.id, from: from })
-
         }
 
     }
@@ -679,7 +616,10 @@ class FindRide extends Component {
         // console.log(item, 'recent search pressed')
         if (this.state.find) {//search ride
 
-            await this.getSearchData(item.origin, item.destination, item.journey_start_at, item.seat_available)
+            // await this.getSearchData(item.origin, item.destination, item.journey_start_at, item.seat_available)
+            // this.state.pickupLocation, this.state.dropLocation, this.state.rawDate, this.state.passengerValue
+            this.setState({ pickupLocation: item.origin, dropLocation: item.destination, passengerValue: item.seat_available, selectedIndex: Number(item.seat_available - 1), selectedDate: 'Date and time of departure' })
+
         }
         else {//offer ride
 
@@ -737,6 +677,20 @@ class FindRide extends Component {
         )
     }
 
+    menuBtnClick() {
+        if (this.state.isSearch == 'cancel') {
+
+            this.props.navigation.openDrawer()
+        }
+        else if (this.state.isSearch == 'start') {
+
+            this.props.navigation.openDrawer()
+        }
+        else {
+            this.setState({ isSearch: 'cancel' })
+        }
+    }
+
 
     HeaderView = ({ name, gender }) => {
         return (
@@ -749,11 +703,18 @@ class FindRide extends Component {
                 </View>
                 <View style={{ position: 'absolute', width: '100%', backgroundColor: 'transparent' }}>
                     {/* <Header isBack={false} close={() => this.props.navigation.openDrawer()} isRight={true} right={require('../../assets/notification.png')} /> */}
-                    <Header isBack={false} close={() => this.props.navigation.openDrawer()} isRight={true} right={require('../../assets/notification.png')} rightClick={() => showNotification({'title': 'hi', 'message': 'hello'})} />
+                    <Header isBack={this.state.isSearch == 'notfound' ? true : false} close={() => this.menuBtnClick()} isRight={true} right={require('../../assets/notification.png')} rightClick={() => showNotification({ 'title': 'hi', 'message': 'hello' })} />
                 </View>
 
 
-                {this.state.isSearch == 'cancel' ? this.SearchOffer(name, gender) : this.state.isSearch == 'start' ? this.searchLoaderScreen() : this.NoRideFound()}
+                {
+                    this.state.isSearch == 'cancel' ?
+                        this.SearchOffer(name, gender)
+                        : this.state.isSearch == 'start' ?
+                            <SearchLoaderScreen />
+                            :
+                            <NoRideFound chooseAnother={this.chooseAnother} />
+                }
 
 
             </>
@@ -784,7 +745,7 @@ class FindRide extends Component {
                 < FlatList
                     data={['1']}
                     contentContainerStyle={{ width: Dimensions.get('window').width }}
-                    ListHeaderComponent={<this.HeaderView name={data?.name} gender={data?.gender} />}
+                    ListHeaderComponent={<this.HeaderView name={data?.name ?? ''} gender={data?.gender} />}
                     keyExtractor={(item, index) => index}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (

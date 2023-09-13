@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { getProfileDataRequest } from '../../redux/actions/actions';
 import reducer from '../../redux/reducers/reducers';
 
+
 const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
   const [menu, setMenu] = React.useState([
     { screen: 'FindRide', name: 'HOME' },
@@ -33,8 +34,11 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
     selectedInd(index);
     if (screenName == 'Payment') {
     }
+    else if (screenName == 'FindRide') {
+      navigation.navigate(screenName);
+    }
     else if (screenName == 'Signout') {
-
+      LogoutAlert()
     }
     else {
       navigation.navigate(screenName);
@@ -63,7 +67,7 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
       );
   };
 
-  const LogoutAlert = navigation => {
+  const LogoutAlert = () => {
     Alert.alert(
       '',
       'Are you sure you want to logout ?',
@@ -138,57 +142,32 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
       </View>
 
       <FlatList
-        contentContainerStyle={{ height: Dimensions.get('window').height * 0.6 }}
+        contentContainerStyle={{ marginTop: 30, height: Dimensions.get('window').height * 0.8 }}
         data={menu}
         keyExtractor={(item, index) => index}
         renderItem={({ item, index }) => (
           <>
-            {item.screen == 'Signout' ? <TouchableOpacity
+            <TouchableOpacity
               style={{
                 width: '100%',
-                height: 80,
+                height: 60,
+                justifyContent: 'center',
                 alignItems: 'center',
               }}
-              onPress={() => LogoutAlert(navigation)}>
+              onPress={() => handleDrawerItemPress(item.screen, index)}>
               <Text
                 style={{
+                  fontFamily: AppFontFamily.PopinsBold,
                   width: '80%',
-                  color: AppColors.themePrimaryColor,
-                  fontFamily: AppFontFamily.PopinsMedium,
+                  color:
+                    index == ind
+                      ? AppColors.themePrimaryColor
+                      : AppColors.themeText2Color,
                   fontSize: 14,
                 }}>
-                Sign out
+                {item.name}
               </Text>
-              <View style={{ width: '80%' }}>
-                <View
-                  style={{
-                    width: '28%',
-                    height: 1,
-                    backgroundColor: AppColors.themePrimaryColor,
-                  }}></View>
-              </View>
-            </TouchableOpacity> :
-              <TouchableOpacity
-                style={{
-                  width: '100%',
-                  height: 80,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                onPress={() => handleDrawerItemPress(item.screen, index)}>
-                <Text
-                  style={{
-                    fontFamily: AppFontFamily.PopinsBold,
-                    width: '80%',
-                    color:
-                      index == ind
-                        ? AppColors.themePrimaryColor
-                        : AppColors.themeText2Color,
-                    fontSize: 14,
-                  }}>
-                  {item.name}
-                </Text>
-              </TouchableOpacity>}
+            </TouchableOpacity>
           </>
         )}
       />

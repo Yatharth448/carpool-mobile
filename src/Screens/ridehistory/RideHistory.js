@@ -14,11 +14,12 @@ export default function RideHistory({ navigation, route }) {
 
     useEffect(()=>{
         
+        console.log('offered')
         if (route.params?.from)
         {
             setIsRequest(route.params?.from == 'offered' ? false : true )
         }
-    })
+    }, [route.params])
 
 
     const changeTab = async (val) => {

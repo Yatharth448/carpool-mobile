@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Modal, TextInput, FlatList, Text, StyleSheet, Image, Dimensions, Pressable, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Modal, TextInput, FlatList, Text, StyleSheet, Image, Dimensions, Pressable, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { AppKeys } from '../constants/AppKeys';
 import { AppColors } from '../constants/AppColor';
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -12,6 +12,17 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
     const [pickMain, setPickMain] = useState('');
     const [drop, setDrop] = useState('');
     const [predictions, setPredictions] = useState([]);
+
+    useEffect(() => {
+       
+        return () => {
+            setPick('')
+            setDrop('')
+
+        }
+    },[])
+
+
     console.log(lat, lng, 'lat')
     const fetchPredictions = async (text) => {
         console.log(text, 'search text')
@@ -125,7 +136,8 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
                                             <TextInput
                                                 style={styles.input}
                                                 value={pick}
-                                                onFocus={() => handleFocus('1')}
+                                                onPressIn={() => handleFocus('1')}
+                                                // onFocus={() => handleFocus('1')}
                                                 // onBlur={handleBlur}
                                                 onChangeText={handlePickInputChange}
                                                 placeholder="Enter Pickup Location"
@@ -141,9 +153,10 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
 
                                         <View style={{ width: '100%', height: 50, justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
                                             <TextInput
+                                                onPressIn={() => handleFocus('2')}
                                                 style={styles.input}
                                                 value={drop}
-                                                onFocus={() => handleFocus('2')}
+                                                // onFocus={() => handleFocus('2')}
                                                 // onBlur={handleBlur}
                                                 onChangeText={handleDropInputChange}
                                                 placeholder="Enter Drop Location"
@@ -166,7 +179,9 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
                             <FlatList
                                 contentContainerStyle={{ height: Dimensions.get('window').height * .73, marginTop: 20 }}
                                 data={predictions}
+                                scrollEnabled={true}
                                 keyboardShouldPersistTaps={'always'}
+                                keyExtractor={(item) => item.place_id}
                                 renderItem={({ item }) => (
                                     <>
 
@@ -186,7 +201,7 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
                                         </View>
                                     </>
                                 )}
-                                keyExtractor={(item) => item.place_id}
+
                             />
 
                         </View>

@@ -14,7 +14,8 @@ import { AppKeys } from '../../components/constants/AppKeys';
 import { AppColors } from '../../components/constants/AppColor';
 import {getToken, configureNotification} from '../../Utils/PushNotification';
 import { puchNotificationPermission } from '../../Utils/RuntimePermission';
-
+import PushNotification from 'react-native-push-notification';
+import { CreateNotificationChannel } from '../../components/notifications/LocalNotification';
 
 
 export default class SplashScreen extends Component {
@@ -47,7 +48,13 @@ export default class SplashScreen extends Component {
 	getSavedToken = async () => {
 		getToken()
 		configureNotification()
-		puchNotificationPermission()
+		
+		// PushNotification.checkPermissions(function(permissions) {  console.log(permissions, 'noti'); });
+		// PushNotification.requestPermissions()
+		// console.log(permission, 'noti')
+		await puchNotificationPermission()
+		await CreateNotificationChannel()
+		
 		let token
 		token = await Storage.getSavedItem(AppKeys.SECRET_KEY)
 		return token
