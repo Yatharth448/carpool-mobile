@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,38 +10,30 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import { AppColors } from '../../components/constants/AppColor';
+import {AppColors} from '../../components/constants/AppColor';
 import moment from 'moment';
-import { Header } from '../../components/commomheader/CommonHeader';
+import {Header} from '../../components/commomheader/CommonHeader';
 import {
   hitApiToRequestGetEstimatedPrice,
   hitApiToRequestUpdateEstimatedPrice,
   hitApiToSaveRide,
 } from '../home/RideModal';
 import Toast from 'react-native-simple-toast';
-import MapView, { Polyline, Marker } from 'react-native-maps';
-import { PriceSelection } from '../../components/priceselection/PriceSelection';
-import { AppFontFamily } from '../../components/constants/AppFonts';
-import { apigetRideDetails } from './StartRideModel';
-import { ButtonPrimary } from '../../components/button/buttonPrimary';
+import MapView, {Polyline, Marker} from 'react-native-maps';
+import {PriceSelection} from '../../components/priceselection/PriceSelection';
+import {AppFontFamily} from '../../components/constants/AppFonts';
+import {apiStartRide, apigetRideDetails} from './StartRideModel';
+import {ButtonPrimary} from '../../components/button/buttonPrimary';
 import {
   GetCurrentLocation,
   checkLocationPermission,
 } from '../../components/location/GetCurrentLocation';
 import MapComponent from '../../components/map/MapComponent';
 
-function calculateLatLongDelta() {
-  const lat = parseFloat(centroid.latitude);
-  const lng = parseFloat(centroid.longitude);
-  const northeastLat = parseFloat(boundingBox.northEast.latitude);
-  const southwestLat = parseFloat(boundingBox.southWest.latitude);
-  const latDelta = northeastLat - southwestLat;
-  const lngDelta = latDelta * ASPECT_RATIO;
-}
-export default function StartRideCarpooler({ navigation, route }) {
+export default function StartRideCarpooler({navigation, route}) {
   // let  path1 = [];
   const mapRef = React.useRef(null);
-
+  const {id} = route.params;
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [routeData, setRouteData] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
@@ -50,30 +42,32 @@ export default function StartRideCarpooler({ navigation, route }) {
   const [estimatedPrice, setEstimatedPrice] = React.useState('');
   const [journeyId, setJourneyId] = React.useState('');
   // openPrice
-
+  const fetchRideDetails = async () => {
+    const result = await apigetRideDetails(id);
+    if (result.status === false) {
+      Toast.showWithGravity(
+        result.message ?? result.error ?? 'Something went wrong',
+        2,
+        Toast.TOP,
+      );
+    } else {
+      let path = result.ride.lat_long_points.map(tempItem => {
+        return {
+          latitude: tempItem[0],
+          longitude: tempItem[1],
+        };
+      });
+      setUserDetails(result.user);
+      setRouteData({
+        ...result.ride,
+        paths: path,
+      });
+      setMap();
+    }
+  };
   useEffect(() => {
     (async () => {
-      const result = await apigetRideDetails('64ff14fa2055c72a5a95faa7');
-      if (result.status === false) {
-        Toast.showWithGravity(
-          result.message ?? result.error ?? 'Something went wrong',
-          2,
-          Toast.TOP,
-        );
-      } else {
-        let path = result.ride.lat_long_points.map(tempItem => {
-          return {
-            latitude: tempItem[0],
-            longitude: tempItem[1],
-          };
-        });
-        setUserDetails(result.user);
-        setRouteData({
-          ...result.ride,
-          paths: path,
-        });
-        setMap()
-      }
+      await fetchRideDetails();
     })();
 
     return () => {
@@ -81,15 +75,12 @@ export default function StartRideCarpooler({ navigation, route }) {
     };
   }, []);
 
-
   const setMap = () => {
-
     mapRef.animateToRegion({
       latitude: routeData.paths[0].latitude,
       longitude: routeData.paths[0].longitude,
     });
-  }
-
+  };
 
   const handleMapLayout = () => {
     const coordinates = routeData.paths.reduce((acc, path) => {
@@ -98,31 +89,25 @@ export default function StartRideCarpooler({ navigation, route }) {
     }, []);
 
     mapRef.current.fitToCoordinates(coordinates, {
-      edgePadding: { top: 50, right: 50, bottom: 50, left: 100 },
+      edgePadding: {top: 50, right: 50, bottom: 50, left: 100},
       animated: true,
     });
   };
 
   const saveRide = async () => {
-    const result = await hitApiToSaveRide(
-      pick,
-      drop,
-      seat,
-      date,
-      selectedIndex,
-      estimatedPrice,
-      pickMainText,
-      dropMainText,
-    );
+    if (routeData.status) {
+      Toast.showWithGravity(
+        result.message ?? result.error ?? 'Something went wrong',
+        2,
+        Toast.TOP,
+      );
+      return;
+    }
+    const result = await apiStartRide(id);
     console.log(result);
     if (result.status) {
-      let itemData = {
-        price: estimatedPrice,
-        pick: pick,
-        drop: drop,
-      };
-
-      navigation.navigate('Success', { item: itemData });
+      Toast.showWithGravity('Ride has started', 2, Toast.TOP);
+      await fetchRideDetails();
     } else {
       Toast.showWithGravity(
         result.message ?? result.error ?? 'Something went wrong',
@@ -156,22 +141,6 @@ export default function StartRideCarpooler({ navigation, route }) {
 
   // }
 
-  const save = val => {
-    if (!val) {
-      Toast.showWithGravity('Please enter estimated price', 2, Toast.TOP);
-    } else {
-      updateEstimatedRide(val);
-    }
-    console.log(val, 'price');
-  };
-
-  const selectedPrice = val => {
-    setOpenPrice(false);
-  };
-  const closeEstimatePopup = () => {
-    setOpenPrice(false);
-  };
-
   return (
     <View
       style={{
@@ -187,10 +156,8 @@ export default function StartRideCarpooler({ navigation, route }) {
           style={styles.maps}
           onLayout={handleMapLayout}
           initialRegion={{
-            latitude:
-              routeData.paths.latitude,
-            longitude:
-              routeData.paths.longitude,
+            latitude: routeData.paths[0].latitude,
+            longitude: routeData.paths[0].longitude,
             latitudeDelta: 0.922,
             longitudeDelta: 0.0421,
           }}>
@@ -210,12 +177,11 @@ export default function StartRideCarpooler({ navigation, route }) {
               zIndex={1}
               strokeWidth={4}
             />
-            {/* <Marker coordinate={path.origin}></Marker> */}
 
             <Marker coordinate={routeData.paths[routeData.paths.length - 1]}>
               <Image
                 source={require('../../assets/mapmarker3.png')}
-                style={{ width: 30, height: 33 }}
+                style={{width: 30, height: 33}}
                 resizeMode="contain"
               />
             </Marker>
@@ -230,7 +196,7 @@ export default function StartRideCarpooler({ navigation, route }) {
               latitudeDelta: 0.922,
               longitudeDelta: 0.0421,
             }}
-            markers={{ latitude: 28.6539952, longitude: 76.973255 }}
+            markers={{latitude: 28.6539952, longitude: 76.973255}}
             loading={false}
             customMapStyle={[
               {
@@ -265,7 +231,7 @@ export default function StartRideCarpooler({ navigation, route }) {
         </View>
       )}
 
-      <View style={{ position: 'absolute', top: 0 }}>
+      <View style={{position: 'absolute', top: 0}}>
         <Header
           isBack={false}
           close={() => {
@@ -361,7 +327,7 @@ export default function StartRideCarpooler({ navigation, route }) {
                 </Text>
               </View>
 
-              <View style={{ width: 'auto' }}>
+              <View style={{width: 'auto'}}>
                 <Text
                   style={{
                     width: '100%',
@@ -498,7 +464,7 @@ export default function StartRideCarpooler({ navigation, route }) {
                   </Text>
                 </View>
               </View>
-              <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
+              <View style={{marginLeft: 0, width: '100%', height: 0}}></View>
               <View
                 style={{
                   width: '100%',
@@ -539,9 +505,11 @@ export default function StartRideCarpooler({ navigation, route }) {
               alignItems: 'center',
             }}>
             <ButtonPrimary
-              style={{ width: '90%' }}
+              style={{width: '90%'}}
               text={'Start Ride'}
-              onPress={() => this.searchRide()}
+              onPress={() => {
+                saveRide();
+              }}
               loader={false}
             />
           </View>

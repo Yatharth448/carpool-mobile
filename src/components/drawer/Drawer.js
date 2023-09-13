@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   FlatList,
   View,
@@ -10,37 +10,34 @@ import {
   Dimensions,
   Pressable,
 } from 'react-native';
-import { AppColors } from '../constants/AppColor';
-import { AppFontFamily } from '../constants/AppFonts';
+import {AppColors} from '../constants/AppColor';
+import {AppFontFamily} from '../constants/AppFonts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { connect } from 'react-redux';
-import { getProfileDataRequest } from '../../redux/actions/actions';
+import {connect} from 'react-redux';
+import {getProfileDataRequest} from '../../redux/actions/actions';
 import reducer from '../../redux/reducers/reducers';
 
-
-const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
+const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
   const [menu, setMenu] = React.useState([
-    { screen: 'FindRide', name: 'HOME' },
-    { screen: 'ActiveRideCarpooler', name: 'Active Ride' },
-    { screen: 'RideHistory', name: 'RIDE HISTORY' },
-    { screen: 'MessageRoom', name: 'MESSAGES' },
-    { screen: 'Payment', name: 'PAYMENT' },
-    { screen: 'Support', name: 'SUPPORT' },
-    { screen: 'Signout', name: 'Sign out' },
-
+    {screen: 'FindRide', name: 'HOME'},
+    {screen: 'ActiveRideCarpooler', name: 'Active Ride'},
+    {screen: 'RideHistory', name: 'RIDE HISTORY'},
+    {screen: 'MessageRoom', name: 'MESSAGES'},
+    {screen: 'Payment', name: 'PAYMENT'},
+    {screen: 'Support', name: 'SUPPORT'},
+    {screen: 'Signout', name: 'Sign out'},
   ]);
   const [ind, setInd] = React.useState(0);
   const handleDrawerItemPress = (screenName, index) => {
     selectedInd(index);
     if (screenName == 'Payment') {
-    }
-    else if (screenName == 'FindRide') {
+    } else if (screenName == 'FindRide') {
       navigation.navigate(screenName);
-    }
-    else if (screenName == 'Signout') {
-      LogoutAlert()
-    }
-    else {
+    } else if (screenName == 'Signout') {
+      LogoutAlert();
+    } else if (screenName == 'ActiveRideCarpooler') {
+      navigation.navigate(screenName, {id: '64ff14fa2055c72a5a95faa7'});
+    } else {
       navigation.navigate(screenName);
     }
   };
@@ -62,7 +59,7 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
       .then(() =>
         nav.reset({
           index: 0,
-          routes: [{ name: 'SplashScreen' }],
+          routes: [{name: 'SplashScreen'}],
         }),
       );
   };
@@ -71,10 +68,7 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
     Alert.alert(
       '',
       'Are you sure you want to logout ?',
-      [
-        { text: 'cancel' },
-        { text: 'OK', onPress: () => clearAllData(navigation) }
-      ],
+      [{text: 'cancel'}, {text: 'OK', onPress: () => clearAllData(navigation)}],
       {
         cancelable: false,
       },
@@ -93,8 +87,8 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
         }}>
         <Pressable
           onPress={() => navigation.navigate('ProfileScreen')}
-          style={{ width: '80%', height: '90%', justifyContent: 'center' }}>
-          <View style={{ width: 80, height: 80, marginBottom: 10 }}>
+          style={{width: '80%', height: '90%', justifyContent: 'center'}}>
+          <View style={{width: 80, height: 80, marginBottom: 10}}>
             <Image
               source={require('../../assets/avtar.png')}
               style={{
@@ -142,10 +136,13 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
       </View>
 
       <FlatList
-        contentContainerStyle={{ marginTop: 30, height: Dimensions.get('window').height * 0.8 }}
+        contentContainerStyle={{
+          marginTop: 30,
+          height: Dimensions.get('window').height * 0.8,
+        }}
         data={menu}
         keyExtractor={(item, index) => index}
-        renderItem={({ item, index }) => (
+        renderItem={({item, index}) => (
           <>
             <TouchableOpacity
               style={{
@@ -171,8 +168,6 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
           </>
         )}
       />
-
-
 
       {/* Add more drawer items as needed */}
     </View>
