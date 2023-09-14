@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, Pressable, Image, FlatList, Dimensions } from 'react-native'
+import { View, Text, alert, Image, FlatList, Dimensions } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { hitApiToGetRideList, hitApiToRequestARide } from './RideListModal';
 import { Header } from '../../components/commomheader/CommonHeader';
@@ -19,6 +19,7 @@ export default function FindRideList({ navigation, route }) {
     const { data, seat } = route.params;
     const [selectedIndex, setIndex] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(false)
+    const [startLoader, setStartLoader] = React.useState(false)
 
     useEffect(() => {
 
@@ -53,6 +54,7 @@ export default function FindRideList({ navigation, route }) {
 
 
     const requestRide = async (item, itemIndex) => {
+        setStartLoader(true)
         const result = await hitApiToRequestARide(
             item._id,
             seat,
@@ -69,6 +71,7 @@ export default function FindRideList({ navigation, route }) {
             );
             updatedArray.reverse()
             setRideList(updatedArray);
+            setStartLoader(false)
 
             showNotification(
                 {
@@ -78,8 +81,10 @@ export default function FindRideList({ navigation, route }) {
 
         }
         else {
+
+            setStartLoader(false)
             if (result.message == "Please add money to wallet") {
-                console.log('open wallet')
+                alert(result.message)
             }
 
         }
@@ -199,13 +204,13 @@ export default function FindRideList({ navigation, route }) {
                                             />
                                         </View>
                                         :
-                                        <View style={{ width: '30%' }}>
+                                        <View style={{ width: startLoader ? '35%' : '30%' }}>
                                             <ButtonPrimary
                                                 style={{ height: 35 }}
                                                 textStyle={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12 }}
                                                 text={'Request Ride'}
-                                                onPress={() => requestRide(item, index)}
-                                                loader={false}
+                                                onPress={() => startLoader ? console.log('empty') : requestRide(item, index)}
+                                                loader={startLoader}
                                             />
                                         </View>
                                     }

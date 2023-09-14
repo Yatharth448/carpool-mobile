@@ -26,7 +26,7 @@ export default function LoginScreen({ navigation }) {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [checked, setChecked] = React.useState(false);
-    const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(true);
     const countryCode = '+91';
 
 

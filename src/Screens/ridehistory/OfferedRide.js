@@ -128,7 +128,7 @@ export default function OfferedRides({ selectedData }) {
     }
 
     return (
-        <View style={{ height: Dimensions.get('window').height * .83 }}>
+        <View style={{ height: Dimensions.get('window').height * .83 , paddingBottom: 50}}>
             {isLoading ? offeredArr.length ? listView() : CommonLoaders.NoDataInList('No offered ride found') : CommonLoaders.RideHistoryLoader()}
         </View>
     )

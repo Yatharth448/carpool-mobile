@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import { Text, View, Image, TouchableOpacity } from 'react-native'
+import { Text, View, Image, TouchableOpacity, Alert } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { TextInput } from 'react-native-paper'
 import OTPInputView from '@twotalltotems/react-native-otp-input'
@@ -61,13 +61,15 @@ export default function OTPScreen({ navigation, route }) {
 
   const resendOTP = async () => {
 
-    const result = await hitApiForSignUp(fullName, email, password, mobile, gender)
+    const result = await hitApiForSignUp( email )
 
     if (result.status)
     {
-      console.log(newSecret, 'old', )
-      setNewSecter(result.secret)
-      console.log(newSecret, 'new' )
+      // console.log(newSecret, 'old', )
+      // setNewSecter(result.secret)
+      // console.log(newSecret, 'new' )
+
+      Alert.alert('OTP resent successfully! Please check your email');
     } 
 
   }
@@ -121,52 +123,6 @@ export default function OTPScreen({ navigation, route }) {
           </View>
         </View>
       </View>
-
-
-      {/* <View style={{ width: '100%', justifyContent: 'flex-start', alignItems: 'center', height: '30%' }}> */}
-      {/* <Text style={{ fontSize: 26, fontWeight: 'bold', color: AppColors.themeBlackColor }}>
-          {'Verification code'}
-        </Text>
-        <Text style={{ fontSize: 18, fontWeight: '300', textAlign: 'center', marginTop: 30, width: '70%', color: AppColors.themeBlackColor }}>
-          {'Enter the code sent to'}
-        </Text>
-        <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginTop: 0, width: '70%', color: AppColors.themeBlackColor }}>
-          {mobile}
-        </Text> */}
-
-      {/* <View style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
-          <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-            <OTPInputView
-              style={{ width: '50%', height: 40 }}
-              pinCount={4}
-              autoFocusOnLoad
-              textContentType={'oneTimeCode'}
-              onCodeChanged={(otpNumber) => setOtp(otpNumber)}
-              codeInputFieldStyle={{ borderWidth: 0, borderBottomWidth: 1.5, height: 50, marginRight: 8, color: AppColors.themeBlackColor, fontSize: 20, borderBottomColor: AppColors.themeTextGrayColor, }}
-              codeInputHighlightStyle={{ borderBottomWidth: 1.5, borderBottomColor: AppColors.themePrimaryColor, }}
-              keyboardType="numeric"
-              code={otp}
-              // clearInputs={this.state.clearOTP}
-              onCodeFilled={(otpNumber => {
-                if (otpNumber.length == 4) {
-                  validateOTP(otpNumber)
-                }
-                // console.log(`Code is ${otpNumber}, you are good to go!`)
-              })}
-            />
-          </View>
-          <View style={{ alignItems: 'center', marginTop: 40 }}>
-            <Text style={{ fontSize: 14, fontWeight: '400', textAlign: 'center', color: AppColors.themeTextGrayColor }}>
-              {"Didn't you receive the OTP?"}
-              <Text style={{ fontSize: 14, fontWeight: '600', textAlign: 'center', color: AppColors.themePrimaryColor }}>
-                {" Resend OTP"}
-              </Text>
-            </Text>
-
-          </View>
-        </View> */}
-      {/* </View> */}
-
 
       <View style={{ width: '100%', alignItems: 'center', height: 50, position: 'absolute', bottom: 0 }}>
         <TouchableOpacity onPress={() => resendOTP()} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>

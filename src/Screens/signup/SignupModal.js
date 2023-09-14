@@ -39,3 +39,24 @@ export const hitApiForGoogleSignUp = async ( email, firstName, givenName, id, ph
     }
 
 }
+
+export const hitApiToResentOTP = async ( email ) => {
+
+    try {
+        const signupData = await connection.postAPI('/api/auth/resend/email/otp', { 'email': email })
+
+        if (signupData.success) {
+            return signupData
+        }
+        else {
+            return signupData
+        }
+
+    } catch (error) {
+
+        console.error('login modal', error);
+        throw error
+    }
+
+}
+

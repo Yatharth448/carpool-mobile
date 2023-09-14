@@ -8,7 +8,7 @@ import { AppTexts } from '../../components/constants/AppTexts'
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import Carousel from 'react-native-reanimated-carousel';
 import PaginationDot from 'react-native-animated-pagination-dot'
-import { hitApiToAcceptOfferedRide, hitApiToAcceptRequestedRide } from '../ridehistory/RideHistoryModal'
+import { hitApiToAcceptOfferedRide, hitApiToAcceptRequestedRide, hitApiToRejectOfferedRide } from '../ridehistory/RideHistoryModal'
 
 
 function Cotravellers ({ navigation, route })  {
@@ -46,6 +46,25 @@ setCotravellerArray(data)
            
             const updatedArray = data.map((obj, index) =>
             index === ind ? { ...obj, status: 'accepted' } : obj);
+
+            // console.log(updatedArray, 'arr')
+            setCotravellerArray(updatedArray)
+
+
+            navigation.goBack()
+        }
+
+    }
+
+
+    const _rejectOfferedRide = async (item, ind) => {
+        const result = await hitApiToRejectOfferedRide(item.ride_id, item.user_id, 'action')
+        console.log(result, 'vvv')
+        if (result.status) {
+
+           
+            const updatedArray = data.map((obj, index) =>
+            index === ind ? { ...obj, status: 'rejected' } : obj);
 
             // console.log(updatedArray, 'arr')
             setCotravellerArray(updatedArray)
@@ -154,7 +173,7 @@ setCotravellerArray(data)
                         <ButtonPrimary
                             style={{ width: '45%', backgroundColor: 'red' }}
                             text={'Reject ride'}
-                            onPress={() => console.log('confirm', item)}
+                            onPress={() => _rejectOfferedRide(item, index)}
                             loader={false}
                         />
 

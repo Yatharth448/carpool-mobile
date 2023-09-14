@@ -4,22 +4,33 @@ import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader'
 import RequestedRides from './RequestedRides'
 import OfferedRides from './OfferedRide'
-import { hitApiToGetRequestedRideDetails } from './RideHistoryModal'
+import { hitApiToGetOfferedRide, hitApiToGetRequestedRideDetails } from './RideHistoryModal'
 import { AppFontFamily } from '../../components/constants/AppFonts'
 
 export default function RideHistory({ navigation, route }) {
 
     const [isRequest, setIsRequest] = React.useState(true)
-    
+    const [offerCount, setOfferCount] = React.useState(0)
 
-    useEffect(()=>{
-        
-        console.log('offered')
-        if (route.params?.from)
-        {
-            setIsRequest(route.params?.from == 'offered' ? false : true )
+
+    useEffect(() => {
+
+        // console.log('offered')
+        if (route.params?.from) {
+            setIsRequest(route.params?.from == 'offered' ? false : true)
         }
-    }, [route.params])
+
+        (async () => {
+            const result = await hitApiToGetOfferedRide()
+
+            // console.log(result.data[0], 'count')
+            if (result.status) {
+                setOfferCount(result.data[result.data.length-1].count ?? '')
+            }
+        })
+
+
+    }, [route.params, offerCount])
 
 
     const changeTab = async (val) => {
@@ -31,6 +42,12 @@ export default function RideHistory({ navigation, route }) {
         else {
 
             setIsRequest(false)
+            const result = await hitApiToGetOfferedRide()
+
+            // console.log(result.data[result.data.length-1].count, 'count')
+            if (result.status) {
+                setOfferCount(result.data[result.data.length-1].count ?? '')
+            }
 
         }
     }
@@ -54,7 +71,7 @@ export default function RideHistory({ navigation, route }) {
         const result = await hitApiToGetRequestedRideDetails(item.ride_id)
 
         if (result.status) {
-            navigation.navigate('Cotravellers', {data: result.data.rideData})
+            navigation.navigate('Cotravellers', { data: result.data.rideData })
         }
 
         console.log(result.data.cotravellerData, 'cotraveller data', result.data.rideData, 'ride data')
@@ -74,7 +91,7 @@ export default function RideHistory({ navigation, route }) {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{ width: '40%', height: 50, alignItems: 'center', justifyContent: 'center' }} onPress={() => changeTab('offer')}>
-                    <Text style={{ width: '100%', textAlign: 'center', color: isRequest ? AppColors.themeTextPrimaryColor : AppColors.themePrimaryColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Offered Rides'}</Text>
+                    <Text style={{ width: '100%', textAlign: 'center', color: isRequest ? AppColors.themeTextPrimaryColor : AppColors.themePrimaryColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Offered Rides ' + offerCount}</Text>
                     <View style={{ marginTop: 10, width: '100%', height: 2.5, backgroundColor: isRequest ? null : AppColors.themePrimaryColor }} />
                 </TouchableOpacity>
 

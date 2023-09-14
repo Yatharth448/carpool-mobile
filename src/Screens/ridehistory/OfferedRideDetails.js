@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { View, Text, Image, Pressable, FlatList, StyleSheet, Dimensions, ScrollView, Linking, Alert } from 'react-native';
-import { hitApiToGetOfferedRideDetails, hitApiToGetRequestedRideDetails } from './RideHistoryModal';
+import { hitApiToCancelRideForDriver, hitApiToGetOfferedRideDetails, hitApiToGetRequestedRideDetails } from './RideHistoryModal';
 import { Header } from '../../components/commomheader/CommonHeader';
 import { Surface } from 'react-native-paper';
 import moment from 'moment';
@@ -107,9 +107,9 @@ export default function OfferedRideDetails({ navigation, route }) {
                         <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginLeft: 10, marginTop: 20 }}>
                             <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} />
                             <View style={{ justifyContent: 'center' }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={{ width: '60%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.name ?? "Sachin Gupta"}</Text>
-                                    <Text style={{ paddingLeft: 5, paddingRight: 5, paddingTop: 5, borderRadius: 5, fontFamily: AppFontFamily.PopinsBold, fontSize: 12, color: AppColors.themePrimaryColor, borderColor: AppColors.themePrimaryColor, borderWidth: 1 }}>{'Confirmed'}</Text>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                    <Text style={{ width: '60%', fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.name ?? "Sachin Gupta"}</Text>
+                                    <Text style={{ width: '30%', height: 30, paddingLeft: 5, paddingRight: 5, paddingTop: 5, borderRadius: 5, fontFamily: AppFontFamily.PopinsBold, fontSize: 12, color: AppColors.themePrimaryColor, borderColor: AppColors.themePrimaryColor, borderWidth: 1 }}>{'Confirmed'}</Text>
                                 </View>
 
                                 <View style={{ paddingLeft: 10, flexDirection: 'row', alignItems: 'center' }}>
@@ -168,7 +168,7 @@ export default function OfferedRideDetails({ navigation, route }) {
                         <View style={{ justifyContent: 'center', width: '95%', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
                             <View style={{ width: '60%', justifyContent: 'center' }}>
 
-                                <RideCostView amount={Number(item.price).toFixed(0)}/>
+                                <RideCostView amount={Number(item.price).toFixed(0)} />
 
                             </View>
                             <Pressable onPress={() => Linking.openURL(`tel:${item?.phoneNumber}`)} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
@@ -307,26 +307,27 @@ export default function OfferedRideDetails({ navigation, route }) {
 
             <>
 
-
-
-
-
-                <View style={{ height: acceptedData.length > 0 ? Dimensions.get('window').height * .89 : Dimensions.get('window').height * .5, marginTop: 10 }}>
+                <View style={{ height: Dimensions.get('window').height * .89, marginTop: 10, paddingBottom: 30 }}>
 
                     <FlatList
                         ref={flatListRef}
                         ListHeaderComponent={<RideDetailView />}
-                        data={cotravllerArray}
-                        renderItem={AcceptedRideView}
+                        data={cotravllerArray.length > 0 ? cotravllerArray : [1]}
+                        renderItem={cotravllerArray.length > 0 ? AcceptedRideView : noData}
                         showsHorizontalScrollIndicator={false}
 
                     />
                 </View>
-                {acceptedData.length > 0 ? null : CommonLoaders.NoDataInList('No co-traveller found', { height: '30%' })}
 
             </>
 
 
+        )
+    }
+
+    const noData = () => {
+        return (
+            CommonLoaders.NoDataInList('No co-traveller found', { height: 100 })
         )
     }
 
@@ -347,7 +348,15 @@ export default function OfferedRideDetails({ navigation, route }) {
     }
 
 
-    const cancelRide = (item) => {
+    const cancelRide = async (item) => {
+
+        const result = await hitApiToCancelRideForDriver(item._id)
+
+        console.log(result, 'cancel result')
+        if (result.status) {
+            Alert.alert('Ride cancelled successfully')
+        }
+
 
     }
 
@@ -358,11 +367,18 @@ export default function OfferedRideDetails({ navigation, route }) {
 
                 <Surface elevation={4} style={{ width: '90%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
                     <View style={{ width: '92%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
-                        <View style={{ justifyContent: 'center', alignItems: 'flex-start', width: '90%' }}>
+                        <View style={{ justifyContent: 'center', alignItems: 'flex-start', width: '50%' }}>
 
                             <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(rideData[0].date).format('DD MMM YYYY, HH:mm')}</Text>
 
                         </View>
+                        {rideData[0].status == 'cancelled' ?
+                            <View style={{ justifyContent: 'center', alignItems: 'flex-end', width: '50%' }}>
+
+                                <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeButtonRed }}>{(rideData[0].status).toUpperCase()}</Text>
+
+                            </View> : null
+                        }
 
                     </View>
                     <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
@@ -415,24 +431,19 @@ export default function OfferedRideDetails({ navigation, route }) {
 
                     <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
                     <View style={{ width: '95%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
-                        <View style={{ justifyContent: 'flex-start', width: '50%' }}>
+                        <View style={{ justifyContent: 'flex-start', width: '90%' }}>
 
-                            <RideCostView amount={rideData[0].journey_expected_price_per_seat}/>
+                            <RideCostView amount={rideData[0].journey_expected_price_per_seat} />
                             <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{CalculateTimeFromMilies(Number(rideData[0].journey_approx_time))}</Text>
-                            
-                        </View>
-
-                        <View style={{ justifyContent: 'center', alignItems: 'flex-end', width: '50%' }}>
-
-                            <Pressable onPress={() => cancelAlert(rideData[0])} style={{ backgroundColor: AppColors.themeButtonRed, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
-
-                                <Text style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 3, fontFamily: AppFontFamily.PopinsRegular, fontSize: 13, color: AppColors.themesWhiteColor }}>{'Cancel you ride'}</Text>
-                            </Pressable>
-
 
                         </View>
+
 
                     </View>
+
+                    {rideData[0].status == 'cancelled' ? null :
+                            
+                            CancelView()}
 
                 </Surface >
 
@@ -441,6 +452,24 @@ export default function OfferedRideDetails({ navigation, route }) {
                 {acceptedData.length ? <CustomerInfoView /> : null}
 
             </View>
+        )
+    }
+
+
+    const CancelView = () => {
+        return (
+            <>
+            <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
+            <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', marginBottom: 10 }}>
+
+                <Pressable onPress={() => cancelAlert(rideData[0])} style={{ backgroundColor: AppColors.themesWhiteColor, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
+
+                    <Text style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 3, fontFamily: AppFontFamily.PopinsRegular, fontSize: 13, color: AppColors.themeButtonRed }}>{'Cancel you ride'}</Text>
+                </Pressable>
+
+
+            </View>
+            </>
         )
     }
 
