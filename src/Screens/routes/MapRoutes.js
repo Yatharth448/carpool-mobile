@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,18 +10,19 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {AppColors} from '../../components/constants/AppColor';
-import {Header} from '../../components/commomheader/CommonHeader';
+import { AppColors } from '../../components/constants/AppColor';
+import { Header } from '../../components/commomheader/CommonHeader';
 import {
   hitApiToRequestGetEstimatedPrice,
   hitApiToRequestUpdateEstimatedPrice,
   hitApiToSaveRide,
 } from '../home/RideModal';
 import Toast from 'react-native-simple-toast';
-import MapView, {Polyline, Marker} from 'react-native-maps';
-import {PriceSelection} from '../../components/priceselection/PriceSelection';
-import {AppFontFamily} from '../../components/constants/AppFonts';
-export default function MapRoutes({navigation, route}) {
+import MapView, { Polyline, Marker } from 'react-native-maps';
+import { PriceSelection } from '../../components/priceselection/PriceSelection';
+import { AppFontFamily } from '../../components/constants/AppFonts';
+import { ButtonPrimary } from '../../components/button/buttonPrimary';
+export default function MapRoutes({ navigation, route }) {
   // let  path1 = [];
   const mapRef = React.useRef(null);
 
@@ -40,7 +41,7 @@ export default function MapRoutes({navigation, route}) {
   const [selectedDistance, setSelectedDistance] = React.useState(0);
   const [openPrice, setOpenPrice] = React.useState(false);
   const [estimatedPrice, setEstimatedPrice] = React.useState('');
-  const [journeyId, setJourneyId] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
   // openPrice
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export default function MapRoutes({navigation, route}) {
       // console.log(result.data, 'price result')
       // setEstimatedPrice(String(result.data))
 
-      const item = {distance: routeData[0].distance};
+      const item = { distance: routeData[0].distance };
       // console.log(price, 'abc')
       setData(0, item);
     })();
@@ -69,12 +70,13 @@ export default function MapRoutes({navigation, route}) {
     }, []);
 
     mapRef.current.fitToCoordinates(coordinates, {
-      edgePadding: {top: 50, right: 50, bottom: 50, left: 100},
+      edgePadding: { top: 50, right: 50, bottom: 50, left: 100 },
       animated: true,
     });
   };
 
   const saveRide = async () => {
+    setIsLoading(true)
     const result = await hitApiToSaveRide(
       pick,
       drop,
@@ -94,7 +96,7 @@ export default function MapRoutes({navigation, route}) {
         drop: drop,
       };
 
-      navigation.navigate('Success', {item: itemData});
+      navigation.navigate('Success', { item: itemData });
     } else {
       Toast.showWithGravity(
         result.message ?? result.error ?? 'Something went wrong',
@@ -102,6 +104,7 @@ export default function MapRoutes({navigation, route}) {
         Toast.TOP,
       );
     }
+    setIsLoading(false)
   };
 
   // const updateEstimatedRide = async (estimatedPrice) => {
@@ -203,7 +206,7 @@ export default function MapRoutes({navigation, route}) {
               <Marker coordinate={path.destination}>
                 <Image
                   source={require('../../assets/mapmarker3.png')}
-                  style={{width: 30, height: 33}}
+                  style={{ width: 30, height: 33 }}
                   resizeMode="contain"
                 />
               </Marker>
@@ -212,7 +215,7 @@ export default function MapRoutes({navigation, route}) {
         </MapView>
       ) : null}
 
-      <View style={{position: 'absolute', top: 0}}>
+      <View style={{ position: 'absolute', top: 0 }}>
         <Header
           close={() => {
             navigation.goBack();
@@ -235,7 +238,7 @@ export default function MapRoutes({navigation, route}) {
           // numColumns={3}
           keyExtractor={(item, index) => index}
           showsVerticalScrollIndicator={false}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <>
               <View
                 style={{
@@ -248,8 +251,8 @@ export default function MapRoutes({navigation, route}) {
                   onPress={() => {
                     setData(index, item);
                   }}
-                  style={{flexDirection: 'row'}}>
-                  <View style={{width: '90%', justifyContent: 'center'}}>
+                  style={{ flexDirection: 'row' }}>
+                  <View style={{ width: '90%', justifyContent: 'center' }}>
                     <Text
                       numberOfLines={3}
                       style={{
@@ -278,7 +281,7 @@ export default function MapRoutes({navigation, route}) {
                       {item.summary}
                     </Text>
                   </View>
-                  <View style={{width: '10%', justifyContent: 'center'}}>
+                  <View style={{ width: '10%', justifyContent: 'center' }}>
                     <Image
                       source={
                         selectedIndex == index
@@ -315,7 +318,7 @@ export default function MapRoutes({navigation, route}) {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height / 3,
           }}>
-          <View style={{width: '95%'}}>
+          <View style={{ width: '95%' }}>
             <Text
               style={{
                 marginTop: 0,
@@ -352,8 +355,8 @@ export default function MapRoutes({navigation, route}) {
             />
           </View>
 
-          <TouchableOpacity
-            onPress={() => saveRide()}
+          {/* <TouchableOpacity
+            onPress={() => isLoading ? console.log('already clicked') : saveRide()}
             style={{
               marginTop: 10,
               backgroundColor: AppColors.themePrimaryColor,
@@ -372,7 +375,17 @@ export default function MapRoutes({navigation, route}) {
               }}>
               {'Proceed'}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+
+          <View style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
+            <ButtonPrimary
+              style={{ width: '95%' }}
+              text={'Proceed'}
+              onPress={() => isLoading ? console.log('already clicked') : saveRide()}
+              loader={isLoading}
+            />
+          </View>
+
         </View>
 
         {/* {PriceSelection('Estimated Price', openPrice ? true : false, closeEstimatePopup, selectedPrice, estimatedPrice, price, save)} */}

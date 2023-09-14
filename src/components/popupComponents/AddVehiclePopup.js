@@ -2,16 +2,22 @@ import React from 'react'
 import { Modal, View, Text, Image, StyleSheet, Pressable, FlatList, Dimensions } from 'react-native'
 import { AppColors } from '../constants/AppColor';
 import { AppFontFamily } from '../constants/AppFonts';
+import CommonLoaders from '../loader/Loader';
 export const AddVehiclePopup = ({ data, headerText, isLoading, closePopup, selectedVehicle, addCar }) => {
 
 
-    const carArray = [{ 'value': '1', 'label': 'Tata Nexon' }, { 'value': '2', 'label': 'MG Hector' }]
+    // const carArray = [{ 'value': '1', 'label': 'Tata Nexon' }, { 'value': '2', 'label': 'MG Hector' }]
     React.useEffect(() => {
         // console.log('se', selectedIdType)
 
 
     }, []);
 
+    const NoData = () =>{
+        return(
+            CommonLoaders.NoDataInList('No vehicle found, Please add your vehicle', { height: 100 })
+        )
+    }
 
     return (
         <Modal visible={isLoading} animationType="slide"
@@ -43,17 +49,18 @@ export const AddVehiclePopup = ({ data, headerText, isLoading, closePopup, selec
                         <View style={{ width: '100%', height: Dimensions.get('screen').height / 3.5, marginTop: 30 }}>
 
                             <FlatList
-                                data={data}
+                                data={data.length > 0 ? data 
+                                : [1] }
                                 // columnWrapperStyle={{ flexWrap: 'wrap' }}
                                 // numColumns={4}
                                 keyExtractor={(item, index) => index}
                                 showsHorizontalScrollIndicator={false}
                                 // horizontal={true}
                                 renderItem={({ item, index }) => (
-
+                                    data.length > 0 ?
                                     <Pressable onPress={() => selectedVehicle(item)} style={{ width: '100%', padding: 10, alignItems: 'center' }}>
                                         <Text style={{ color: AppColors.themeBlackColor, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular }}>{item.label}</Text>
-                                    </Pressable>
+                                    </Pressable> : <NoData/>
 
                                 )}
                             />

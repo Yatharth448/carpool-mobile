@@ -16,6 +16,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
     const [email, setEmail] = React.useState("");
     const [mobile, setMobile] = React.useState("");
     const [date, setDate] = React.useState(new Date())
+    const [isLoading, setIsLoading] = React.useState(false);
  
 
     useEffect(() => {
@@ -49,6 +50,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
             }
             else {
 
+                setIsLoading(true)
                 const accountRes = await hitApiToUpdateProfile(fullName, mobile, date)
 
                 if (accountRes.status) {
@@ -59,6 +61,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                 else {
                     Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
                 }
+                setIsLoading(false)
                 //    
             }
         }
@@ -96,7 +99,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                     </View>
                     <Image source={require('../../assets/edit.png')} style={{ marginLeft: Dimensions.get('window').width / 2 + 5, position: 'absolute', width: 20, height: 20, borderRadius: 40, borderRadius: 40, borderColor: AppColors.themesWhiteColor, borderWidth: .5, resizeMode: 'contain' }} />
 
-                    <View style={{ width: '96%', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
+                    <View style={{ width: '96%', alignItems: 'center', justifyContent: 'center', marginTop: 20, flexDirection: 'row' }}>
 
                         <TextInput
                             style={{ fontSize: 20, fontFamily: AppFontFamily.PopinsBold, color: AppColors.themeBlackColor }}
@@ -106,6 +109,10 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                             onChangeText={(text) => onChangeFullName(text)}
                      
                         />
+                         <View style={{ width: '5%', justifyContent: 'center' }}>
+                            <Image source={require('../../assets/edit.png')} style={{ width: 15, height: 15, resizeMode: 'contain' }} />
+                        </View>
+
                        
                     </View>
 
@@ -113,11 +120,11 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                 </View>
 
 
-                <Surface style={{ width: '92%', borderRadius: 10, marginTop: 30, justifyContent: 'center', padding: 20 }}>
+                <Surface style={{ width: '92%', borderRadius: 10, marginTop: 30, justifyContent: 'center', padding: 20, alignItems: 'flex-end' }}>
 
-                    <View style={{ width: '90%', flexDirection: 'row', }}>
+                    <View style={{ width: '100%', flexDirection: 'row'}}>
 
-                        <View style={{ width: '20%', justifyContent: 'center' }}>
+                        <View style={{ width: '15%', justifyContent: 'center' }}>
                             <Image source={require('../../assets/phone.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
                         </View>
                         <View style={{ width: '80%', justifyContent: 'center' }}>
@@ -130,17 +137,21 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                                 onChangeText={(text) => onChangeMobile(text)}
                             />
                         </View>
+                        <View style={{ width: '5%', justifyContent: 'center' }}>
+                            <Image source={require('../../assets/edit.png')} style={{ width: 15, height: 15, resizeMode: 'contain' }} />
+                        </View>
+
 
                     </View>
                     <View style={{ marginTop: 10, marginBottom: 15, marginLeft: 45, width: '88%', height: 1, backgroundColor: AppColors.themeCardBorderColor }}></View>
 
 
-                    <View style={{ width: '90%', flexDirection: 'row', }}>
+                    <View style={{ width: '100%', flexDirection: 'row', }}>
 
-                        <View style={{ width: '20%', justifyContent: 'center' }}>
+                        <View style={{ width: '15%', justifyContent: 'center' }}>
                             <Image source={require('../../assets/mail.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
                         </View>
-                        <View style={{ width: '80%', justifyContent: 'center' }}>
+                        <View style={{ width: '85%', justifyContent: 'center' }}>
                             <TextInput
                                 style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBtnDisableColor }}
                                 placeholder={'Enter mmobile'}
@@ -180,8 +191,8 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                     <View style={{ width: '92%', alignItems: 'center' }}>
                         <ButtonPrimary
                             text={'Save info'}
-                            onPress={() => saveAndContinue()}
-                            loader={false}
+                            onPress={() => isLoading ? console.log('already clicked') : saveAndContinue()}
+                            loader={isLoading}
                         />
                     </View>
                 </View>

@@ -38,6 +38,7 @@ export default function SignupScreen({ navigation }) {
     const [showPassword, setShowPassword] = React.useState(false);
     const [selectedIndex, setIndex] = React.useState(0)
     const [gender, setGender] = React.useState('m')
+    const [isLoading, setIsLoading] = React.useState(false);
     const countryCode = '+91';
 
 
@@ -102,6 +103,7 @@ export default function SignupScreen({ navigation }) {
         console.log(result, 'login Respnse')
         if (result.status) {
             Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
+            // navigation.navigate('OTPScreen', { email: email, secret: result.secret })
             navigation.navigate('KycScreen')
             // navigation.dispatch(
             //     CommonActions.reset({
@@ -119,7 +121,7 @@ export default function SignupScreen({ navigation }) {
     }
 
     const userLogin = async () => {
-
+        setIsLoading(true)
         console.log('1')
         if (!email) {
             console.log('2')
@@ -132,11 +134,12 @@ export default function SignupScreen({ navigation }) {
             // navigation.navigate('OTPScreen', { email: email, secret: '' })
             if (loginRes.status) {
                 // Storage.saveItem(AppKeys.SECRET_KEY, loginRes.secret)
-                navigation.navigate('OTPScreen', { fullName: fullName, email: email, password: password, mobile: mobile, secret: loginRes.secret })
+                navigation.navigate('OTPScreen', { email: email, secret: loginRes.secret })
             }
             else {
                 Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
             }
+            setIsLoading(false)
             //    
             console.log(loginRes, '3')
 
@@ -251,8 +254,8 @@ export default function SignupScreen({ navigation }) {
                         <View style={{ alignItems: 'center', marginTop: 10 }}>
                             <ButtonPrimary
                                 text={'Request OTP'}
-                                onPress={() => userLogin()}
-                                loader={false}
+                                onPress={() => isLoading ? console.log('already clicked') : userLogin()}
+                                loader={isLoading}
                             />
                         </View>
                     </View>

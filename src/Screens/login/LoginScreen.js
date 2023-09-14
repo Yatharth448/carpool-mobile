@@ -27,6 +27,7 @@ export default function LoginScreen({ navigation }) {
     const [password, setPassword] = React.useState("");
     const [checked, setChecked] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(true);
+    const [isLoading, setIsLoading] = React.useState(false);
     const countryCode = '+91';
 
 
@@ -125,7 +126,7 @@ export default function LoginScreen({ navigation }) {
     }
 
     const userLogin = async () => {
-
+        setIsLoading(true)
         console.log('1')
         if (!email) {
             console.log('2')
@@ -135,7 +136,7 @@ export default function LoginScreen({ navigation }) {
 
             const deviceToken = await Storage.getSavedItem('fcmToken')
             const loginRes = await hitApiForLogin(email, password, deviceToken)
-
+            setIsLoading(false)
             console.log(loginRes, 'login Respnse')
             if (loginRes.status) {
                 Storage.saveItem(AppKeys.SECRET_KEY, loginRes.secret)
@@ -148,7 +149,7 @@ export default function LoginScreen({ navigation }) {
 
             }
             else {
-
+                setIsLoading(false)
                 Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
             }
             //    
@@ -182,8 +183,8 @@ export default function LoginScreen({ navigation }) {
                 <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 200, resizeMode: 'contain' }} />
             </View>
 
-            <View style={{ width: '90%',  justifyContent: 'center' }}>
-                <Text style={{marginLeft: 20, fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
+            <View style={{ width: '90%', justifyContent: 'center' }}>
+                <Text style={{ marginLeft: 20, fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
                     {'Login'}
                 </Text>
             </View>
@@ -233,8 +234,8 @@ export default function LoginScreen({ navigation }) {
                     <View style={{ alignItems: 'center', marginTop: 10 }}>
                         <ButtonPrimary
                             text={'Login'}
-                            onPress={() => userLogin()}
-                            loader={false}
+                            onPress={() => isLoading ? console.log('already clicked') : userLogin()}
+                            loader={isLoading}
                         />
                     </View>
                 </View>

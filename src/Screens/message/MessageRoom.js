@@ -48,12 +48,39 @@ export default function MessageRoom({ navigation, route }) {
 
     }
 
+
+    const ListItemView = ({ item, index }) => {
+
+        return (
+            <View style={{ width: Dimensions.get('window').width, alignItems: 'center', marginTop: 10 }}>
+                <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.cotraveller_id, 'id': item._id, 'cotravellerName': item.cotraveller_name, from: 'chat', phone: item?.cotraveller_contact })} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
+
+                    <View style={{ width: '100%', justifyContent: 'center', padding: 10 }}>
+                        <View style={{ width: '100%', alignItems: 'flex-start' }}>
+                            {/* {console.log(item)} */}
+                            <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: AppColors.themeBlackColor }}>{(item.cotraveller_name)}</Text>
+                            <Text style={{ width: '100%', marginTop: 10, fontWeight: '600', fontSize: 14, color: AppColors.themeText2Color }}>{(item.messages[item.messages.length - 1].message)}</Text>
+
+                        </View>
+
+                    </View>
+
+                </Pressable>
+            </View>
+        )
+    }
+
+    const NoData = () =>{
+        return(
+            CommonLoaders.NoDataInList('No chats found', { height: 100 })
+        )
+    }
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
             <Header close={() => { navigation.goBack() }} text='Messages' isBack={true} />
 
             <FlatList
-                data={message ?? []}
+                data={message.length > 0 ? message : [1]}
                 refreshControl={
                     <RefreshControl
                         onRefresh={() => getChat()}
@@ -68,28 +95,16 @@ export default function MessageRoom({ navigation, route }) {
                 showsVerticalScrollIndicator={false}
                 // extraData={this.state}
                 // onEndReached={() => this.getCartList()}
-                renderItem={({ item, index }) => (
-                    <View style={{ width: Dimensions.get('window').width, alignItems: 'center', marginTop: 10 }}>
-                        <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.cotraveller_id, 'id': item._id, 'cotravellerName': item.cotraveller_name, from: 'chat', phone: item?.cotraveller_contact })} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
-
-                            <View style={{ width: '100%', justifyContent: 'center', padding: 10 }}>
-                                <View style={{ width: '100%', alignItems: 'flex-start' }}>
-                                    {/* {console.log(item)} */}
-                                    <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: AppColors.themeBlackColor }}>{(item.cotraveller_name)}</Text>
-                                    <Text style={{ width: '100%', marginTop: 10, fontWeight: '600', fontSize: 14, color: AppColors.themeText2Color }}>{(item.messages[item.messages.length - 1].message)}</Text>
-
-                                </View>
-
-                            </View>
-
-                        </Pressable>
-                    </View>
-                )}
+                renderItem={
+                    message.length > 0 ?
+                        ListItemView : NoData
+                }
             />
 
-            <CommonLoaders.ChatLoader isLoading={fetching} text={'Loading messages'}/>
+            {/* <CommonLoaders.ChatLoader isLoading={fetching} text={'Loading messages'} /> */}
 
 
         </View>
     )
 }
+

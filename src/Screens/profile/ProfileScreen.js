@@ -25,7 +25,7 @@ function ProfileScreen({ data, loading, error, getProfileDataRequest, navigation
     return (
         <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg }}>
 
-            <Header close={() => { navigation.goBack() }} text='Profile' right={false} />
+            <Header close={() => { navigation.goBack() }} text='Profile' isRight={true} right={require('../../assets/edit.png')} rightClick={()=> navigation.navigate('UpdateProfile')} />
 
 
             <View style={{ alignItems: 'center', width: '100%', height: Platform.OS == 'android' ? '92%' : '84%' }}>
@@ -46,14 +46,14 @@ function ProfileScreen({ data, loading, error, getProfileDataRequest, navigation
                 </Pressable>
 
 
-                <Surface style={{ width: '92%', borderRadius: 10, marginTop: 30, justifyContent: 'center', padding: 20 }}>
+                <Surface style={{ width: '92%', borderRadius: 10, marginTop: 30, justifyContent: 'center', padding: 20 , alignItems: 'flex-end'}}>
 
-                    <View style={{ width: '80%', flexDirection: 'row', }}>
+                    <View style={{ width: '100%', flexDirection: 'row', }}>
 
-                        <View style={{ width: '20%', justifyContent: 'center' }}>
+                        <View style={{ width: '15%', justifyContent: 'center' }}>
                             <Image source={require('../../assets/phone.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
                         </View>
-                        <View style={{ width: '80%', justifyContent: 'center' }}>
+                        <View style={{ width: '85%', justifyContent: 'center' }}>
                             <Text style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeText2Color }}>{data.contact_number}</Text>
                         </View>
 
@@ -61,15 +61,15 @@ function ProfileScreen({ data, loading, error, getProfileDataRequest, navigation
                     <View style={{ marginTop: 10, marginBottom: 15, marginLeft: 45, width: '88%', height: 1, backgroundColor: AppColors.themeCardBorderColor }}></View>
 
 
-                    <View style={{ width: '80%', flexDirection: 'row', }}>
+                    <View style={{ width: '100%', flexDirection: 'row', }}>
 
-                        <View style={{ width: '20%', justifyContent: 'center' }}>
+                        <View style={{ width: '15%', justifyContent: 'center' }}>
                             <Image source={require('../../assets/mail.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
                         </View>
-                        <View style={{ width: '80%', justifyContent: 'center' }}>
+                        <View style={{ width: '85%', justifyContent: 'center' }}>
                             <Text style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeText2Color }}>{data.email}</Text>
                         </View>
-
+                       
                     </View>
                     {/* <View style={{ marginTop: 10, marginBottom: 15, marginLeft: 45, width: '88%', height: 1, backgroundColor: AppColors.themeCardBorderColor }}></View>
 

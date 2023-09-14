@@ -20,12 +20,12 @@ import reducer from '../../redux/reducers/reducers';
 const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
   const [menu, setMenu] = React.useState([
     {screen: 'FindRide', name: 'HOME'},
-    {screen: 'ActiveRideCarpooler', name: 'Active Ride'},
+    {screen: 'ActiveRideCarpooler', name: 'ACTIVE RIDE'},
     {screen: 'RideHistory', name: 'RIDE HISTORY'},
     {screen: 'MessageRoom', name: 'MESSAGES'},
     {screen: 'Payment', name: 'PAYMENT'},
     {screen: 'Support', name: 'SUPPORT'},
-    {screen: 'Signout', name: 'Sign out'},
+    {screen: 'Signout', name: 'SIGN OUT'},
   ]);
   const [ind, setInd] = React.useState(0);
   const handleDrawerItemPress = (screenName, index) => {

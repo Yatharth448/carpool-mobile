@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { Text, View, Image, TouchableOpacity, Alert } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { TextInput } from 'react-native-paper'
@@ -11,22 +11,24 @@ import Storage from '../../components/localStorage/storage'
 import { AppKeys } from '../../components/constants/AppKeys'
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { AppFontFamily } from '../../components/constants/AppFonts'
-import { hitApiForSignUp } from '../signup/SignupModal'
+import { hitApiForSignUp, hitApiToResentOTP } from '../signup/SignupModal'
 export default function OTPScreen({ navigation, route }) {
   const [otp, setOtp] = React.useState("");
   const [newSecret, setNewSecter] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
   console.log(route.params, 'route')
-  const { email, secret, fullName, password, mobile, gender } = route.params;
+  const { email, secret } = route.params;
+  // let { secret } = route.params;
 
   useEffect(() => {
 
-    setNewSecter(secret)
 
+    setNewSecter(secret)
     // console.log(data, 'result')
-}, []);
+  }, []);
 
   const validateOTP = async (otp) => {
-
+    setIsLoading(true)
     const deviceToken = await Storage.getSavedItem('fcmToken')
     if ((!(otp) == '') && (otp.length == 4)) {
 
@@ -51,9 +53,10 @@ export default function OTPScreen({ navigation, route }) {
         Toast.showWithGravity('Invalid otp', 2, Toast.TOP);
         // Toast.show(themes.appCustomTexts.InvalidOTPText);
       }
+      setIsLoading(false)
 
     }
-    
+
 
 
   }
@@ -61,16 +64,16 @@ export default function OTPScreen({ navigation, route }) {
 
   const resendOTP = async () => {
 
-    const result = await hitApiForSignUp( email )
+    const result = await hitApiToResentOTP(email)
 
-    if (result.status)
-    {
-      // console.log(newSecret, 'old', )
-      // setNewSecter(result.secret)
+    console.log(result, 'resend otp result',)
+    if (result) {
+      // secret = result.secret
+      setNewSecter(result.secret)
       // console.log(newSecret, 'new' )
 
       Alert.alert('OTP resent successfully! Please check your email');
-    } 
+    }
 
   }
 
@@ -78,7 +81,7 @@ export default function OTPScreen({ navigation, route }) {
     <View style={{ flex: 1, backgroundColor: AppColors.themesWhiteColor }}>
 
       <View style={{ width: '100%', height: '20%' }}>
-        <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, marginTop: 200, resizeMode: 'contain' }} />
+        <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 200, resizeMode: 'contain' }} />
       </View>
 
 
@@ -91,14 +94,14 @@ export default function OTPScreen({ navigation, route }) {
           <Text style={{ fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular }}>
             {'We’ve sent a 4-digit confirmation code to ' + email + '. Make sure you enter correct code.'}
           </Text>
-          <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 20, height: 200 }}>
+          <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 20, height: 200 }}>
             <OTPInputView
-              style={{ width: '50%', height: 40, marginRight: 60 }}
+              style={{ width: '75%', alignItems: 'center', justifyContent: 'center' }}
               pinCount={4}
               autoFocusOnLoad
               textContentType={'oneTimeCode'}
               onCodeChanged={(otpNumber) => setOtp(otpNumber)}
-              codeInputFieldStyle={{ width: 50, borderWidth: 1, borderRadius: 5, height: 70, marginLeft: 10, color: AppColors.themeBlackColor, fontSize: 28, borderColor: AppColors.themeTextGrayColor, backgroundColor: AppColors.themeCardBorderColor }}
+              codeInputFieldStyle={{ width: 50, borderWidth: 1, borderRadius: 5, height: 70, marginRight: 5, marginLeft: 5, color: AppColors.themeBlackColor, fontSize: 28, borderColor: AppColors.themeTextGrayColor, backgroundColor: AppColors.themeCardBorderColor }}
               codeInputHighlightStyle={{ borderBottomWidth: 1.5, borderBottomColor: AppColors.themePrimaryColor }}
               keyboardType="numeric"
               code={otp}
@@ -112,25 +115,25 @@ export default function OTPScreen({ navigation, route }) {
             />
           </View>
 
-
+          <View style={{ width: '100%', alignItems: 'center', height: 50 }}>
+            <TouchableOpacity onPress={() => resendOTP()} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ fontSize: 16, color: AppColors.themeTextGrayColor }}>{"Didn't receive code? "}
+                <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{' Resend Code'}</Text>
+              </Text>
+            </TouchableOpacity>
+          </View>
 
           <View style={{ alignItems: 'center', marginTop: 10 }}>
             <ButtonPrimary
               text={'Verify'}
-              onPress={() => validateOTP()}
-              loader={false}
+              onPress={() => isLoading ? console.log('already clicked') : validateOTP()}
+              loader={isLoading}
             />
           </View>
         </View>
       </View>
 
-      <View style={{ width: '100%', alignItems: 'center', height: 50, position: 'absolute', bottom: 0 }}>
-        <TouchableOpacity onPress={() => resendOTP()} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ fontSize: 16, color: AppColors.themeTextGrayColor }}>{"Didn't receive code? "}
-            <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{' Resend Code'}</Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
+
 
 
     </View>

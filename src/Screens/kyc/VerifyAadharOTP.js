@@ -100,7 +100,7 @@ export default function VerifyAadharOTP({ navigation, route }) {
                             autoFocusOnLoad
                             textContentType={'oneTimeCode'}
                             onCodeChanged={(otpNumber) => setOtp(otpNumber)}
-                            codeInputFieldStyle={{ width: 50, borderWidth: 1, borderRadius: 5, height: 70, marginLeft: 5, marginRight: 5, color: AppColors.themeBlackColor, fontSize: 28, borderColor: AppColors.themeTextGrayColor, backgroundColor: AppColors.themeCardBorderColor }}
+                            codeInputFieldStyle={{ width: 40, borderWidth: 1, borderRadius: 5, height: 70, marginLeft: 5, marginRight: 5, color: AppColors.themeBlackColor, fontSize: 28, borderColor: AppColors.themeTextGrayColor, backgroundColor: AppColors.themeCardBorderColor }}
                             codeInputHighlightStyle={{ borderBottomWidth: 1.5, borderBottomColor: AppColors.themePrimaryColor }}
                             keyboardType="numeric"
                             code={otp}
