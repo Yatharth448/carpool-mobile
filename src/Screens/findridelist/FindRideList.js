@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, alert, Image, FlatList, Dimensions } from 'react-native'
+import { View, Text, Alert, Image, FlatList, Dimensions } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { hitApiToGetRideList, hitApiToRequestARide } from './RideListModal';
 import { Header } from '../../components/commomheader/CommonHeader';
@@ -84,7 +84,7 @@ export default function FindRideList({ navigation, route }) {
 
             setStartLoader(false)
             if (result.message == "Please add money to wallet") {
-                alert(result.message)
+                Alert.alert(result.message)
             }
 
         }
@@ -180,40 +180,47 @@ export default function FindRideList({ navigation, route }) {
                             </View> */}
                                 <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
                                 <View style={{ width: '95%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
-                                    <View style={{ width: '11%' }}>
-                                        <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 40, height: 40, borderRadius: 20, resizeMode: 'contain' }} />
-                                    </View>
-                                    <View style={{ justifyContent: 'center', width: '59%' }}>
+                                    <View style={{ width: '50%', flexDirection: 'row' }}>
 
-                                        <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 14, color: AppColors.themeText2Color }}>{item.user_name ?? "Sachin Gupta"}</Text>
-                                        <View style={{ paddingLeft: 10, flexDirection: 'row', alignItems: 'center' }}>
-                                            <Image source={require('../../assets/Star.png')} style={{ marginRight: 5, width: 12, height: 12, marginBottom: 3, resizeMode: 'contain' }} />
-                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{item.rating + ' rating'}</Text>
+                                        <View style={{ width: '25%' }}>
+                                            <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 40, height: 40, borderRadius: 20, resizeMode: 'contain' }} />
                                         </View>
-                                    </View>
-                                    {item?.alreadyRequest ?
+                                        <View style={{ justifyContent: 'center', width: '75%' }}>
 
-                                        <View style={{ width: '30%' }}>
-                                            <ButtonPrimary
-                                                style={{ height: 35 }}
-                                                textStyle={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12 }}
-                                                disabled={true}
-                                                text={'Requested'}
-                                                onPress={() => console.log('Requested')}
-                                                loader={false}
-                                            />
+                                            <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 14, color: AppColors.themeText2Color }}>{item.user_name ?? "Sachin Gupta"}</Text>
+                                            <View style={{ paddingLeft: 10, flexDirection: 'row', alignItems: 'center' }}>
+                                                <Image source={require('../../assets/Star.png')} style={{ marginRight: 5, width: 12, height: 12, marginBottom: 3, resizeMode: 'contain' }} />
+                                                <Text style={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{item.rating + ' rating'}</Text>
+                                            </View>
                                         </View>
-                                        :
-                                        <View style={{ width: startLoader ? '35%' : '30%' }}>
-                                            <ButtonPrimary
-                                                style={{ height: 35 }}
-                                                textStyle={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12 }}
-                                                text={'Request Ride'}
-                                                onPress={() => startLoader ? console.log('empty') : requestRide(item, index)}
-                                                loader={startLoader}
-                                            />
-                                        </View>
-                                    }
+
+                                    </View>
+
+                                    <View style={{ width: '50%', alignItems: 'flex-end'}}>
+                                        {item?.alreadyRequest ?
+
+                                            <View style={{ width: '70%' }}>
+                                                <ButtonPrimary
+                                                    style={{ height: 35 }}
+                                                    textStyle={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12 }}
+                                                    disabled={true}
+                                                    text={'Requested'}
+                                                    onPress={() => console.log('Requested')}
+                                                    loader={false}
+                                                />
+                                            </View>
+                                            :
+                                            <View style={{ width: startLoader ? '75%' : '70%' }}>
+                                                <ButtonPrimary
+                                                    style={{ height: 35 }}
+                                                    textStyle={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12 }}
+                                                    text={'Request Ride'}
+                                                    onPress={() => startLoader ? console.log('empty') : requestRide(item, index)}
+                                                    loader={startLoader}
+                                                />
+                                            </View>
+                                        }
+                                    </View>
                                 </View>
 
                             </Surface>

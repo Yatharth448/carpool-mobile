@@ -32,7 +32,7 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
     selectedInd(index);
     if (screenName == 'Payment') {
     } else if (screenName == 'FindRide') {
-      navigation.navigate(screenName);
+      navigation.navigate(screenName, { from: 'reset' } );
     } else if (screenName == 'Signout') {
       LogoutAlert();
     } else if (screenName == 'ActiveRideCarpooler') {

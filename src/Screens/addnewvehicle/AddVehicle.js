@@ -19,13 +19,13 @@ export default function AddVehicle({ navigation, route }) {
         // console.log(result, 'add vehicle result')
         if (result.status) {
             Toast.showWithGravity(result.message, 2, Toast.TOP);
-            navigation.goBack()
+            navigation.navigate('FindRide', {'from': ''})
         }
     }
 
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themesWhiteColor, alignItems: 'center' }}>
-            <Header close={() => { navigation.goBack() }} isBack={true} text='Add Vehicle' />
+            <Header close={() => { navigation.navigate('FindRide', {'from': ''}) }} isBack={true} text='Add Vehicle' />
 
             <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 30 }}>
 

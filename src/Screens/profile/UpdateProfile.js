@@ -131,7 +131,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
 
                             <TextInput
                                 style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeText2Color }}
-                                placeholder={'Enter mmobile'}
+                                placeholder={'Enter mobile'}
                                 placeholderTextColor={AppColors.themeTextGrayColor}
                                 value={mobile}
                                 onChangeText={(text) => onChangeMobile(text)}
