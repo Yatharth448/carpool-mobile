@@ -17,7 +17,11 @@ function Cotravellers ({ navigation, route })  {
     const flatListRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [cotravellerArray, setCotravellerArray] = useState([]);
+    const [acceptLoader, setAcceptLoader] = React.useState(false);
+    const [rejectLoader, setRejectLoader] = React.useState(false);
+
     const { data, from } = route.params
+
 
     useEffect(() => {
 
@@ -39,6 +43,7 @@ setCotravellerArray(data)
     }, []);
 
     const _acceptOfferedRide = async (item, ind) => {
+        setAcceptLoader(true)
         const result = await hitApiToAcceptOfferedRide(item.ride_id, item.user_id)
         console.log(result, 'vvv')
         if (result.status) {
@@ -53,12 +58,14 @@ setCotravellerArray(data)
 
             navigation.goBack()
         }
+        setAcceptLoader(false)
 
     }
 
 
     const _rejectOfferedRide = async (item, ind) => {
-        const result = await hitApiToRejectOfferedRide(item.ride_id, item.user_id, 'action')
+        setRejectLoader(true)
+        const result = await hitApiToRejectOfferedRide(item.ride_id, item.user_id, 'reject')
         console.log(result, 'vvv')
         if (result.status) {
 
@@ -72,6 +79,7 @@ setCotravellerArray(data)
 
             navigation.goBack()
         }
+        setRejectLoader(false)
 
     }
 
@@ -88,8 +96,8 @@ setCotravellerArray(data)
                 <ButtonPrimary
                 style={{ width: '45%' }}
                 text={'Accept Ride'}
-                onPress={()=> _acceptOfferedRide(item, index)}
-                loader={false}
+                onPress={()=> acceptLoader ? console.log('already clicked') : _acceptOfferedRide(item, index)}
+                loader={acceptLoader}
                 /> 
             )
         
@@ -173,8 +181,8 @@ setCotravellerArray(data)
                         <ButtonPrimary
                             style={{ width: '45%', backgroundColor: 'red' }}
                             text={'Reject ride'}
-                            onPress={() => _rejectOfferedRide(item, index)}
-                            loader={false}
+                            onPress={() => rejectLoader ? console.log('already clicked') : _rejectOfferedRide(item, index)}
+                            loader={rejectLoader}
                         />
 
                     </View>

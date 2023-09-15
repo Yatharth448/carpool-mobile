@@ -15,9 +15,9 @@ export const RecentHorizontal = ({ recentArray, onPress }) => {
                     {'Recent Searches'}
                 </Text>
 
-                <Text style={{ color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 14 }}>
+                {/* <Text style={{ color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 14 }}>
                     {'See all'}
-                </Text>
+                </Text> */}
 
 
             </View>

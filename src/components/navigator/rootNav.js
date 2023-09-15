@@ -32,6 +32,8 @@ import UploadDocuments from '../../Screens/kyc/UploadDocuments';
 import Support from '../../Screens/support/Support';
 import VerifyAadharOTP from '../../Screens/kyc/VerifyAadharOTP';
 import StartRideCarpooler from '../../Screens/startridecarpooler/StartRideCarpooler';
+import Notification from '../../Screens/notification/Notification';
+import AddGenderMobile from '../genderMobile/AddGenderMobile';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -108,6 +110,9 @@ export default function RootNav() {
         <Stack.Screen name="Support" component={Support} />
         <Stack.Screen name="UploadDocuments" component={UploadDocuments} />
         <Stack.Screen name="VerifyAadharOTP" component={VerifyAadharOTP} />
+        <Stack.Screen name="SearchLocation" component={SearchLocation} />
+        <Stack.Screen name="AddGenderMobile" component={AddGenderMobile} />
+        <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen
           name="RideDrawer"
           component={RideDrawer}

@@ -35,7 +35,7 @@ export default function SignupScreen({ navigation }) {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [checked, setChecked] = React.useState(false);
-    const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(true);
     const [selectedIndex, setIndex] = React.useState(0)
     const [gender, setGender] = React.useState('m')
     const [isLoading, setIsLoading] = React.useState(false);
@@ -46,7 +46,7 @@ export default function SignupScreen({ navigation }) {
     useEffect(() => {
         // Configure Google Sign-In
         GoogleSignin.configure({
-            scopes: ['email', 'https://www.googleapis.com/auth/user.gender.read', 'https://www.googleapis.com/auth/user.phonenumbers.read'], // what API you want to access on behalf of the user, default is email and profile
+            scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
             webClientId:
                 '330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
             offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
@@ -98,13 +98,17 @@ export default function SignupScreen({ navigation }) {
 
 
     const userGoogleSignup = async (userInfo) => {
-        const deviceToken = await Storage.getSavedItem('fcmToken')
-        const result = await hitApiForGoogleSignUp(userInfo.email, userInfo.familyName, userInfo.givenName, userInfo.id, userInfo.photo, deviceToken)
-        console.log(result, 'login Respnse')
-        if (result.status) {
-            Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
+
+        if (userInfo) {
+            
             // navigation.navigate('OTPScreen', { email: email, secret: result.secret })
-            navigation.navigate('KycScreen')
+            if (!userInfo?.gender || !userInfo?.mobile) {
+                navigation.navigate('AddGenderMobile', { "email": userInfo?.email, 'familyName': userInfo?.familyName, 'givenName': userInfo?.givenName, 'id': userInfo?.id, 'photo': userInfo?.photo })
+            }
+            else {
+
+                navigation.navigate('KycScreen')
+            }
             // navigation.dispatch(
             //     CommonActions.reset({
             //         index: 0,
@@ -177,7 +181,7 @@ export default function SignupScreen({ navigation }) {
         if (i === 0) {
             setGender('m')
         }
-        else if (i === 0) {
+        else if (i === 1) {
             setGender('f')
         }
         else {

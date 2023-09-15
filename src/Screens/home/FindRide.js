@@ -137,6 +137,16 @@ class FindRide extends Component {
             if (this.props.route.params?.from == 'reset') {
                 this.setState({ pickupLocation: '', dropLocation: '', selectedIndex: 0, selectedDate: 'Date and time of departure' })
             }
+            else if (this.props.route.params?.from == 'search') {
+                this.setState({
+                    pickupLocation: this.props.route.params?.pick,
+                    pickMainText: this.props.route.params?.pickMain,
+                    dropLocation: this.props.route.params?.drop,
+                    dropMainText: this.props.route.params?.dropMain,
+                })
+
+            }
+
             this.setState({ kycStatus: this.props?.data?.kyc_status })
             const isKyc = this.props?.data?.kyc_status
 
@@ -243,19 +253,27 @@ class FindRide extends Component {
     }
 
     pickUp = () => {
-
-        this.setState({ openSearch: 'pick' })
-
+        this.props.navigation.navigate('SearchLocation', {
+            'headerText': 'Search Loaction',
+            'lat': this.state.location.latitude,
+            'lng': this.state.location.longitude
+        })
     }
 
     dropOff = () => {
-        this.setState({ openSearch: 'drop' })
-        // console.log('drop off')
+        this.props.navigation.navigate('SearchLocation', {
+            'headerText': 'Search Loaction',
+            'lat': this.state.location.latitude,
+            'lng': this.state.location.longitude
+        })
     }
-    openLocationSearch = () => {
-        this.openSearch == 'pick' ? this.setState({ pickupLocation: '' }) : this.setState({ dropLocation: '' })
-        this.setState({ openSearch: '' })
-    }
+
+    // const animation = createAnimation({
+    //     type: 'slide',
+    //     duration: 500,
+    //     easing: 'easeInOut',
+    //   });
+
     onSelectionPress = (val) => {
 
         this.setState({
@@ -498,10 +516,10 @@ class FindRide extends Component {
     onTextLayout = (e) => {
         const { height } = e.nativeEvent.layout;
         this.setState({ textHeight: height });
-      };
+    };
 
     checkExistingRequest() {
-       
+
         return (
             <View style={{
                 alignItems: 'center', backgroundColor: AppColors.themeNotificationBg, marginTop: -50,
@@ -599,11 +617,16 @@ class FindRide extends Component {
                                 </View>
 
                             }
-                            <View style={{ width: '100%', height: 1, marginBottom: 20, backgroundColor: AppColors.themeCardBorderColor }} />
 
-                            <View style={{ width: '100%', alignItems: 'flex-start', marginBottom: 20 }}>
-                                <RecentHorizontal recentArray={this.state.recentSearchArray} onPress={this.recentSearchPress} />
-                            </View>
+                            {this.state.recentSearchArray.length > 0 ?
+                                <>
+                                    <View style={{ width: '100%', height: 1, marginBottom: 20, backgroundColor: AppColors.themeCardBorderColor }} />
+                                    <View style={{ width: '100%', alignItems: 'flex-start', marginBottom: 20 }}>
+                                        <RecentHorizontal recentArray={this.state.recentSearchArray} onPress={this.recentSearchPress} />
+                                    </View>
+                                </>
+                                : null
+                            }
 
                         </View>
 
@@ -768,14 +791,14 @@ class FindRide extends Component {
 
 
 
-                < SearchLocation
+                {/* < SearchLocation
                     headerText={'Select address'}
                     isLoading={this.state.openSearch ? true : false}
                     closePopup={this.openLocationSearch}
                     onSelectionPress={this.onSelectionPress}
                     lat={this.state.location.latitude}
                     lng={this.state.location.longitude}
-                />
+                /> */}
             </View >
         )
     }

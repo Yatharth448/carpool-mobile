@@ -6,12 +6,13 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { AppFontFamily } from '../constants/AppFonts';
 import { Surface } from 'react-native-paper';
 
-export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionPress, lat, lng }) => {
+export default function SearchLocation ({ navigation ,route}) {
     const [selectedInput, setSelectedInput] = useState(null);
     const [pick, setPick] = useState('');
     const [pickMain, setPickMain] = useState('');
     const [drop, setDrop] = useState('');
     const [predictions, setPredictions] = useState([]);
+    const {headerText, lat, lng } = route.params;
 
     useEffect(() => {
        
@@ -43,11 +44,6 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
         setSelectedInput(inputName);
     };
 
-    const handleBlur = () => {
-        setSelectedInput(null);
-
-    };
-
     const handlePickInputChange = (text) => {
         setPick(text);
         // setQuery(text)
@@ -59,18 +55,17 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
         fetchPredictions(text);
     };
 
-    const setPickup = (v, mainText) => {
-        console.log(selectedInput, mainText, 'sel')
+    const setPickup = (description, mainText) => {
+        console.log(selectedInput, description, mainText, 'sel')
         setPredictions([])
         if (selectedInput === '1') {
-            setPick(v)
+            setPick(description)
             setPickMain(mainText)
         }
         else {
-            setDrop(v)
-
-
-            onSelectionPress({ pick: pick, pickMain: pickMain, drop: v, dropMain: mainText })
+            setDrop(description)
+            navigation.navigate('FindRide', { 'pick': pick, 'pickMain': pickMain, 'drop': description, 'dropMain': mainText, 'from': 'search' })
+            // onSelectionPress({ pick: pick, pickMain: pickMain, drop: v, dropMain: mainText })
         }
     }
 
@@ -87,16 +82,12 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
 
     return (
 
-        <Modal visible={isLoading} animationType="slide"
-            onRequestClose={() => console.log('closed')} transparent={true}>
-            <Pressable>
-                {/* onPress={closePopup}> */}
                 <View style={styles.popupBg}>
 
                     <View style={styles.container}>
 
                         <View style={{ height: 70, backgroundColor: AppColors.themesWhiteColor, width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                            <Pressable onPress={closePopup} style={{ width: '20%', height: 60, alignItems: 'flex-start', paddingLeft: 10, justifyContent: 'center' }}>
+                            <Pressable onPress={()=> navigation.navigate('FindRide', {'from': 'reset'})} style={{ width: '20%', height: 60, alignItems: 'flex-start', paddingLeft: 10, justifyContent: 'center' }}>
                                 <Surface style={{ borderRadius: 20 }} elevation={4}>
                                     <Image source={require('../../assets/bckarrow.png')} style={{ width: 40, height: 40 }} />
                                 </Surface>
@@ -208,8 +199,7 @@ export const SearchLocation = ({ headerText, isLoading, closePopup, onSelectionP
                     </View>
 
                 </View>
-            </Pressable>
-        </Modal>
+            
     );
 };
 

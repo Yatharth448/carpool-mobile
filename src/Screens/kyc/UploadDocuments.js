@@ -378,7 +378,7 @@ export default function UploadDocuments({ navigation, route }) {
                             </View>
 
                             <Pressable onPress={() => navigation.goBack()} style={{ width: '60%', alignItems: 'flex-end' }}>
-                                <Text style={{ marginLeft: 20, fontFamily: AppFontFamily.PopinsRegular, fontSize: 10, color: AppColors.themeTextGrayColor }}>
+                                <Text style={{ marginLeft: 20, fontFamily: AppFontFamily.PopinsRegular, fontSize: 10, color: AppColors.themePrimaryColor}}>
                                     {'Change'}
                                 </Text>
                             </Pressable>

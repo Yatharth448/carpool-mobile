@@ -17,8 +17,9 @@ export default function RequestedRideDetails({ navigation, route }) {
 
     const flatListRef = useRef(null);
     const [isLoading, setIsLoading] = React.useState(false)
-    const [currentIndex, setCurrentIndex] = React.useState(0);
-    const [acceptedData, setAcceptedData] = React.useState([]);
+    const [acceptLoader, setAcceptLoader] = React.useState(false);
+    const [rejectLoader, setRejectLoader] = React.useState(false);
+    const [cancelLoader, setCancelLoader] = React.useState(false);
     const [userData, setUserData] = React.useState({});
     const [cotravellerArray, setCotravellerArray] = React.useState([]);
     const [rideData, setRideData] = React.useState('')
@@ -82,7 +83,7 @@ export default function RequestedRideDetails({ navigation, route }) {
     }
 
     const acceptRide = async (ind) => {
-
+        setAcceptLoader(true)
         const result = await hitApiToAcceptRequestedRide(userData[0].ride_id, userData[0].user_id, rideData[0].journey_published_by)
         console.log(result, 'vvv')
         if (result.status) {
@@ -96,14 +97,14 @@ export default function RequestedRideDetails({ navigation, route }) {
 
             // navigation.goBack()
         }
-        getRideDetail()
-
+        await getRideDetail()
+        setAcceptLoader(false)
         // getRideDetail()
     }
 
 
     const rejectRide = async (ind) => {
-
+        setRejectLoader(true)
         const result = await hitApiToRejectRequestedRide(userData[0].ride_id, userData[0].user_id, rideData[0].journey_published_by, 'reject')
         console.log(result, 'vvv')
         if (result.status) {
@@ -117,31 +118,19 @@ export default function RequestedRideDetails({ navigation, route }) {
 
             // navigation.goBack()
         }
-        getRideDetail()
+        await getRideDetail()
+        setRejectLoader(false)
 
         // getRideDetail()
     }
 
     const ViewRideRequestBtn = ({ }) => {
-        // if (userData[0].status == 'accepted')
-        //     return (
-        //         <View style={{ width: '100%', paddingLeft: 20, alignItems: 'center', marginTop: 20, justifyContent: 'center' }}>
 
-        //             <ButtonPrimary
-        //                 style={{ width: '90%' }}
-        //                 text={'Accept the ride'}
-        //                 onPress={() => acceptRide()}
-        //                 loader={false}
-        //             />
-
-        //         </View>
-        //     )
-        // else
         return (
             <View style={{ paddingLeft: 20, width: '88%', alignItems: 'left', marginTop: 10, marginBottom: 20, justifyContent: 'center' }}>
 
                 <Text style={{ fontSize: 14, fontFamily: AppFontFamily.PopinsBold, color: AppColors.themeBlackColor }}>
-                    {userData[0].status == 'confirmed' ? 'Ride Confirmed' : userData[0].status == 'accepted' ? 'Accepted by ' + rideData[0].name : 'Awaited from ' + rideData[0].name}
+                    {userData[0].status == 'confirmed' ? 'Ride Confirmed' : userData[0].status == 'accepted' ? 'Accepted by ' + rideData[0].name : userData[0].status == 'rejected' ? 'Rejected by ' + rideData[0].name : 'Awaited from ' + rideData[0].name}
                 </Text>
 
             </View>
@@ -168,7 +157,7 @@ export default function RequestedRideDetails({ navigation, route }) {
 
 
     const cancelRide = async (item) => {
-
+        setCancelLoader(true)
         const result = await hitApiToCancelRideForCustomer(item._id)
 
         console.log(result, 'cancel result')
@@ -182,8 +171,9 @@ export default function RequestedRideDetails({ navigation, route }) {
                 {
                     cancelable: false,
                 },
-                )
+            )
         }
+        setCancelLoader(false)
 
 
     }
@@ -195,7 +185,7 @@ export default function RequestedRideDetails({ navigation, route }) {
         // console.log(item, 'item')
 
         return (
-            
+
             <View style={{ width: Dimensions.get('screen').width, alignItems: 'center', justifyContent: 'center', paddingBottom: 10 }}>
 
                 <View style={{ width: '95%', alignItems: 'center', marginTop: 0, marginBottom: 10 }}>
@@ -307,7 +297,7 @@ export default function RequestedRideDetails({ navigation, route }) {
                         // contentContainerStyle={{alignItems: 'center', width: Dimensions.get('window').width,}}
                         ref={flatListRef}
                         ListHeaderComponent={<RideDetailView />}
-                        data={cotravellrArray.length > 0 ? cotravellrArray : [1] }
+                        data={cotravellrArray.length > 0 ? cotravellrArray : [1]}
                         renderItem={cotravellerArray.length > 0 ? AcceptedRideView : noData}
                         // horizontal
                         // pagingEnabled
@@ -323,8 +313,8 @@ export default function RequestedRideDetails({ navigation, route }) {
         )
     }
 
-    const noData =()=>{
-        return(
+    const noData = () => {
+        return (
 
             CommonLoaders.NoDataInList('No co-traveller found', { height: 100 })
         )
@@ -432,16 +422,22 @@ export default function RequestedRideDetails({ navigation, route }) {
 
                         </View>
 
-                        <View style={{ width: '100%', marginTop: 0, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
-                        <View style={{ marginLeft: 10, width: '100%', alignItems: 'flex-start', justifyContent: 'center', paddingBottom: 10}}>
-                            <ButtonPrimary
-                                style={{ width: '90%', height: 30, backgroundColor: AppColors.themesWhiteColor }}
-                                textStyle={{color: AppColors.themeButtonRed}}
-                                text={'Cancel your ride'}
-                                onPress={() => console.log('confirm', rideData[0])}
-                                loader={false}
-                            />
-                        </View>
+                        {userData[0].status == 'confirmed' ?
+                            <>
+
+                                <View style={{ width: '100%', marginTop: 0, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
+                                <View style={{ marginLeft: 10, width: '100%', alignItems: 'flex-start', justifyContent: 'center', paddingBottom: 10 }}>
+                                    <ButtonPrimary
+                                        style={{ width: '90%', height: 30, backgroundColor: AppColors.themesWhiteColor }}
+                                        textStyle={{ color: AppColors.themeButtonRed }}
+                                        text={'Cancel your ride'}
+                                        onPress={() => cancelLoader ? console.log('already clicked') : cancelAlert()}
+                                        loader={cancelLoader}
+                                    />
+                                </View>
+                            </>
+                            : null
+                        }
 
 
                     </Surface >
@@ -454,15 +450,15 @@ export default function RequestedRideDetails({ navigation, route }) {
                                 <ButtonPrimary
                                     style={{ width: '48%', height: 35, backgroundColor: AppColors.themeButtonRed }}
                                     text={'Reject'}
-                                    onPress={() => rejectRide()}
-                                    loader={false}
+                                    onPress={() => rejectLoader ? console.log('already clicked') : rejectRide()}
+                                    loader={rejectLoader}
                                 />
 
                                 <ButtonPrimary
                                     style={{ width: '48%', height: 35, backgroundColor: AppColors.themeAcceptBtnColor }}
                                     text={'Accept'}
-                                    onPress={() => acceptRide()}
-                                    loader={false}
+                                    onPress={() => acceptLoader ? console.log('already clicked') : acceptRide()}
+                                    loader={acceptLoader}
                                 />
 
 

@@ -10,7 +10,7 @@ import { AppFontFamily } from '../../components/constants/AppFonts'
 export default function RideHistory({ navigation, route }) {
 
     const [isRequest, setIsRequest] = React.useState(true)
-    const [offerCount, setOfferCount] = React.useState(0)
+    const [offerCount, setOfferCount] = React.useState('')
 
 
     useEffect(() => {

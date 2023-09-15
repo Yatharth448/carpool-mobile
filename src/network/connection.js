@@ -4,7 +4,7 @@ import DeviceInfo from 'react-native-device-info';
 import Storage from '../components/localStorage/storage';
 import { AppKeys } from '../components/constants/AppKeys';
 
-const apiCaller = async (method, url, params = {}, headerOptions = {}, onUploadProgress) => {
+const apiCaller = async (method, url, params = {}, headerOptions = {}) => {
 
     try {
 
@@ -29,10 +29,10 @@ const apiCaller = async (method, url, params = {}, headerOptions = {}, onUploadP
         if (Object.keys(headerOptions).length) {
 
             options.headers = Object.assign({}, options.headers, headerOptions);
-            options.onUploadProgress = onUploadProgress;
+            // options.onUploadProgress = onUploadProgress;
            
         }
-
+        console.log('header ', options.headers);
         if (authToken) {
 
             options.headers['authorization'] = "Bearer "+authToken
@@ -55,7 +55,7 @@ const apiCaller = async (method, url, params = {}, headerOptions = {}, onUploadP
         const response = await axios(options);
         // if (response?.headers?.authorization) {
 
-            console.log('header response token', options.headers.authorization);
+            // console.log('header response token', options.headers);
 
         //     LocalStorage.storeData('token', response.headers.authorization)
         // }
@@ -181,13 +181,13 @@ const connection = {
         }
 
     },
-    uploadDocument: async (endPoint, params = {}, onUploadProgress) => {
+    uploadDocument: async (endPoint, params = {}) => {
 
         try {
 
             console.log('post params', params);
 
-            const response = await apiCaller('POST', endPoint, params, { 'Content-Type': 'multipart/form-data' }, onUploadProgress);
+            const response = await apiCaller('POST', endPoint, params, { 'Content-Type': 'multipart/form-data' });
             return response;
 
         }

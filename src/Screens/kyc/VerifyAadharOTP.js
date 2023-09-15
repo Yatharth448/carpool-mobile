@@ -119,8 +119,8 @@ export default function VerifyAadharOTP({ navigation, route }) {
                     <View style={{ alignItems: 'center', marginTop: 10 }}>
                         <ButtonPrimary
                             text={'Verify'}
-                            onPress={() => validateOTP()}
-                            loader={false}
+                            onPress={() => isLoading ? console.log('already clicked') : validateOTP()}
+                            loader={isLoading}
                         />
                     </View>
                 </View>
@@ -180,7 +180,7 @@ export default function VerifyAadharOTP({ navigation, route }) {
                 </TouchableOpacity>
             </View>
 
-            <CommonLoaders.ChatLoader isLoading={isLoading} loaderText={'OTP verification in process...Please wait'} />
+            {/* <CommonLoaders.ChatLoader isLoading={isLoading} loaderText={'OTP verification in process...Please wait'} /> */}
 
 
         </View>

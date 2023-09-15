@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Image, TextInput, Platform, Dimensions } from 'react-native'
+import { View, Image, TextInput, Platform, Dimensions, Pressable, Alert, Linking } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import Toast from 'react-native-simple-toast'
 import { hitApiToUpdateProfile } from './ProfileModal';
@@ -9,6 +9,9 @@ import { getProfileDataRequest } from '../../redux/actions/actions';
 import { AppFontFamily } from '../../components/constants/AppFonts';
 import { Surface } from 'react-native-paper';
 import { ButtonPrimary } from '../../components/button/buttonPrimary';
+import SelectImagePopup from '../../Utils/SelectImagePopup'
+import { cameraPermission, galleryPermission } from '../../Utils/RuntimePermission'
+import selectImage from '../../Utils/ImagePicker'
 function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation }) {
 
 
@@ -17,7 +20,10 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
     const [mobile, setMobile] = React.useState("");
     const [date, setDate] = React.useState(new Date())
     const [isLoading, setIsLoading] = React.useState(false);
- 
+    const [openPhoto, setOpenPhoto] = React.useState(false)
+    const [progress, setProgress] = React.useState(0);
+
+    const [img, setImg] = React.useState()
 
     useEffect(() => {
         getProfileDataRequest();
@@ -29,7 +35,87 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
 
     }, []);
 
-  
+
+
+    const openCam = async () => {
+        try {
+            if (await cameraPermission()) {
+                const data = await selectImage.cameraLaunch();
+                console.log(data.replace(/^.*\//, ''), 'Image path')
+                let imageName = data.replace(/^.*\//, '')
+                let extension = imageName.split('.')[1]
+
+                imageName = imageName.length > 20 ? `${String(imageName).substring(0, 18)}...` + extension : imageName;
+                setImg(data.path);
+                setOpenPhoto(false)
+              
+            }
+            else {
+
+                Alert.alert(
+                    '',
+                    "ShareWheel does not have access to your camera. To enable access, tap Settings and turn on camera.",
+                    [
+                        { text: 'Cancel', onPress: () => null },
+                        { text: 'Settings', onPress: () => Linking.openSettings() },
+                    ],
+                    {
+                        cancelable: false,
+                    },
+                );
+
+            }
+
+        } catch (error) {
+            if (error.code == 'file_size') {
+                Alert.alert(error.message || 'File size cannot exceed 5MB')
+                setOpenPhoto(false)
+            }
+        }
+
+    }
+    const openGall = async () => {
+
+        // console.log(isFront, 'front')
+        try {
+            if (await galleryPermission()) {
+                const data = await selectImage.imageGalleryLaunch();
+                console.log(data.path.replace(/^.*\//, ''), 'Image path')
+                let imageName = data.path.replace(/^.*\//, '')
+                let extension = imageName.split('.')[1]
+                // if (Platform.OS == 'android') {
+
+                imageName = imageName.length > 20 ? `${String(imageName).substring(0, 18)}...` + extension : imageName;
+                // setBackImg(data.path)
+                setImg(data.path);
+                setOpenPhoto(false)
+              
+            }
+            else {
+
+                Alert.alert(
+                    '',
+                    "ShareWheel does not have access to your photos. To enable access, tap Settings and turn on photos.",
+                    [
+                        { text: 'Cancel', onPress: () => null },
+                        { text: 'Settings', onPress: () => Linking.openSettings() },
+                    ],
+                    {
+                        cancelable: false,
+                    },
+                );
+
+            }
+
+        } catch (error) {
+            console.log(error, 'error')
+            if (error.code == 'file_size') {
+                Alert.alert(error.message || 'File size cannot exceed 5MB')
+                // this.setState({ openPopup: false })
+            }
+        }
+
+    }
 
     const saveAndContinue = async () => {
 
@@ -51,15 +137,22 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
             else {
 
                 setIsLoading(true)
-                const accountRes = await hitApiToUpdateProfile(fullName, mobile, date)
+
+                const params = new FormData();
+                params.append('name', fullName);
+                params.append('contact_number', mobile);
+                params.append('date_of_birth', date);
+                // params.append('file',  img)
+                const accountRes = await hitApiToUpdateProfile(params)
 
                 if (accountRes.status) {
                     // Storage.saveItem(AppKeys.SECRET_KEY, loginRes.secret)
-                    getProfileDataRequest();
+                   await getProfileDataRequest();
                     navigation.goBack()
                 }
                 else {
-                    Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
+                    console.log(accountRes, 'res')
+                    Toast.showWithGravity(accountRes?.message ?? 'Something went wrong', 2, Toast.TOP);
                 }
                 setIsLoading(false)
                 //    
@@ -71,6 +164,12 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
 
     }
 
+
+    const onUploadProgress = (data) => {
+        var progress = data.loaded / data.total;
+        setProgress(progress)
+        console.log(progress, 'aaaaaa------')
+    }
 
     const onChangeFullName = (e) => {
         setFullName(e)
@@ -84,6 +183,10 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
         setMobile(e)
     }
 
+    const uploadProfileImage = () => {
+        setOpenPhoto(true)
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg }}>
 
@@ -93,11 +196,13 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
             <View style={{ alignItems: 'center', width: '100%', height: Platform.OS == 'android' ? '92%' : '84%' }}>
 
                 <View style={{ width: '96%', borderRadius: 10, marginTop: 30, justifyContent: 'center' }}>
+                    <Pressable onPress={() => uploadProfileImage()}>
 
-                    <View style={{ width: '96%', alignItems: 'center', justifyContent: 'center' }}>
-                        <Image source={require('../../assets/avtar.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 40, borderWidth: 2, width: 80, height: 80, resizeMode: 'contain' }} />
-                    </View>
-                    <Image source={require('../../assets/edit.png')} style={{ marginLeft: Dimensions.get('window').width / 2 + 5, position: 'absolute', width: 20, height: 20, borderRadius: 40, borderRadius: 40, borderColor: AppColors.themesWhiteColor, borderWidth: .5, resizeMode: 'contain' }} />
+                        <View style={{ width: '96%', alignItems: 'center', justifyContent: 'center' }}>
+                            <Image source={img ? { uri: img } : require('../../assets/avtar.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 40, borderWidth: 2, width: 80, height: 80, resizeMode: 'contain' }} />
+                        </View>
+                        <Image source={require('../../assets/edit.png')} style={{ marginLeft: Dimensions.get('window').width / 2 + 5, bottom: 0, position: 'absolute', width: 20, height: 20, borderRadius: 40, borderRadius: 40, borderColor: AppColors.themesWhiteColor, borderWidth: .5, resizeMode: 'contain' }} />
+                    </Pressable>
 
                     <View style={{ width: '96%', alignItems: 'center', justifyContent: 'center', marginTop: 20, flexDirection: 'row' }}>
 
@@ -107,13 +212,13 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                             placeholderTextColor={AppColors.themeTextGrayColor}
                             value={fullName}
                             onChangeText={(text) => onChangeFullName(text)}
-                     
+
                         />
-                         <View style={{ width: '5%', justifyContent: 'center' }}>
+                        <View style={{ width: '5%', justifyContent: 'center' }}>
                             <Image source={require('../../assets/edit.png')} style={{ width: 15, height: 15, resizeMode: 'contain' }} />
                         </View>
 
-                       
+
                     </View>
 
 
@@ -122,7 +227,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
 
                 <Surface style={{ width: '92%', borderRadius: 10, marginTop: 30, justifyContent: 'center', padding: 20, alignItems: 'flex-end' }}>
 
-                    <View style={{ width: '100%', flexDirection: 'row'}}>
+                    <View style={{ width: '100%', flexDirection: 'row' }}>
 
                         <View style={{ width: '15%', justifyContent: 'center' }}>
                             <Image source={require('../../assets/phone.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
@@ -199,7 +304,12 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
 
             </View>
 
-
+            <SelectImagePopup
+                isLoading={openPhoto}
+                closePopup={() => setOpenPhoto(false)}
+                onPressCam={() => { openCam() }}
+                onPressGal={() => { openGall() }}
+            />
 
 
         </View>

@@ -20,10 +20,10 @@ export const hitApiForSignUp = async (name, email, password, mobile, gender) => 
 
 }
 
-export const hitApiForGoogleSignUp = async ( email, firstName, givenName, id, photo, token) => {
+export const hitApiForGoogleSignUp = async ( email, firstName, givenName, id, photo, token, mobile, gender) => {
 
     try {
-        const signupData = await connection.postAPI('/api/auth/signup/google', { 'email': email, 'firstName': firstName, 'givenName': givenName, id: id, 'photo': photo, 'device_token': token  })
+        const signupData = await connection.postAPI('/api/auth/signup/google', { 'email': email, 'firstName': firstName, 'givenName': givenName, id: id, 'photo': photo, 'device_token': token, 'contactNumber': mobile, 'gender': gender  })
 
         if (signupData.success) {
             return signupData

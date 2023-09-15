@@ -13,11 +13,11 @@ export const Header = ({ isBack = true, close, text = '', isRight= false, right 
             <Pressable onPress={close} style={{ width: '25%', height: 70, alignItems: 'flex-start', paddingLeft: 10, justifyContent: 'center' }}>
                 {
                     isBack ?
-                        <Surface style={{ backgroundColor: AppColors.themesWhiteColor, width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }} elevation={4}>
+                        <Surface style={{ backgroundColor: AppColors.themesWhiteColor, marginLeft: 5, width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }} elevation={4}>
                             <Image source={require('../../assets/bckarrow.png')} style={{ width: 40, height: 40 }} />
                         </Surface>
                         :
-                        <Image source={require('../../assets/menu.png')} style={{ width: 70, height: 70 }} />
+                        <Image source={require('../../assets/menu.png')} style={{ marginLeft: -10, width: 70, height: 70 }} />
                 }
 
             </Pressable>
