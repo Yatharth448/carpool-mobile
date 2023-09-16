@@ -8,7 +8,7 @@ import {
 import {AppColors} from '../constants/AppColor';
 import {AppFontFamily} from '../constants/AppFonts';
 
-export const ButtonPrimary = ({
+export const ButtonDanger = ({
   text,
   onPress,
   style,
@@ -28,7 +28,7 @@ export const ButtonPrimary = ({
           // borderColor: loader ? AppColors.themeBorderLightDarkColor : AppColors.themePrimaryColor,
           backgroundColor: disabled
             ? AppColors.themeBtnDisableColor
-            : AppColors.themePrimaryColor,
+            : AppColors.themeButtonRed,
         },
         pressed && styles.pressed,
         style,

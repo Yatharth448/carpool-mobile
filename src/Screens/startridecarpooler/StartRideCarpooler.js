@@ -13,22 +13,25 @@ import {
 import {AppColors} from '../../components/constants/AppColor';
 import moment from 'moment';
 import {Header} from '../../components/commomheader/CommonHeader';
-import {
-  hitApiToRequestGetEstimatedPrice,
-  hitApiToRequestUpdateEstimatedPrice,
-  hitApiToSaveRide,
-} from '../home/RideModal';
+
 import Toast from 'react-native-simple-toast';
 import MapView, {Polyline, Marker} from 'react-native-maps';
+import Geolocation from 'react-native-geolocation-service';
 import {PriceSelection} from '../../components/priceselection/PriceSelection';
 import {AppFontFamily} from '../../components/constants/AppFonts';
-import {apiStartRide, apigetRideDetails} from './StartRideModel';
+import {
+  apiEndRide,
+  apiStartRide,
+  apiUpdateLocation,
+  apigetRideDetails,
+} from './StartRideModel';
 import {ButtonPrimary} from '../../components/button/buttonPrimary';
 import {
   GetCurrentLocation,
   checkLocationPermission,
 } from '../../components/location/GetCurrentLocation';
 import MapComponent from '../../components/map/MapComponent';
+import {ButtonDanger} from '../../components/button/buttonDanger';
 
 export default function StartRideCarpooler({navigation, route}) {
   // let  path1 = [];
@@ -62,7 +65,6 @@ export default function StartRideCarpooler({navigation, route}) {
         ...result.ride,
         paths: path,
       });
-      setMap();
     }
   };
   useEffect(() => {
@@ -76,10 +78,12 @@ export default function StartRideCarpooler({navigation, route}) {
   }, []);
 
   const setMap = () => {
-    mapRef.animateToRegion({
-      latitude: routeData.paths[0].latitude,
-      longitude: routeData.paths[0].longitude,
-    });
+    if (routeData && routeData.paths && routeData.paths.length) {
+      // mapRef.animateToRegion({
+      //   latitude: routeData.paths[0].latitude,
+      //   longitude: routeData.paths[0].longitude,
+      // });
+    }
   };
 
   const handleMapLayout = () => {
@@ -95,15 +99,36 @@ export default function StartRideCarpooler({navigation, route}) {
   };
 
   const saveRide = async () => {
-    if (routeData.status) {
+    if (
+      routeData.status &&
+      (routeData.status == 'running' || routeData.status == 'completed')
+    ) {
       Toast.showWithGravity(
-        result.message ?? result.error ?? 'Something went wrong',
+        "Ride already started, can't start again",
         2,
         Toast.TOP,
       );
       return;
     }
-    const result = await apiStartRide(id);
+    checkLocationPermission();
+    let watchId = Geolocation.watchPosition(
+      data => {
+        console.log('Sucess ', data);
+        apiUpdateLocation(id, data.coords.latitude, data.coords.longitude);
+      },
+      error => {
+        console.log('Error ', error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        fastestInterval: 3000,
+        interval: 5000,
+        distanceFilter: 5,
+      },
+    );
+    console.log('id ', watchId);
+    const result = await apiStartRide(id, watchId);
     console.log(result);
     if (result.status) {
       Toast.showWithGravity('Ride has started', 2, Toast.TOP);
@@ -114,6 +139,23 @@ export default function StartRideCarpooler({navigation, route}) {
         2,
         Toast.TOP,
       );
+    }
+  };
+
+  const endride = async () => {
+    if (routeData.watch_id) {
+      Geolocation.clearWatch(routeData.watch_id);
+      const result = await apiEndRide(id);
+      if (result.status) {
+        Toast.showWithGravity('Ride has ended', 2, Toast.TOP);
+        await fetchRideDetails();
+      } else {
+        Toast.showWithGravity(
+          result.message ?? result.error ?? 'Something went wrong',
+          2,
+          Toast.TOP,
+        );
+      }
     }
   };
 
@@ -150,7 +192,7 @@ export default function StartRideCarpooler({navigation, route}) {
         backgroundColor: AppColors.themePickupDropSearchBg,
         alignItems: 'center',
       }}>
-      {routeData && routeData.paths.length > 0 ? (
+      {routeData && routeData.paths && routeData.paths.length > 0 ? (
         <MapView
           ref={mapRef}
           style={styles.maps}
@@ -497,7 +539,7 @@ export default function StartRideCarpooler({navigation, route}) {
         ) : (
           ''
         )}
-        {routeData && !routeData.status ? (
+        {routeData && (!routeData.status || routeData.status == 'active') ? (
           <View
             style={{
               width: '100%',
@@ -509,6 +551,26 @@ export default function StartRideCarpooler({navigation, route}) {
               text={'Start Ride'}
               onPress={() => {
                 saveRide();
+              }}
+              loader={false}
+            />
+          </View>
+        ) : (
+          ''
+        )}
+
+        {routeData && routeData.status == 'running' ? (
+          <View
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+            }}>
+            <ButtonDanger
+              style={{width: '90%'}}
+              text={'End Ride'}
+              onPress={() => {
+                endride();
               }}
               loader={false}
             />
