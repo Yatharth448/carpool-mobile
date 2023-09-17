@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -13,9 +13,15 @@ import {
 import {AppColors} from '../../components/constants/AppColor';
 import moment from 'moment';
 import {Header} from '../../components/commomheader/CommonHeader';
+import messaging from '@react-native-firebase/messaging';
 
 import Toast from 'react-native-simple-toast';
-import MapView, {Polyline, Marker} from 'react-native-maps';
+import MapView, {
+  Polyline,
+  Marker,
+  MarkerAnimated,
+  AnimatedRegion,
+} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import {PriceSelection} from '../../components/priceselection/PriceSelection';
 import {AppFontFamily} from '../../components/constants/AppFonts';
@@ -33,9 +39,12 @@ import {
 import MapComponent from '../../components/map/MapComponent';
 import {ButtonDanger} from '../../components/button/buttonDanger';
 
+import {firebase} from '@react-native-firebase/auth';
+
 export default function StartRideCarpooler({navigation, route}) {
   // let  path1 = [];
   const mapRef = React.useRef(null);
+  const markerRef = useRef(null);
   const {id} = route.params;
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [routeData, setRouteData] = useState(null);
@@ -44,6 +53,25 @@ export default function StartRideCarpooler({navigation, route}) {
   const [openPrice, setOpenPrice] = React.useState(false);
   const [estimatedPrice, setEstimatedPrice] = React.useState('');
   const [journeyId, setJourneyId] = React.useState('');
+  let {width, height} = Dimensions.get('window');
+  let totalHeight = height / 1.75;
+  const ASPECT_RATIO = width / totalHeight;
+  const LATITUDE_DELTA = 0.003;
+  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+  const [state, setState] = useState({
+    curLoc: {
+      latitude: null,
+      longitude: null,
+    },
+    destinationCords: {},
+    isLoading: false,
+    coordinate: new AnimatedRegion({
+      latitude: null,
+      longitude: null,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    }),
+  });
   // openPrice
   const fetchRideDetails = async () => {
     const result = await apigetRideDetails(id);
@@ -65,11 +93,75 @@ export default function StartRideCarpooler({navigation, route}) {
         ...result.ride,
         paths: path,
       });
+      if (result.ride.status == 'running' && result.ride.current_lat) {
+        setState({
+          ...state,
+          curLoc: {
+            latitude: result.ride.current_lat,
+            longitude: result.ride.current_long,
+          },
+          coordinate: new AnimatedRegion({
+            latitude: result.ride.current_lat,
+            longitude: result.ride.current_long,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }),
+        });
+        animate(result.ride.current_lat, result.ride.current_long);
+      } else {
+        setState({
+          ...state,
+          curLoc: {
+            latitude: path[0].latitude,
+            longitude: path[0].longitude,
+          },
+        });
+      }
     }
+  };
+
+  const onCenter = () => {
+    if (mapRef.current) {
+      mapRef.current.animateToRegion({
+        latitude: state.curLoc.latitude,
+        longitude: state.curLoc.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      });
+    }
+  };
+
+  const listenToMessage = () => {
+    messaging().onMessage(async remoteMessage => {
+      console.log('location received ', remoteMessage);
+      if (remoteMessage.data) {
+        const {lat, long} = remoteMessage.data;
+        setState({
+          ...state,
+          curLoc: {latitude: parseFloat(lat), longitude: parseFloat(long)},
+          coordinate: new AnimatedRegion({
+            latitude: parseFloat(lat),
+            longitude: parseFloat(long),
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }),
+        });
+        animate(parseFloat(lat), parseFloat(long));
+        if (mapRef.current) {
+          mapRef.current.animateToRegion({
+            latitude: parseFloat(lat),
+            longitude: parseFloat(long),
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          });
+        }
+      }
+    });
   };
   useEffect(() => {
     (async () => {
       await fetchRideDetails();
+      listenToMessage();
     })();
 
     return () => {
@@ -142,8 +234,21 @@ export default function StartRideCarpooler({navigation, route}) {
     }
   };
 
+  const animate = (latitude, longitude) => {
+    const newCoordinate = {latitude, longitude};
+    if (Platform.OS == 'android') {
+      if (markerRef.current) {
+        markerRef.current.animateMarkerToCoordinate(newCoordinate, 7000);
+      }
+    } else {
+      state.coordinate.timing(newCoordinate).start();
+    }
+  };
+
   const endride = async () => {
-    if (routeData.watch_id) {
+    console.log(' end ride', routeData.watch_id);
+    // await apiUpdateLocation(id, 29.8714409, 77.8661175);
+    if (routeData.watch_id != null || routeData.watch_id != undefined) {
       Geolocation.clearWatch(routeData.watch_id);
       const result = await apiEndRide(id);
       if (result.status) {
@@ -194,14 +299,21 @@ export default function StartRideCarpooler({navigation, route}) {
       }}>
       {routeData && routeData.paths && routeData.paths.length > 0 ? (
         <MapView
+          minZoomLevel={4}
+          maxZoomLevel={16}
           ref={mapRef}
           style={styles.maps}
           onLayout={handleMapLayout}
+          region={{
+            ...state.curLoc,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }}
           initialRegion={{
             latitude: routeData.paths[0].latitude,
             longitude: routeData.paths[0].longitude,
-            latitudeDelta: 0.922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
           }}>
           <React.Fragment key={0}>
             <Polyline
@@ -219,14 +331,23 @@ export default function StartRideCarpooler({navigation, route}) {
               zIndex={1}
               strokeWidth={4}
             />
-
-            <Marker coordinate={routeData.paths[routeData.paths.length - 1]}>
+            <Marker.Animated
+              style={{
+                paddingVertical: 1,
+                paddingHorizontal: 1,
+                borderRadius: 1,
+                elevation: 1,
+              }}
+              ref={markerRef}
+              coordinate={state.coordinate}>
               <Image
-                source={require('../../assets/mapmarker3.png')}
+                source={require('../../assets/map_marker.png')}
                 style={{width: 30, height: 33}}
                 resizeMode="contain"
               />
-            </Marker>
+            </Marker.Animated>
+            <Marker
+              coordinate={routeData.paths[routeData.paths.length - 1]}></Marker>
           </React.Fragment>
         </MapView>
       ) : (
@@ -282,7 +403,40 @@ export default function StartRideCarpooler({navigation, route}) {
           text=""
         />
       </View>
-
+      {routeData && routeData.status == 'running' ? (
+        <Pressable
+          style={{
+            position: 'absolute',
+            display: 'flex',
+            flexDirection: 'row',
+            right: 10,
+            top: 400,
+            backgroundColor: AppColors.themesWhiteColor,
+            padding: 10,
+            borderRadius: 5,
+          }}
+          onPress={() => {
+            console.log('pressed');
+            onCenter();
+          }}>
+          <View>
+            <Image
+              source={require('../../assets/up-arrow.png')}
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 5,
+                resizeMode: 'contain',
+              }}
+            />
+          </View>
+          <Text style={{marginLeft: 5, fontWeight: 600, color: '#3bbdff'}}>
+            RECENTRE
+          </Text>
+        </Pressable>
+      ) : (
+        ''
+      )}
       <View
         style={{
           marginTop: -20,
