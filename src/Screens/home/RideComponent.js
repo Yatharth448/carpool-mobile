@@ -11,13 +11,13 @@ export const AvtarView = ({ image, name, type }) => {
 
             <View style={{ width: '13%', justifyContent: 'center', alignItems: 'flex-start' }}>
 
-                <Image source={image} style={{ width: 50, height: 50, borderRadius: 5, resizeMode: 'contain' }} />
+                <Image source={image} style={{ width: 50, height: 50, borderRadius: 25, resizeMode: 'contain' }} />
 
             </View>
 
             <View style={{ width: '78%', justifyContent: 'center', alignItems: 'flex-start' }}>
                 <Text style={{ width: '100%', color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsBold, fontSize: 18 }}>
-                    {'Hey ' + name + ","}
+                    {'Hey' +", " + name }
                 </Text>
                 <Text style={{ width: '100%', color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 14 }}>
                     {type ? 'Enter details below to find your ride' : 'Enter details below to offer ride'}

@@ -23,7 +23,7 @@ export default function RequestedRideDetails({ navigation, route }) {
     const [userData, setUserData] = React.useState({});
     const [cotravellerArray, setCotravellerArray] = React.useState([]);
     const [rideData, setRideData] = React.useState('')
-    const [cotraveller, setCotraveller] = React.useState('')
+    const [isCancel, setIsCancel] = React.useState('')
     const { id, from } = route.params;
 
     useEffect(() => {
@@ -51,19 +51,20 @@ export default function RequestedRideDetails({ navigation, route }) {
     const getRideDetail = async () => {
         const result = await hitApiToGetRequestedRideDetails(id)
 
-        // console.log(result.data.rideData, result.data.cotravellerData, 'request')
+        console.log(result.data, 'status')
 
 
 
 
 
         if (result.status) {
+            setIsCancel(result.data?.status)
             setRideData(result.data.rideData)
             setCotravellerArray(result.data.cotravellerData)
             setUserData(result.data.userData)
             setIsLoading(true)
 
-            console.log(result.data.acceptedCotravellerData, 'accepted cotraveller \n', result.data?.cotravellerData, 'cotraveller data \n', result.data.rideData, 'ride data \n', result.data.userData, '\nuser data\n')
+            // console.log(result.data)
         }
     }
 
@@ -85,7 +86,7 @@ export default function RequestedRideDetails({ navigation, route }) {
     const acceptRide = async (ind) => {
         setAcceptLoader(true)
         const result = await hitApiToAcceptRequestedRide(userData[0].ride_id, userData[0].user_id, rideData[0].journey_published_by)
-        console.log(result, 'vvv')
+        // console.log(result, 'vvv')
         if (result.status) {
 
 
@@ -106,7 +107,7 @@ export default function RequestedRideDetails({ navigation, route }) {
     const rejectRide = async (ind) => {
         setRejectLoader(true)
         const result = await hitApiToRejectRequestedRide(userData[0].ride_id, userData[0].user_id, rideData[0].journey_published_by, 'reject')
-        console.log(result, 'vvv')
+        // console.log(result, 'vvv')
         if (result.status) {
 
 
@@ -130,7 +131,7 @@ export default function RequestedRideDetails({ navigation, route }) {
             <View style={{ paddingLeft: 20, width: '88%', alignItems: 'left', marginTop: 10, marginBottom: 20, justifyContent: 'center' }}>
 
                 <Text style={{ fontSize: 14, fontFamily: AppFontFamily.PopinsBold, color: AppColors.themeBlackColor }}>
-                    {userData[0].status == 'confirmed' ? 'Ride Confirmed' : userData[0].status == 'accepted' ? 'Accepted by ' + rideData[0].name : userData[0].status == 'rejected' ? 'Rejected by ' + rideData[0].name : 'Awaited from ' + rideData[0].name}
+                    {isCancel}
                 </Text>
 
             </View>
@@ -158,9 +159,9 @@ export default function RequestedRideDetails({ navigation, route }) {
 
     const cancelRide = async (item) => {
         setCancelLoader(true)
+        // console.log(item, 'cancel result')
         const result = await hitApiToCancelRideForCustomer(item._id)
 
-        console.log(result, 'cancel result')
         if (result.status) {
             Alert.alert(
                 '',
@@ -173,6 +174,7 @@ export default function RequestedRideDetails({ navigation, route }) {
                 },
             )
         }
+        await getRideDetail()
         setCancelLoader(false)
 
 
@@ -286,7 +288,7 @@ export default function RequestedRideDetails({ navigation, route }) {
 
     const CotravellerList = ({ cotravellrArray }) => {
 
-        console.log(cotravellrArray.length, 'len')
+        // console.log(cotravellrArray.length, 'len')
         return (
 
             <>
@@ -422,7 +424,7 @@ export default function RequestedRideDetails({ navigation, route }) {
 
                         </View>
 
-                        {userData[0].status == 'confirmed' ?
+                        {isCancel == 'confirmed' ?
                             <>
 
                                 <View style={{ width: '100%', marginTop: 0, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
@@ -431,8 +433,9 @@ export default function RequestedRideDetails({ navigation, route }) {
                                         style={{ width: '90%', height: 30, backgroundColor: AppColors.themesWhiteColor }}
                                         textStyle={{ color: AppColors.themeButtonRed }}
                                         text={'Cancel your ride'}
-                                        onPress={() => cancelLoader ? console.log('already clicked') : cancelAlert()}
+                                        onPress={() => cancelLoader ? console.log('already clicked') : cancelAlert(rideData[0])}
                                         loader={cancelLoader}
+                                        loaderColor={AppColors.themeButtonRed}
                                     />
                                 </View>
                             </>
@@ -443,7 +446,7 @@ export default function RequestedRideDetails({ navigation, route }) {
                     </Surface >
 
                     {
-                        userData[0]?.status == 'accepted' ?
+                        userData[0]?.status.toLowerCase() == 'accepted' ?
 
                             <View style={{ width: '90%', alignItems: 'center', marginTop: 20, justifyContent: 'space-between', flexDirection: 'row' }}>
 

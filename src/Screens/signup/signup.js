@@ -127,9 +127,21 @@ export default function SignupScreen({ navigation }) {
     const userLogin = async () => {
         setIsLoading(true)
         console.log('1')
+         if (!fullName) {
+            setIsLoading(false)
+            Toast.showWithGravity('Enter name', 2, Toast.TOP);
+        }
         if (!email) {
-            console.log('2')
+            setIsLoading(false)
+            Toast.showWithGravity('Enter email', 2, Toast.TOP);
+        }
+        else  if (!mobile) {
+            setIsLoading(false)
             Toast.showWithGravity('Enter mobile number', 2, Toast.TOP);
+        }
+        else  if (!password) {
+            setIsLoading(false)
+            Toast.showWithGravity('Enter password', 2, Toast.TOP);
         }
         else {
 

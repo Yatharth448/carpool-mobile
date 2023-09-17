@@ -129,8 +129,13 @@ export default function LoginScreen({ navigation }) {
         setIsLoading(true)
         console.log('1')
         if (!email) {
-            console.log('2')
+            setIsLoading(false)
+            // console.log('2')
             Toast.showWithGravity('Enter mobile number', 2, Toast.TOP);
+        }
+        else  if (!password) {
+            setIsLoading(false)
+            Toast.showWithGravity('Enter password', 2, Toast.TOP);
         }
         else {
 
@@ -161,10 +166,11 @@ export default function LoginScreen({ navigation }) {
 
             }
             else {
-                setIsLoading(false)
+               
                 Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
             }
-            //    
+            // 
+            setIsLoading(false)   
             console.log(loginRes, '3')
 
         }

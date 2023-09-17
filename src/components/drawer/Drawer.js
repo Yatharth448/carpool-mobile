@@ -90,7 +90,7 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
           style={{width: '80%', height: '90%', justifyContent: 'center'}}>
           <View style={{width: 80, height: 80, marginBottom: 10}}>
             <Image
-              source={require('../../assets/avtar.png')}
+              source={ data?.profilePath ? {uri: data.profilePath} : require('../../assets/avtar.png')}
               style={{
                 width: 80,
                 height: 80,

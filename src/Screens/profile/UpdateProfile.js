@@ -141,8 +141,12 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                 const params = new FormData();
                 params.append('name', fullName);
                 params.append('contact_number', mobile);
-                params.append('date_of_birth', date);
-                // params.append('file',  img)
+                params.append('file', {
+                    uri: img,
+                    type: 'image/jpeg',
+                    name: 'profile',
+                })
+        
                 const accountRes = await hitApiToUpdateProfile(params)
 
                 if (accountRes.status) {

@@ -97,8 +97,8 @@ export default class SplashScreen extends Component {
 
 				{/* <View style={styles.SplashScreen_RootView}> */}
 					<Image
-						source={require('../../assets/mapbg.png')}
-						style={{ marginRight: 5, width: Dimensions.get('screen').width, height: Dimensions.get('screen').height, resizeMode: 'contain' }} />
+						source={require('../../assets/splashscreen.png')}
+						style={{ width: Dimensions.get('screen').width, height: Dimensions.get('screen').height, resizeMode: 'cover' }} />
 				{/* </View> */}
 
 

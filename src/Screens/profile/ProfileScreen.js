@@ -33,7 +33,7 @@ function ProfileScreen({ data, loading, error, getProfileDataRequest, navigation
                 <Pressable onPress={() => navigation.navigate('UpdateProfile')} style={{ width: '96%', borderRadius: 10, marginTop: 30, justifyContent: 'center' }}>
 
                     <View style={{ width: '96%', alignItems: 'center', justifyContent: 'center' }}>
-                        <Image source={require('../../assets/avtar.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 40, borderWidth: 2, width: 80, height: 80, resizeMode: 'contain' }} />
+                        <Image source={data?.profilePath ? {uri: data?.profilePath} : require('../../assets/avtar.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 40, borderWidth: 2, width: 80, height: 80, resizeMode: 'contain' }} />
                     </View>
                     <Image source={require('../../assets/edit.png')} style={{ marginLeft: Dimensions.get('window').width / 2 + 5, position: 'absolute', width: 20, height: 20, borderRadius: 40, borderRadius: 40, borderColor: AppColors.themesWhiteColor, borderWidth: .5, resizeMode: 'contain' }} />
 

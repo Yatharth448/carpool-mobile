@@ -65,11 +65,11 @@ export default function RequestedRides({ selectedRequest }) {
                         <Surface elevation={4} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
                             <View style={{ width: '95%', alignItems: 'center', marginTop: 10, marginLeft: 10 }}>
                                 <View style={{ justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                    <View style={{ width: '70%', alignItems: 'flex-start', justifyContent: 'center' }}>
+                                    <View style={{ width: '45%', alignItems: 'flex-start', justifyContent: 'center' }}>
 
                                         <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(item.date).format('DD MMM YYYY, HH:mm')}</Text>
                                     </View>
-                                    <View style={{ width: '30%', alignItems: 'flex-end', justifyContent: 'center' }}>
+                                    <View style={{ width: '55%', alignItems: 'flex-end', justifyContent: 'center' }}>
 
                                         <Text style={{ height: 20, paddingLeft: 5, paddingRight: 5, borderRadius: 5, fontFamily: AppFontFamily.PopinsBold, fontSize: 12, color: AppColors.themePrimaryColor, borderColor: AppColors.themePrimaryColor, borderWidth: 1 }}>{item?.status.toUpperCase()}</Text>
                                     </View>
