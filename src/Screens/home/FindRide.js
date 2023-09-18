@@ -134,7 +134,10 @@ class FindRide extends Component {
         this._unsubscribe = this.props.navigation.addListener('focus', async () => {
             BackHandler.addEventListener("hardwareBackPress", this.backActionHandler);
 
-            this.props.getProfileDataRequest()
+            if (this.props?.data?.kyc_status != 1)
+            {
+                this.props.getProfileDataRequest()
+            }
             console.log('loaded', this.props?.route.params)
             if (this.props.route.params?.from == 'reset') {
                 this.setState({ pickupLocation: '', dropLocation: '', selectedIndex: 0, selectedDate: 'Date and time of departure' })
@@ -558,7 +561,7 @@ class FindRide extends Component {
 
                         {FindAndOfferRide(this.findRide, this.offerRide, this.state.find)}
 
-                        <AvtarView image={ image ? {uri: image, priority: FastImage.priority.normal} : require('../../assets/avtar.png')} name={name} type={this.state.find} />
+                        <AvtarView image={ image ? {uri: image} : require('../../assets/avtar.png')} name={name} type={this.state.find} />
                         <View style={{ width: '94%', height: 1, marginTop: 20, backgroundColor: AppColors.themeCardBorderColor }} />
                         {this.state.find ?
                             <>
@@ -577,7 +580,7 @@ class FindRide extends Component {
                         {PickupAndDrop(this.state.pickupLocation, this.state.dropLocation, this.pickUp, this.dropOff)}
                         <View style={{ marginTop: 10, width: '95%', height: 70, justifyContent: 'center', alignItems: 'center' }}>
 
-                            {DateTimeView('date', this.state.openDate, this.state.date, this.onDateConfirm, this.onDateCancel, this.openDatePicker, this.state.selectedDate)}
+                            {DateTimeView(this.state.find ? 'date' : 'datetime', this.state.openDate, this.state.date, this.onDateConfirm, this.onDateCancel, this.openDatePicker, this.state.selectedDate)}
 
                         </View>
 

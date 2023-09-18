@@ -5,6 +5,13 @@ import FastImage from "react-native-fast-image"
 export const ImageLoader = ({ image, width, height, borderRadius, loaderColor=AppColors.themePrimaryColor }) => {
     const [loading, setLoading] = React.useState(false)
     console.log(image, 'image')
+
+    const combinedObject = {
+        ...image,
+        ...{priority: FastImage.priority.high, cache: FastImage.cacheControl.immutable},
+      };
+      
+
     return (
        
 
@@ -13,10 +20,11 @@ export const ImageLoader = ({ image, width, height, borderRadius, loaderColor=Ap
                 <FastImage
                     style={{ width: width, height: height }}
                     defaultSource={require('../../assets/avtar.png')}
-                    source={image}
+                    source={combinedObject}
                     onLoadStart={(e) => setLoading(true)}
                     onLoadEnd={(e) => setLoading(false)}
                     resizeMode={FastImage.resizeMode.cover}
+                    
                 />
 
                 {loading ?

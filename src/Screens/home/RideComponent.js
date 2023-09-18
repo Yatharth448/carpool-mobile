@@ -10,6 +10,9 @@ import { ImageLoader } from "../../components/imageloader/ImageLoader";
 export const AvtarView = ({ image, name, type }) => {
     const [loading, setLoading] = React.useState(false)
     console.log(image, 'image')
+
+    
+
     return (
         <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
 

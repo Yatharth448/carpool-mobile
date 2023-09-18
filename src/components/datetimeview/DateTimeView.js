@@ -1,8 +1,9 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { AppColors } from '../constants/AppColor'
-import DatePicker from 'react-native-date-picker'
+// import DatePicker from 'react-native-date-picker'
 import { AppFontFamily } from '../constants/AppFonts'
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 export default function DateTimeView(mode, open, date, onConfirm, onCancel, openDatePicker, selectedDate) {
 
 
@@ -11,17 +12,26 @@ export default function DateTimeView(mode, open, date, onConfirm, onCancel, open
         console.log(date, 'date')
         return (
 
-            <DatePicker
-                modal={true}
-                // mode={mode}
-                open={open}
-                minimumDate={new Date()}
-                date={date}
+            <DateTimePickerModal
+                isVisible={open}
+                mode={mode}
                 onConfirm={(date) => onConfirm(date)}
                 onCancel={() => {
                     onCancel()
                 }}
             />
+
+            // <DatePicker
+            //     modal={true}
+            //     // mode={mode}
+            //     open={open}
+            //     minimumDate={new Date()}
+            //     date={date}
+            //     onConfirm={(date) => onConfirm(date)}
+            //     onCancel={() => {
+            //         onCancel()
+            //     }}
+            // />
         )
     }
 
@@ -31,14 +41,14 @@ export default function DateTimeView(mode, open, date, onConfirm, onCancel, open
 
             {/* <Text style={{ fontSize: 16, fontWeight: '400',marginBottom: 5 , color: AppColors.themeBlackColor}}>{'Date of birth'}</Text> */}
 
-            <TouchableOpacity onPress={openDatePicker} style={{ borderRadius: 10, paddingLeft: 10, paddingRight: 10, backgroundColor: AppColors.themePickupDropSearchBg, flexDirection: 'row', alignItems: 'center', width: '100%', height: 45,justifyContent: 'space-between' }}>
+            <TouchableOpacity onPress={openDatePicker} style={{ borderRadius: 10, paddingLeft: 10, paddingRight: 10, backgroundColor: AppColors.themePickupDropSearchBg, flexDirection: 'row', alignItems: 'center', width: '100%', height: 45, justifyContent: 'space-between' }}>
                 <View style={{ width: '80%', justifyContent: 'center' }}>
                     <Text style={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 14, fontWeight: '400', width: '100%', color: selectedDate == 'Date and time of departure' ? AppColors.themeTextGrayColor : AppColors.themeBlackColor }}>
                         {selectedDate}
                     </Text>
 
                 </View>
-                <View style={{ width: '20%', justifyContent: 'center', alignItems: 'flex-end'}}>
+                <View style={{ width: '20%', justifyContent: 'center', alignItems: 'flex-end' }}>
                     <Image source={require('../../assets/calendar.png')} style={{ marginRight: 0, width: 24, resizeMode: 'contain' }} />
                 </View>
             </TouchableOpacity>
