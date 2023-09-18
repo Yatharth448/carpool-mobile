@@ -12,6 +12,7 @@ import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import SelectImagePopup from '../../Utils/SelectImagePopup'
 import { cameraPermission, galleryPermission } from '../../Utils/RuntimePermission'
 import selectImage from '../../Utils/ImagePicker'
+import { ImageLoader } from '../../components/imageloader/ImageLoader';
 function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation }) {
 
 
@@ -31,6 +32,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
         setFullName(data.name)
         setEmail(data.email)
         setMobile(data.contact_number)
+        setImg(data?.profilePath ? {uri: data?.profilePath} : require('../../assets/avtar.png'))
         console.log(data, 'result')
 
     }, []);
@@ -48,7 +50,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                 imageName = imageName.length > 20 ? `${String(imageName).substring(0, 18)}...` + extension : imageName;
                 setImg(data.path);
                 setOpenPhoto(false)
-              
+
             }
             else {
 
@@ -89,7 +91,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                 // setBackImg(data.path)
                 setImg(data.path);
                 setOpenPhoto(false)
-              
+
             }
             else {
 
@@ -146,12 +148,12 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                     type: 'image/jpeg',
                     name: 'profile',
                 })
-        
+
                 const accountRes = await hitApiToUpdateProfile(params)
 
                 if (accountRes.status) {
                     // Storage.saveItem(AppKeys.SECRET_KEY, loginRes.secret)
-                   await getProfileDataRequest();
+                    await getProfileDataRequest();
                     navigation.goBack()
                 }
                 else {
@@ -203,7 +205,13 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                     <Pressable onPress={() => uploadProfileImage()}>
 
                         <View style={{ width: '96%', alignItems: 'center', justifyContent: 'center' }}>
-                            <Image source={img ? { uri: img } : require('../../assets/avtar.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 40, borderWidth: 2, width: 80, height: 80, resizeMode: 'contain' }} />
+                            <ImageLoader
+                                image={img}
+                                width={80}
+                                height={80}
+                                borderRadius={40}
+                            />
+                            {/* <Image source={img ? { uri: img } : require('../../assets/avtar.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 40, borderWidth: 2, width: 80, height: 80, resizeMode: 'contain' }} /> */}
                         </View>
                         <Image source={require('../../assets/edit.png')} style={{ marginLeft: Dimensions.get('window').width / 2 + 5, bottom: 0, position: 'absolute', width: 20, height: 20, borderRadius: 40, borderRadius: 40, borderColor: AppColors.themesWhiteColor, borderWidth: .5, resizeMode: 'contain' }} />
                     </Pressable>

@@ -8,6 +8,7 @@ import { AppFontFamily } from '../../components/constants/AppFonts';
 import { Surface } from 'react-native-paper';
 import { Switch } from 'react-native-paper';
 import { ButtonPrimary } from '../../components/button/buttonPrimary';
+import { ImageLoader } from '../../components/imageloader/ImageLoader';
 function ProfileScreen({ data, loading, error, getProfileDataRequest, navigation }) {
 
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
@@ -33,7 +34,7 @@ function ProfileScreen({ data, loading, error, getProfileDataRequest, navigation
                 <Pressable onPress={() => navigation.navigate('UpdateProfile')} style={{ width: '96%', borderRadius: 10, marginTop: 30, justifyContent: 'center' }}>
 
                     <View style={{ width: '96%', alignItems: 'center', justifyContent: 'center' }}>
-                        <Image source={data?.profilePath ? {uri: data?.profilePath} : require('../../assets/avtar.png')} style={{ borderColor: AppColors.themeCardBorderColor, borderRadius: 40, borderWidth: 2, width: 80, height: 80, resizeMode: 'contain' }} />
+                        <ImageLoader image={data?.profilePath ? {uri: data?.profilePath} : require('../../assets/avtar.png')} width={80} height={80} borderRadius={40}/>
                     </View>
                     <Image source={require('../../assets/edit.png')} style={{ marginLeft: Dimensions.get('window').width / 2 + 5, position: 'absolute', width: 20, height: 20, borderRadius: 40, borderRadius: 40, borderColor: AppColors.themesWhiteColor, borderWidth: .5, resizeMode: 'contain' }} />
 

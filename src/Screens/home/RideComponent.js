@@ -1,23 +1,32 @@
-import React from "react"
-import { Text, Image, View, FlatList, Pressable, Dimensions, TouchableOpacity } from "react-native"
+import React, { useState } from "react"
+import { Text, Image, View, FlatList, Pressable, Dimensions, TouchableOpacity, ActivityIndicator } from "react-native"
 import { AppColors } from "../../components/constants/AppColor"
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from "../../components/constants/AppFonts"
 import { ButtonPrimary } from "../../components/button/buttonPrimary";
 import CommonLoaders from "../../components/loader/Loader";
+import FastImage from 'react-native-fast-image'
+import { ImageLoader } from "../../components/imageloader/ImageLoader";
 export const AvtarView = ({ image, name, type }) => {
+    const [loading, setLoading] = React.useState(false)
+    console.log(image, 'image')
     return (
         <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
 
-            <View style={{ width: '13%', justifyContent: 'center', alignItems: 'flex-start' }}>
+            <View style={{ width: 60, justifyContent: 'center', alignItems: 'center', borderRadius: 30, overflow: 'hidden' }}>
 
-                <Image source={image} style={{ width: 50, height: 50, borderRadius: 25, resizeMode: 'contain' }} />
+                <ImageLoader
+                    image={image}
+                    width={60}
+                    height={60}
+                    borderRadius={30}
+                />
 
             </View>
 
             <View style={{ width: '78%', justifyContent: 'center', alignItems: 'flex-start' }}>
                 <Text style={{ width: '100%', color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsBold, fontSize: 18 }}>
-                    {'Hey' +", " + name }
+                    {'Hey' + ", " + name}
                 </Text>
                 <Text style={{ width: '100%', color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular, fontSize: 14 }}>
                     {type ? 'Enter details below to find your ride' : 'Enter details below to offer ride'}
@@ -95,7 +104,7 @@ export const PendingKYC = ({ message, onOkPress }) => {
     return (
         <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', marginTop: 0, backgroundColor: '#ffcc00', height: 30 }}>
 
-            <View style={{ width: '85%',alignItems: 'flex-start', justifyContent: 'center' }}>
+            <View style={{ width: '85%', alignItems: 'flex-start', justifyContent: 'center' }}>
                 <Text style={{ marginLeft: 10, color: AppColors.themesWhiteColor, fontFamily: AppFontFamily.PopinsBold, fontSize: 12 }}>
                     {message}
                 </Text>
@@ -110,7 +119,7 @@ export const PendingKYC = ({ message, onOkPress }) => {
 
 }
 
-export const NoRideFound = ({chooseAnother}) => {
+export const NoRideFound = ({ chooseAnother }) => {
     return (
 
         <View style={{

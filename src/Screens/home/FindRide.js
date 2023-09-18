@@ -27,6 +27,7 @@ import { hitApiToGetProfile } from "../profile/ProfileModal";
 import { CreateNotificationChannel, showNotification } from "../../components/notifications/LocalNotification";
 import PushNotification from 'react-native-push-notification';
 import { AppKeys } from "../../components/constants/AppKeys";
+import FastImage from 'react-native-fast-image'
 import { hitApiToSetSeenNotifications } from "../notification/NotificationModal";
 class FindRide extends Component {
 
@@ -557,7 +558,7 @@ class FindRide extends Component {
 
                         {FindAndOfferRide(this.findRide, this.offerRide, this.state.find)}
 
-                        <AvtarView image={ image ? {uri: image} : require('../../assets/avtar.png')} name={name} type={this.state.find} />
+                        <AvtarView image={ image ? {uri: image, priority: FastImage.priority.normal} : require('../../assets/avtar.png')} name={name} type={this.state.find} />
                         <View style={{ width: '94%', height: 1, marginTop: 20, backgroundColor: AppColors.themeCardBorderColor }} />
                         {this.state.find ?
                             <>
