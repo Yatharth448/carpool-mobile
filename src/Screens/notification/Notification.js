@@ -124,7 +124,7 @@ export default function Notification({ navigation, route }) {
 
         notification.length > 0 ? ListView()
           :
-          CommonLoaders.NoDataInList('No rides found')
+          CommonLoaders.NoDataInList('No notifications yet')
 
         : CommonLoaders.RideHistoryLoader()
       }

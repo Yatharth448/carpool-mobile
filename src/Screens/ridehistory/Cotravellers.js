@@ -115,7 +115,7 @@ setCotravellerArray(data)
 
                     <Image source={require('../../assets/paysuccess.png')} style={{ height: 60, width: 60, resizeMode: 'contain' }} />
                     <Text style={{ marginTop: 20, width: '80%', textAlign: 'center', fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsBold }}>
-                        {'Few riders have sent your request'}
+                        {'Few riders have sent you ride request'}
                     </Text>
 
 
