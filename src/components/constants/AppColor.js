@@ -5,6 +5,7 @@ export const AppColors = {
   themeSecondaryMapColor: '#bcbdbf',
   themeSecondarMapBorderColor: '#939497',
   themeBgColor: '#FAFAFB',
+  themeGreenColor: '#4BB543',
   themeTextPrimaryColor: '#5C5C5C',
   themeBtnDisableColor: '#B4AAF2',
   themeBtnHoverColor: '#d8501e',
@@ -21,5 +22,4 @@ export const AppColors = {
   themeNotificationBg: '#F9F9FF',
   themeButtonRed: '#ff0e0e',
   themeAcceptBtnColor: '#5dbea3',
-
 };

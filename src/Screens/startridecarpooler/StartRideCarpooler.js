@@ -58,8 +58,18 @@ export default function StartRideCarpooler({navigation, route}) {
   const ASPECT_RATIO = width / totalHeight;
   const LATITUDE_DELTA = 0.003;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+  const [newLocation, setNewLocation] = useState(null);
   const [state, setState] = useState({
     curLoc: {
+      latitude: null,
+      longitude: null,
+    },
+    curAng: 90,
+    prevLoc: {
+      latitude: null,
+      longitude: null,
+    },
+    nextLoc: {
       latitude: null,
       longitude: null,
     },
@@ -94,11 +104,20 @@ export default function StartRideCarpooler({navigation, route}) {
         paths: path,
       });
       if (result.ride.status == 'running' && result.ride.current_lat) {
+        let tempState = JSON.parse(JSON.stringify(state));
         setState({
-          ...state,
+          ...tempState,
+          prevLoc: {
+            latitude: state.curLoc.latitude,
+            longitude: state.curLoc.longitude,
+          },
           curLoc: {
             latitude: result.ride.current_lat,
             longitude: result.ride.current_long,
+          },
+          nextLoc: {
+            latitude: result.ride.current_nearer_lat,
+            longitude: result.ride.current_nearer_long,
           },
           coordinate: new AnimatedRegion({
             latitude: result.ride.current_lat,
@@ -107,10 +126,14 @@ export default function StartRideCarpooler({navigation, route}) {
             longitudeDelta: LONGITUDE_DELTA,
           }),
         });
-        animate(result.ride.current_lat, result.ride.current_long);
       } else {
+        let tempState = JSON.parse(JSON.stringify(state));
         setState({
-          ...state,
+          ...tempState,
+          prevLoc: {
+            latitude: state.curLoc.latitude,
+            longitude: state.curLoc.longitude,
+          },
           curLoc: {
             latitude: path[0].latitude,
             longitude: path[0].longitude,
@@ -122,39 +145,90 @@ export default function StartRideCarpooler({navigation, route}) {
 
   const onCenter = () => {
     if (mapRef.current) {
-      mapRef.current.animateToRegion({
-        latitude: state.curLoc.latitude,
-        longitude: state.curLoc.longitude,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
+      updateMap();
+    }
+  };
+
+  const getRotation = (prevPos, curPos) => {
+    if (!prevPos) {
+      return 0;
+    }
+    const xDiff = curPos.latitude - prevPos.latitude;
+    const yDiff = curPos.longitude - prevPos.longitude;
+    return (Math.atan2(yDiff, xDiff) * 180.0) / Math.PI;
+  };
+
+  const updateMap = () => {
+    const {curLoc, prevLoc, curAng, nextLoc} = state;
+    let curRot;
+    if (
+      (!prevLoc ||
+        (prevLoc &&
+          (prevLoc.latitude == null ||
+            (prevLoc.latitude == curLoc.latitude &&
+              prevLoc.longitude == curLoc.longitude)))) &&
+      nextLoc
+    ) {
+      curRot = getRotation(curLoc, nextLoc);
+    } else {
+      curRot = getRotation(prevLoc, curLoc);
+    }
+    if (mapRef.current) {
+      mapRef.current.animateCamera({
+        heading: curRot,
+        center: curLoc,
+        pitch: curAng,
       });
     }
   };
+
+  useEffect(() => {
+    if (state.curLoc.latitude && state.curLoc.longitude) {
+      updateMap();
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (newLocation) {
+      let tempState = JSON.parse(JSON.stringify(state));
+      setState({
+        ...tempState,
+        prevLoc: {
+          latitude: state.curLoc.latitude,
+          longitude: state.curLoc.longitude,
+        },
+        curLoc: {
+          latitude: newLocation.latitude,
+          longitude: newLocation.longitude,
+        },
+        coordinate: new AnimatedRegion({
+          latitude: newLocation.latitude,
+          longitude: newLocation.longitude,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
+        }),
+      });
+    }
+  }, [newLocation]);
 
   const listenToMessage = () => {
     messaging().onMessage(async remoteMessage => {
       console.log('location received ', remoteMessage);
       if (remoteMessage.data) {
         const {lat, long} = remoteMessage.data;
-        setState({
-          ...state,
-          curLoc: {latitude: parseFloat(lat), longitude: parseFloat(long)},
-          coordinate: new AnimatedRegion({
-            latitude: parseFloat(lat),
-            longitude: parseFloat(long),
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }),
+        setNewLocation({
+          latitude: parseFloat(lat),
+          longitude: parseFloat(long),
         });
-        animate(parseFloat(lat), parseFloat(long));
-        if (mapRef.current) {
-          mapRef.current.animateToRegion({
-            latitude: parseFloat(lat),
-            longitude: parseFloat(long),
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          });
-        }
+        // if (mapRef.current) {
+        //   console.log('inside animat region');
+        //   mapRef.current.animateToRegion({
+        //     latitude: parseFloat(lat),
+        //     longitude: parseFloat(long),
+        //     latitudeDelta: LATITUDE_DELTA,
+        //     longitudeDelta: LONGITUDE_DELTA,
+        //   });
+        // }
       }
     });
   };
@@ -238,7 +312,7 @@ export default function StartRideCarpooler({navigation, route}) {
     const newCoordinate = {latitude, longitude};
     if (Platform.OS == 'android') {
       if (markerRef.current) {
-        markerRef.current.animateMarkerToCoordinate(newCoordinate, 7000);
+        markerRef.current.animateMarkerToCoordinate(newCoordinate, 4000);
       }
     } else {
       state.coordinate.timing(newCoordinate).start();
@@ -300,7 +374,7 @@ export default function StartRideCarpooler({navigation, route}) {
       {routeData && routeData.paths && routeData.paths.length > 0 ? (
         <MapView
           minZoomLevel={4}
-          maxZoomLevel={16}
+          maxZoomLevel={32}
           ref={mapRef}
           style={styles.maps}
           onLayout={handleMapLayout}
@@ -338,6 +412,7 @@ export default function StartRideCarpooler({navigation, route}) {
                 borderRadius: 1,
                 elevation: 1,
               }}
+              anchor={{x: 0.5, y: 0.5}}
               ref={markerRef}
               coordinate={state.coordinate}>
               <Image
@@ -728,6 +803,36 @@ export default function StartRideCarpooler({navigation, route}) {
               }}
               loader={false}
             />
+          </View>
+        ) : (
+          ''
+        )}
+
+        {routeData && routeData.status == 'completed' ? (
+          <View
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              borderRadius: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <View
+              style={{
+                width: '90%',
+                backgroundColor: AppColors.themeGreenColor,
+                height: 47,
+                display: 'flex',
+                alignItems: 'center',
+                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={{color: AppColors.themesWhiteColor}}>
+                Ride Completed
+              </Text>
+            </View>
           </View>
         ) : (
           ''
