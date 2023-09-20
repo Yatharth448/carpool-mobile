@@ -49,7 +49,6 @@ export default function OfferedRideDetails({ navigation, route }) {
 
         }
     }, []);
-
     const handlePageChange = (event) => {
         const { contentOffset } = event.nativeEvent;
         const index = Math.round(contentOffset.x / Dimensions.get('window').width);
@@ -369,7 +368,7 @@ export default function OfferedRideDetails({ navigation, route }) {
                     <View style={{ width: '92%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
                         <View style={{ justifyContent: 'center', alignItems: 'flex-start', width: '50%' }}>
 
-                            <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(rideData[0].date).format('DD MMM YYYY, HH:mm')}</Text>
+                            <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(rideData[0].journey_start_at).format('DD MMM YYYY, HH:mm')}</Text>
 
                         </View>
                         {rideData[0].status == 'cancelled' ?
