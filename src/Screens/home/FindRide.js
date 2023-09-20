@@ -134,10 +134,10 @@ class FindRide extends Component {
         this._unsubscribe = this.props.navigation.addListener('focus', async () => {
             BackHandler.addEventListener("hardwareBackPress", this.backActionHandler);
 
-            if (this.props?.data?.kyc_status != 1)
-            {
+            // if (this.props?.data?.kyc_status != 1)
+            // {
                 this.props.getProfileDataRequest()
-            }
+            // }
             console.log('loaded', this.props?.route.params)
             if (this.props.route.params?.from == 'reset') {
                 this.setState({ pickupLocation: '', dropLocation: '', selectedIndex: 0, selectedDate: 'Date and time of departure' })
@@ -157,8 +157,8 @@ class FindRide extends Component {
 
 
 
-            const res = await hitApiToGetProfile()
-            console.log(this.props.data, 'redux profile', res, 'profile')
+            // const res = await hitApiToGetProfile()
+            // console.log(this.props.data, 'redux profile', res, 'profile')
 
             await this.getRideNotificationData()
             await this.getSavedVehicles()
