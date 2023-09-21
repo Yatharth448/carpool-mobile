@@ -41,10 +41,27 @@ import {ButtonDanger} from '../../components/button/buttonDanger';
 
 import {firebase} from '@react-native-firebase/auth';
 
+const latitudeArrays = [
+  [29.87149, 77.866261],
+  [29.871461, 77.866454],
+  [29.871352, 77.866636],
+  [29.871254, 77.866784],
+  [29.871121, 77.866969],
+  [29.871042, 77.867127],
+  [29.870942, 77.867285],
+  [29.870854, 77.867427],
+  [29.870728, 77.867636],
+  [29.87062, 77.867777],
+  [29.870546, 77.867895],
+  [29.870469, 77.867994],
+  [29.870355, 77.868219],
+];
+
 export default function StartRideCarpooler({navigation, route}) {
   // let  path1 = [];
   const mapRef = React.useRef(null);
   const markerRef = useRef(null);
+  const [index, setIndex] = useState(0);
   const {id} = route.params;
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [routeData, setRouteData] = useState(null);
@@ -85,6 +102,7 @@ export default function StartRideCarpooler({navigation, route}) {
   // openPrice
   const fetchRideDetails = async () => {
     const result = await apigetRideDetails(id);
+    console.log('result ', result);
     if (result.status === false) {
       Toast.showWithGravity(
         result.message ?? result.error ?? 'Something went wrong',
@@ -158,8 +176,9 @@ export default function StartRideCarpooler({navigation, route}) {
     return (Math.atan2(yDiff, xDiff) * 180.0) / Math.PI;
   };
 
-  const updateMap = () => {
+  const updateMap = async () => {
     const {curLoc, prevLoc, curAng, nextLoc} = state;
+    console.log('cur angel ', curAng);
     let curRot;
     if (
       (!prevLoc ||
@@ -174,7 +193,9 @@ export default function StartRideCarpooler({navigation, route}) {
       curRot = getRotation(prevLoc, curLoc);
     }
     if (mapRef.current) {
-      mapRef.current.animateCamera({
+      let currentConfiguration = await mapRef.current.getCamera();
+      console.log('current config', currentConfiguration);
+      mapRef.current.setCamera({
         heading: curRot,
         center: curLoc,
         pitch: curAng,
@@ -194,8 +215,8 @@ export default function StartRideCarpooler({navigation, route}) {
       setState({
         ...tempState,
         prevLoc: {
-          latitude: state.curLoc.latitude,
-          longitude: state.curLoc.longitude,
+          latitude: tempState.curLoc.latitude,
+          longitude: tempState.curLoc.longitude,
         },
         curLoc: {
           latitude: newLocation.latitude,
@@ -258,10 +279,10 @@ export default function StartRideCarpooler({navigation, route}) {
       return acc;
     }, []);
 
-    mapRef.current.fitToCoordinates(coordinates, {
-      edgePadding: {top: 50, right: 50, bottom: 50, left: 100},
-      animated: true,
-    });
+    // mapRef.current.fitToCoordinates(coordinates, {
+    //   edgePadding: {top: 50, right: 50, bottom: 50, left: 100},
+    //   animated: true,
+    // });
   };
 
   const saveRide = async () => {
@@ -308,34 +329,45 @@ export default function StartRideCarpooler({navigation, route}) {
     }
   };
 
-  const animate = (latitude, longitude) => {
-    const newCoordinate = {latitude, longitude};
-    if (Platform.OS == 'android') {
-      if (markerRef.current) {
-        markerRef.current.animateMarkerToCoordinate(newCoordinate, 4000);
-      }
-    } else {
-      state.coordinate.timing(newCoordinate).start();
-    }
-  };
+  // const animate = (latitude, longitude) => {
+  //   const newCoordinate = {latitude, longitude};
+  //   if (Platform.OS == 'android') {
+  //     if (markerRef.current) {
+  //       markerRef.current.animateMarkerToCoordinate(newCoordinate, 4000);
+  //     }
+  //   } else {
+  //     state.coordinate.timing(newCoordinate).start();
+  //   }
+  // };
 
   const endride = async () => {
     console.log(' end ride', routeData.watch_id);
-    // await apiUpdateLocation(id, 29.8714409, 77.8661175);
-    if (routeData.watch_id != null || routeData.watch_id != undefined) {
-      Geolocation.clearWatch(routeData.watch_id);
-      const result = await apiEndRide(id);
-      if (result.status) {
-        Toast.showWithGravity('Ride has ended', 2, Toast.TOP);
-        await fetchRideDetails();
-      } else {
-        Toast.showWithGravity(
-          result.message ?? result.error ?? 'Something went wrong',
-          2,
-          Toast.TOP,
-        );
-      }
-    }
+
+    var i = 0;
+    var timer = setInterval(function () {
+      let currentLat = latitudeArrays[i][0];
+      let currentLong = latitudeArrays[i][1];
+      console.log('updating location ', currentLat, currentLong, i);
+      apiUpdateLocation(id, currentLat, currentLong);
+      if (i === 5) clearInterval(timer);
+      i = i + 1;
+      console.log('post-interval', i); // interval will be cleared after completing this whole block
+    }, 5000);
+
+    // if (routeData.watch_id != null || routeData.watch_id != undefined) {
+    //   Geolocation.clearWatch(routeData.watch_id);
+    //   const result = await apiEndRide(id);
+    //   if (result.status) {
+    //     Toast.showWithGravity('Ride has ended', 2, Toast.TOP);
+    //     await fetchRideDetails();
+    //   } else {
+    //     Toast.showWithGravity(
+    //       result.message ?? result.error ?? 'Something went wrong',
+    //       2,
+    //       Toast.TOP,
+    //     );
+    //   }
+    // }
   };
 
   // const updateEstimatedRide = async (estimatedPrice) => {
@@ -377,7 +409,7 @@ export default function StartRideCarpooler({navigation, route}) {
           maxZoomLevel={32}
           ref={mapRef}
           style={styles.maps}
-          onLayout={handleMapLayout}
+          // onLayout={handleMapLayout}
           region={{
             ...state.curLoc,
             latitudeDelta: LATITUDE_DELTA,
@@ -544,15 +576,27 @@ export default function StartRideCarpooler({navigation, route}) {
                   alignItems: 'center',
                   borderRadius: 50,
                 }}>
-                <Image
-                  source={require('../../assets/avtar.png')}
-                  style={{
-                    width: 70,
-                    height: 70,
-                    borderRadius: 5,
-                    resizeMode: 'contain',
-                  }}
-                />
+                {userDetails.profile ? (
+                  <Image
+                    src={userDetails.profile}
+                    style={{
+                      width: 70,
+                      height: 70,
+                      borderRadius: 50,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                ) : (
+                  <Image
+                    source={require('../../assets/avtar.png')}
+                    style={{
+                      width: 70,
+                      height: 70,
+                      borderRadius: 5,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                )}
               </View>
             </View>
           </View>

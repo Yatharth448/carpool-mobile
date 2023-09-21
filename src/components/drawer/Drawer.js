@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   FlatList,
   View,
@@ -10,33 +10,35 @@ import {
   Dimensions,
   Pressable,
 } from 'react-native';
-import { AppColors } from '../constants/AppColor';
-import { AppFontFamily } from '../constants/AppFonts';
+import {AppColors} from '../constants/AppColor';
+import {AppFontFamily} from '../constants/AppFonts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { connect } from 'react-redux';
-import { getProfileDataRequest } from '../../redux/actions/actions';
+import {connect} from 'react-redux';
+import {getProfileDataRequest} from '../../redux/actions/actions';
 import reducer from '../../redux/reducers/reducers';
-import { ImageLoader } from '../imageloader/ImageLoader';
+import {ImageLoader} from '../imageloader/ImageLoader';
 
-const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
+const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
   const [menu, setMenu] = React.useState([
-    { screen: 'FindRide', name: 'HOME' },
-    { screen: 'ActiveRideCarpooler', name: 'ACTIVE RIDE' },
-    { screen: 'RideHistory', name: 'RIDE HISTORY' },
-    { screen: 'MessageRoom', name: 'MESSAGES' },
-    { screen: 'Wallet', name: 'PAYMENT' },
-    { screen: 'Support', name: 'SUPPORT' },
-    { screen: 'Signout', name: 'SIGN OUT' },
+    {screen: 'FindRide', name: 'HOME'},
+    {screen: 'ActiveRideCarpooler', name: 'ACTIVE RIDE'},
+    {screen: 'RideHistory', name: 'RIDE HISTORY'},
+    {screen: 'MessageRoom', name: 'MESSAGES'},
+    {screen: 'Payment', name: 'PAYMENT'},
+    {screen: 'Support', name: 'SUPPORT'},
+    {screen: 'Signout', name: 'SIGN OUT'},
   ]);
   const [ind, setInd] = React.useState(0);
   const handleDrawerItemPress = (screenName, index) => {
     selectedInd(index);
-    if (screenName == 'FindRide') {
-      navigation.navigate(screenName, { from: 'reset' });
+
+    if (screenName == 'Payment') {
+    } else if (screenName == 'FindRide') {
+      navigation.navigate(screenName, {from: 'reset'});
     } else if (screenName == 'Signout') {
       LogoutAlert();
     } else if (screenName == 'ActiveRideCarpooler') {
-      navigation.navigate(screenName, { id: '6506c86018ad7e7e1efa40f4' });
+      navigation.navigate(screenName, {id: '650b130805766d844025e23a'});
     } else {
       navigation.navigate(screenName);
     }
@@ -44,7 +46,6 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
 
   useEffect(() => {
     // getProfileDataRequest();
-
     // console.log(data, 'result');
   }, []);
 
@@ -59,7 +60,7 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
       .then(() =>
         nav.reset({
           index: 0,
-          routes: [{ name: 'SplashScreen' }],
+          routes: [{name: 'SplashScreen'}],
         }),
       );
   };
@@ -68,7 +69,7 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
     Alert.alert(
       '',
       'Are you sure you want to logout ?',
-      [{ text: 'cancel' }, { text: 'OK', onPress: () => clearAllData(navigation) }],
+      [{text: 'cancel'}, {text: 'OK', onPress: () => clearAllData(navigation)}],
       {
         cancelable: false,
       },
@@ -87,13 +88,17 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
         }}>
         <Pressable
           onPress={() => navigation.navigate('ProfileScreen')}
-          style={{ width: '80%', height: '90%', justifyContent: 'center' }}>
-          <View style={{ width: 80, height: 80, marginBottom: 10 }}>
+          style={{width: '80%', height: '90%', justifyContent: 'center'}}>
+          <View style={{width: 80, height: 80, marginBottom: 10}}>
             <ImageLoader
               width={80}
               height={80}
               borderRadius={40}
-              image={data?.profilePath ? { uri: data.profilePath } : require('../../assets/avtar.png')}
+              image={
+                data?.profilePath
+                  ? {uri: data.profilePath}
+                  : require('../../assets/avtar.png')
+              }
               loaderColor={AppColors.themesWhiteColor}
             />
           </View>
@@ -137,7 +142,7 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
         }}
         data={menu}
         keyExtractor={(item, index) => index}
-        renderItem={({ item, index }) => (
+        renderItem={({item, index}) => (
           <>
             <TouchableOpacity
               style={{
