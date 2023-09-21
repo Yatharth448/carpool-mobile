@@ -136,7 +136,7 @@ class FindRide extends Component {
 
             // if (this.props?.data?.kyc_status != 1)
             // {
-                this.props.getProfileDataRequest()
+            this.props.getProfileDataRequest()
             // }
             console.log('loaded', this.props?.route.params)
             if (this.props.route.params?.from == 'reset') {
@@ -259,7 +259,7 @@ class FindRide extends Component {
 
     pickUp = () => {
         this.props.navigation.navigate('SearchLocation', {
-            'headerText': 'Search Loaction',
+            'headerText': 'Search Location',
             'lat': this.state.location.latitude,
             'lng': this.state.location.longitude
         })
@@ -267,7 +267,7 @@ class FindRide extends Component {
 
     dropOff = () => {
         this.props.navigation.navigate('SearchLocation', {
-            'headerText': 'Search Loaction',
+            'headerText': 'Search Location',
             'lat': this.state.location.latitude,
             'lng': this.state.location.longitude
         })
@@ -548,10 +548,41 @@ class FindRide extends Component {
         )
     }
 
+
+    KycNotification() {
+
+        return (
+            <View style={{
+                alignItems: 'center', backgroundColor: AppColors.themeNotificationBg, marginTop: -50,
+                width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, padding: 10, minHeight: this.state.textHeight + 70
+            }}>
+                <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <View style={{ width: '80%', justifyContent: 'center', alignItems: 'flex-start' }}>
+                        <Text style={{ color: AppColors.themeBlackColor, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular }} onLayout={this.onTextLayout}>{this.state.kycStatus == 0 ? 'Your kyc is pending, Please update your kyc' : this.state.kycStatus == 2 ? 'Your kyc document is under review' : ''}</Text>
+                    </View>
+                    {this.state.kycStatus == 0 ?
+                        <View style={{ width: 53, justifyContent: 'center', alignItems: 'center' }}>
+                            <ButtonPrimary
+                                style={{ height: 22 }}
+                                textStyle={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12 }}
+                                text={'View'}
+                                onPress={() =>  this.props.navigation.navigate('KycScreen')}
+                                loader={false}
+                            />
+                        </View> : null}
+                </View>
+            </View>
+        )
+    }
+
+
+
     SearchOffer = (name, gender, image) => {
         return (
             <>
-                {this.state.existingData?.status ? this.checkExistingRequest() : null}
+                {this.props?.data?.kyc_status == 0 || this.props?.data?.kyc_status == 2 ?  this.KycNotification() : null}
+                
+                {this.state.existingData?.status ? this.checkExistingRequest() : null }
                 <View style={{
                     alignItems: 'center', backgroundColor: AppColors.themesWhiteColor, marginTop: -50,
                     width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, borderColor: AppColors.themeCardBorderColor, borderWidth: 1
@@ -561,7 +592,7 @@ class FindRide extends Component {
 
                         {FindAndOfferRide(this.findRide, this.offerRide, this.state.find)}
 
-                        <AvtarView image={ image ? {uri: image} : require('../../assets/avtar.png')} name={name} type={this.state.find} />
+                        <AvtarView image={image ? { uri: image } : require('../../assets/avtar.png')} name={name} type={this.state.find} />
                         <View style={{ width: '94%', height: 1, marginTop: 20, backgroundColor: AppColors.themeCardBorderColor }} />
                         {this.state.find ?
                             <>
@@ -739,7 +770,7 @@ class FindRide extends Component {
                 </View>
                 <View style={{ position: 'absolute', width: '100%', backgroundColor: 'transparent' }}>
                     {/* <Header isBack={false} close={() => this.props.navigation.openDrawer()} isRight={true} right={require('../../assets/notification.png')} /> */}
-                    <Header isBack={this.state.isSearch == 'notfound' ? true : false} close={() => this.menuBtnClick()} isRight={true} right={require('../../assets/notification.png')} rightClick={() => this.notiClick(count)} count={count}/>
+                    <Header isBack={this.state.isSearch == 'notfound' ? true : false} close={() => this.menuBtnClick()} isRight={true} right={require('../../assets/notification.png')} rightClick={() => this.notiClick(count)} count={count} />
                 </View>
 
 
@@ -759,14 +790,13 @@ class FindRide extends Component {
 
 
 
-   async  notiClick (count)  {
+    async notiClick(count) {
 
-        if(count > 0)
-        {
-           await hitApiToSetSeenNotifications()
+        if (count > 0) {
+            await hitApiToSetSeenNotifications()
         }
 
-        this.props.navigation.navigate('Notification') 
+        this.props.navigation.navigate('Notification')
 
     }
 
@@ -780,18 +810,18 @@ class FindRide extends Component {
 
         return (
             <View style={{ flex: 1, alignItems: 'center' }}>
-                {
+                {/* {
                     this.state.kycStatus == 0 ?
                         <PendingKYC message={'Your kyc is pending, Please update your kyc'} onOkPress={this.onOkPress} />
                         : this.state.kycStatus == 2 ?
                             <PendingKYC message={'Your kyc document is under review'} onOkPress={this.onOkPress} />
                             :
                             null
-                }
+                } */}
                 < FlatList
                     data={['1']}
                     contentContainerStyle={{ width: Dimensions.get('window').width }}
-                    ListHeaderComponent={<this.HeaderView name={data?.name ?? ''} gender={data?.gender} count={data?.notification_count} image={data?.profilePath}/>}
+                    ListHeaderComponent={<this.HeaderView name={data?.name ?? ''} gender={data?.gender} count={data?.notification_count} image={data?.profilePath} />}
                     keyExtractor={(item, index) => index}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (

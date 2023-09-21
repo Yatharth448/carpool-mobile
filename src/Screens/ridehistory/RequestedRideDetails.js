@@ -332,7 +332,7 @@ export default function RequestedRideDetails({ navigation, route }) {
                         <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
                             <View style={{ justifyContent: 'center' }}>
 
-                                <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(rideData[0].date).format('DD MMM YYYY, HH:mm')}</Text>
+                                <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(rideData[0].journey_start_at).format('DD MMM YYYY, HH:mm')}</Text>
 
                             </View>
                         </View>
@@ -367,14 +367,14 @@ export default function RequestedRideDetails({ navigation, route }) {
                                     <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginTop: 20, marginBottom: 0 }}>
 
                                         <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                            <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 16 }}>{rideData[0].journey_origin_address}</Text>
+                                            <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 16 }}>{rideData[0].origin_address}</Text>
                                         </View>
                                     </View>
                                     <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
                                     <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginBottom: 20, marginTop: 20 }}>
 
                                         <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                            <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 16 }}>{rideData[0].journey_destination_address}</Text>
+                                            <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 16 }}>{rideData[0].destination_address}</Text>
                                         </View>
                                     </View>
 
@@ -403,9 +403,9 @@ export default function RequestedRideDetails({ navigation, route }) {
                             <View style={{ justifyContent: 'flex-start', width: '55%' }}>
 
 
-                                <RideCostView amount={rideData[0].journey_expected_price_per_seat} />
+                                <RideCostView amount={rideData[0].price} />
 
-                                <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{CalculateTimeFromMilies(Number(rideData[0].journey_approx_time))}</Text>
+                                <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{CalculateTimeFromMilies(Number(rideData[0].approx_time))}</Text>
                             </View>
 
 

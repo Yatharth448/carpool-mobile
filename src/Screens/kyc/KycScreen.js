@@ -121,7 +121,7 @@ export default function KycScreen({ navigation }) {
 
       <View style={{ width: '100%', alignItems: 'center', height: 50, position: 'absolute', bottom: 0 }}>
         <TouchableOpacity onPress={() => skipClick()} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ fontSize: 16, color: AppColors.themeTextGrayColor }}>{"Skip"}
+          <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{"Skip"}
           </Text>
         </TouchableOpacity>
       </View>

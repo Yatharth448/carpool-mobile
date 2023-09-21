@@ -218,13 +218,13 @@ export default function SignupScreen({ navigation }) {
 
                 <Pressable onPress={() => _signIn()} style={{ width: '100%', marginTop: 20, alignItems: 'center' }}>
 
-                    <Surface style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 47, borderRadius: 5 }} elevation={2}>
+                    <Surface style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 47, borderRadius: 5 }} elevation={4}>
 
                         <View style={{ width: '30%', justifyContent: 'center', alignItems: 'center' }}>
                             <Image source={require('../../assets/googlelogo.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
                         </View>
                         <View style={{ width: '60%', justifyContent: 'center', justifyContent: 'center' }}>
-                            <Text style={{ color: AppColors.themeCardBorderColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Sign up using Google'}</Text>
+                            <Text style={{ color: AppColors.themeBlackColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Sign up using Google'}</Text>
                         </View>
 
                     </Surface>
@@ -234,9 +234,9 @@ export default function SignupScreen({ navigation }) {
                 <View style={{ width: '100%', marginTop: 20 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
 
-                        <View style={{ width: '25%', height: 2, backgroundColor: AppColors.themeCardBorderColor }} />
-                        <Text style={{ color: AppColors.themeCardBorderColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'   or continue with   '}</Text>
-                        <View style={{ width: '25%', height: 2, backgroundColor: AppColors.themeCardBorderColor }} />
+                        <View style={{ width: '25%', height: 2, backgroundColor: AppColors.themePrimaryColor }} />
+                        <Text style={{ color: AppColors.themePrimaryColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'   or continue with   '}</Text>
+                        <View style={{ width: '25%', height: 2, backgroundColor: AppColors.themePrimaryColor }} />
 
                     </View>
                 </View>

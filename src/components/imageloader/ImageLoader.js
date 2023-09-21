@@ -4,7 +4,6 @@ import { AppColors } from "../../components/constants/AppColor"
 import FastImage from "react-native-fast-image"
 export const ImageLoader = ({ image, width, height, borderRadius, loaderColor=AppColors.themePrimaryColor }) => {
     const [loading, setLoading] = React.useState(false)
-    console.log(image, 'image')
 
     const combinedObject = {
         ...image,

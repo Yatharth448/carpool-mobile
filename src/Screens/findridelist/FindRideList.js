@@ -11,6 +11,7 @@ import { FindRideFilterView } from './FindRideComp';
 import { Surface } from 'react-native-paper';
 import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import CommonLoaders from '../../components/loader/Loader';
+import Toast from 'react-native-simple-toast'
 import { showNotification } from '../../components/notifications/LocalNotification';
 export default function FindRideList({ navigation, route }) {
 
@@ -83,6 +84,7 @@ export default function FindRideList({ navigation, route }) {
         else {
 
             setStartLoader(false)
+            Toast.showWithGravity(result.message ?? result.error ?? 'Something went wrong', 2, Toast.TOP);
             if (result.message == "Please add money to wallet") {
                 Alert.alert(result.message)
             }

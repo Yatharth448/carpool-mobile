@@ -15,6 +15,7 @@ export default function DateTimeView(mode, open, date, onConfirm, onCancel, open
             <DateTimePickerModal
                 isVisible={open}
                 mode={mode}
+                minimumDate={new Date()}
                 onConfirm={(date) => onConfirm(date)}
                 onCancel={() => {
                     onCancel()

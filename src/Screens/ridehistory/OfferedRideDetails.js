@@ -107,7 +107,7 @@ export default function OfferedRideDetails({ navigation, route }) {
                             <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} />
                             <View style={{ justifyContent: 'center' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                    <Text style={{ marginLeft:10, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.name ?? "Sachin Gupta"}</Text>
+                                    <Text style={{ marginLeft: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.name ?? "Sachin Gupta"}</Text>
 
                                 </View>
 
@@ -429,13 +429,21 @@ export default function OfferedRideDetails({ navigation, route }) {
                     </View>
 
                     <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
-                    <View style={{ width: '95%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
-                        <View style={{ justifyContent: 'flex-start', width: '90%' }}>
+                    <View style={{ width: '95%', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
+                        <View style={{ justifyContent: 'flex-start', width: '50%' }}>
 
                             <RideCostView amount={rideData[0].journey_expected_price_per_seat} />
                             <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{CalculateTimeFromMilies(Number(rideData[0].journey_approx_time))}</Text>
 
                         </View>
+
+                        <View style={{ alignItems: 'flex-end', width: '50%', justifyContent: 'flex-start' }}>
+
+                            <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themeText2Color }}>{rideData[0].seat_left + ' Seats left'}</Text>
+
+                        </View>
+
+
 
 
                     </View>
