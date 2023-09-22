@@ -22,7 +22,7 @@ function Wallet({ data, loading, error, getProfileDataRequest, navigation, route
 
     return (
         <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
-            <Header close={() => navigation.pop(2)} />
+            <Header isBack={false} close={() => navigation.openDrawer()} />
 
             <View style={{ width: Dimensions.get('screen').width, height: Dimensions.get('window').height * .6, alignItems: 'center', justifyContent: 'center', paddingBottom: 10, marginTop: 50 }}>
                 {/* <ImageBackground source={require('../../assets/paymentcardbg.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover', alignItems: 'center' }}> */}

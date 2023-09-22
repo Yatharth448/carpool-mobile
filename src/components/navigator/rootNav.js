@@ -53,6 +53,7 @@ function RideDrawer() {
           component={StartRideCarpooler}
         />
       <Drawer.Screen name="Payment" component={Payment} />
+      <Drawer.Screen name="Wallet" component={Wallet} />
       {/* <Drawer.Screen name='MapRoutes' component={MapRoutes} />
                 <Drawer.Screen name='ProfileScreen' component={ProfileScreen} /> */}
       {/* <Drawer.Screen name='FindRideList' component={FindRideList} /> */}
@@ -114,7 +115,7 @@ export default function RootNav() {
         <Stack.Screen name="SearchLocation" component={SearchLocation} />
         <Stack.Screen name="AddGenderMobile" component={AddGenderMobile} />
         <Stack.Screen name="Notification" component={Notification} />
-        <Stack.Screen name="Wallet" component={Wallet} />
+        
         <Stack.Screen
           name="RideDrawer"
           component={RideDrawer}
