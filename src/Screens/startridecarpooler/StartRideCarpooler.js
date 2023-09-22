@@ -16,12 +16,7 @@ import {Header} from '../../components/commomheader/CommonHeader';
 import messaging from '@react-native-firebase/messaging';
 
 import Toast from 'react-native-simple-toast';
-import MapView, {
-  Polyline,
-  Marker,
-  MarkerAnimated,
-  AnimatedRegion,
-} from 'react-native-maps';
+import MapView, {Polyline, Marker} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import {PriceSelection} from '../../components/priceselection/PriceSelection';
 import {AppFontFamily} from '../../components/constants/AppFonts';
@@ -81,7 +76,7 @@ export default function StartRideCarpooler({navigation, route}) {
       latitude: null,
       longitude: null,
     },
-    curAng: 90,
+    curAng: 45,
     prevLoc: {
       latitude: null,
       longitude: null,
@@ -92,12 +87,6 @@ export default function StartRideCarpooler({navigation, route}) {
     },
     destinationCords: {},
     isLoading: false,
-    coordinate: new AnimatedRegion({
-      latitude: null,
-      longitude: null,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA,
-    }),
   });
   // openPrice
   const fetchRideDetails = async () => {
@@ -137,12 +126,6 @@ export default function StartRideCarpooler({navigation, route}) {
             latitude: result.ride.current_nearer_lat,
             longitude: result.ride.current_nearer_long,
           },
-          coordinate: new AnimatedRegion({
-            latitude: result.ride.current_lat,
-            longitude: result.ride.current_long,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }),
         });
       } else {
         let tempState = JSON.parse(JSON.stringify(state));
@@ -178,7 +161,6 @@ export default function StartRideCarpooler({navigation, route}) {
 
   const updateMap = async () => {
     const {curLoc, prevLoc, curAng, nextLoc} = state;
-    console.log('cur angel ', curAng);
     let curRot;
     if (
       (!prevLoc ||
@@ -193,12 +175,10 @@ export default function StartRideCarpooler({navigation, route}) {
       curRot = getRotation(prevLoc, curLoc);
     }
     if (mapRef.current) {
-      let currentConfiguration = await mapRef.current.getCamera();
-      console.log('current config', currentConfiguration);
-      mapRef.current.setCamera({
+      mapRef.current.animateCamera({
         heading: curRot,
         center: curLoc,
-        pitch: curAng,
+        pitch: 75,
       });
     }
   };
@@ -222,12 +202,6 @@ export default function StartRideCarpooler({navigation, route}) {
           latitude: newLocation.latitude,
           longitude: newLocation.longitude,
         },
-        coordinate: new AnimatedRegion({
-          latitude: newLocation.latitude,
-          longitude: newLocation.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }),
       });
     }
   }, [newLocation]);
@@ -241,15 +215,6 @@ export default function StartRideCarpooler({navigation, route}) {
           latitude: parseFloat(lat),
           longitude: parseFloat(long),
         });
-        // if (mapRef.current) {
-        //   console.log('inside animat region');
-        //   mapRef.current.animateToRegion({
-        //     latitude: parseFloat(lat),
-        //     longitude: parseFloat(long),
-        //     latitudeDelta: LATITUDE_DELTA,
-        //     longitudeDelta: LONGITUDE_DELTA,
-        //   });
-        // }
       }
     });
   };
@@ -263,27 +228,6 @@ export default function StartRideCarpooler({navigation, route}) {
       // clear/remove event listener
     };
   }, []);
-
-  const setMap = () => {
-    if (routeData && routeData.paths && routeData.paths.length) {
-      // mapRef.animateToRegion({
-      //   latitude: routeData.paths[0].latitude,
-      //   longitude: routeData.paths[0].longitude,
-      // });
-    }
-  };
-
-  const handleMapLayout = () => {
-    const coordinates = routeData.paths.reduce((acc, path) => {
-      acc.push(path.origin, path.destination);
-      return acc;
-    }, []);
-
-    // mapRef.current.fitToCoordinates(coordinates, {
-    //   edgePadding: {top: 50, right: 50, bottom: 50, left: 100},
-    //   animated: true,
-    // });
-  };
 
   const saveRide = async () => {
     if (
@@ -314,7 +258,6 @@ export default function StartRideCarpooler({navigation, route}) {
         distanceFilter: 5,
       },
     );
-    console.log('id ', watchId);
     const result = await apiStartRide(id, watchId);
     console.log(result);
     if (result.status) {
@@ -329,70 +272,35 @@ export default function StartRideCarpooler({navigation, route}) {
     }
   };
 
-  // const animate = (latitude, longitude) => {
-  //   const newCoordinate = {latitude, longitude};
-  //   if (Platform.OS == 'android') {
-  //     if (markerRef.current) {
-  //       markerRef.current.animateMarkerToCoordinate(newCoordinate, 4000);
-  //     }
-  //   } else {
-  //     state.coordinate.timing(newCoordinate).start();
-  //   }
-  // };
-
   const endride = async () => {
     console.log(' end ride', routeData.watch_id);
 
-    var i = 0;
-    var timer = setInterval(function () {
-      let currentLat = latitudeArrays[i][0];
-      let currentLong = latitudeArrays[i][1];
-      console.log('updating location ', currentLat, currentLong, i);
-      apiUpdateLocation(id, currentLat, currentLong);
-      if (i === 5) clearInterval(timer);
-      i = i + 1;
-      console.log('post-interval', i); // interval will be cleared after completing this whole block
-    }, 5000);
+    // var i = 0;
+    // var timer = setInterval(function () {
+    //   let currentLat = latitudeArrays[i][0];
+    //   let currentLong = latitudeArrays[i][1];
+    //   console.log('updating location ', currentLat, currentLong, i);
+    //   apiUpdateLocation(id, currentLat, currentLong);
+    //   if (i === 5) clearInterval(timer);
+    //   i = i + 1;
+    //   console.log('post-interval', i); // interval will be cleared after completing this whole block
+    // }, 5000);
 
-    // if (routeData.watch_id != null || routeData.watch_id != undefined) {
-    //   Geolocation.clearWatch(routeData.watch_id);
-    //   const result = await apiEndRide(id);
-    //   if (result.status) {
-    //     Toast.showWithGravity('Ride has ended', 2, Toast.TOP);
-    //     await fetchRideDetails();
-    //   } else {
-    //     Toast.showWithGravity(
-    //       result.message ?? result.error ?? 'Something went wrong',
-    //       2,
-    //       Toast.TOP,
-    //     );
-    //   }
-    // }
+    if (routeData.watch_id != null || routeData.watch_id != undefined) {
+      Geolocation.clearWatch(routeData.watch_id);
+      const result = await apiEndRide(id);
+      if (result.status) {
+        Toast.showWithGravity('Ride has ended', 2, Toast.TOP);
+        await fetchRideDetails();
+      } else {
+        Toast.showWithGravity(
+          result.message ?? result.error ?? 'Something went wrong',
+          2,
+          Toast.TOP,
+        );
+      }
+    }
   };
-
-  // const updateEstimatedRide = async (estimatedPrice) => {
-
-  //     const result = await hitApiToRequestUpdateEstimatedPrice(journeyId, estimatedPrice)
-  //     console.log(result)
-  //     if (result.status) {
-
-  //         // {"data": 952.4361, "status": true}
-  //         let itemData = {
-  //             'price': estimatedPrice,
-  //             'pick': pick,
-  //             'drop': drop,
-
-  //         }
-
-  //         navigation.navigate('Success', { item: itemData })
-  //         setOpenPrice(false)
-
-  //     }
-  //     else {
-  //         Toast.showWithGravity(result.message ?? result.error ?? 'Something went wrong', 2, Toast.TOP);
-  //     }
-
-  // }
 
   return (
     <View
@@ -403,21 +311,21 @@ export default function StartRideCarpooler({navigation, route}) {
         backgroundColor: AppColors.themePickupDropSearchBg,
         alignItems: 'center',
       }}>
-      {routeData && routeData.paths && routeData.paths.length > 0 ? (
+      {routeData &&
+      routeData.paths &&
+      routeData.paths.length > 0 &&
+      state.curLoc &&
+      state.curLoc.latitude &&
+      state.curLoc.longitude ? (
         <MapView
           minZoomLevel={4}
           maxZoomLevel={32}
           ref={mapRef}
           style={styles.maps}
           // onLayout={handleMapLayout}
-          region={{
-            ...state.curLoc,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
           initialRegion={{
-            latitude: routeData.paths[0].latitude,
-            longitude: routeData.paths[0].longitude,
+            latitude: state.curLoc.latitude,
+            longitude: state.curLoc.longitude,
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
           }}>
@@ -437,7 +345,7 @@ export default function StartRideCarpooler({navigation, route}) {
               zIndex={1}
               strokeWidth={4}
             />
-            <Marker.Animated
+            <Marker
               style={{
                 paddingVertical: 1,
                 paddingHorizontal: 1,
@@ -446,13 +354,13 @@ export default function StartRideCarpooler({navigation, route}) {
               }}
               anchor={{x: 0.5, y: 0.5}}
               ref={markerRef}
-              coordinate={state.coordinate}>
+              coordinate={state.curLoc}>
               <Image
                 source={require('../../assets/map_marker.png')}
                 style={{width: 30, height: 33}}
                 resizeMode="contain"
               />
-            </Marker.Animated>
+            </Marker>
             <Marker
               coordinate={routeData.paths[routeData.paths.length - 1]}></Marker>
           </React.Fragment>
@@ -895,3 +803,99 @@ const styles = StyleSheet.create({
     height: Dimensions.get('screen').height / 1.75,
   },
 });
+
+// import React, {Component} from 'react';
+
+// import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+
+// import MapView, {Marker} from 'react-native-maps';
+// // @ts-ignore
+// import carImage from '../../assets/map_marker.png';
+
+// export default class StartRideCarpooler extends Component {
+//   map;
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       prevPos: null,
+//       curPos: {latitude: 37.420814, longitude: -122.081949},
+//       curAng: 90,
+//       latitudeDelta: 0.0922,
+//       longitudeDelta: 0.0421,
+//     };
+//     this.changePosition = this.changePosition.bind(this);
+//     this.getRotation = this.getRotation.bind(this);
+//     this.updateMap = this.updateMap.bind(this);
+//   }
+
+//   changePosition(latOffset, lonOffset) {
+//     const latitude = this.state.curPos.latitude + latOffset;
+//     const longitude = this.state.curPos.longitude + lonOffset;
+//     this.setState({
+//       prevPos: this.state.curPos,
+//       curPos: {latitude, longitude},
+//     });
+//     this.updateMap();
+//   }
+
+//   getRotation(prevPos, curPos) {
+//     if (!prevPos) {
+//       return 0;
+//     }
+//     const xDiff = curPos.latitude - prevPos.latitude;
+//     const yDiff = curPos.longitude - prevPos.longitude;
+//     return (Math.atan2(yDiff, xDiff) * 180.0) / Math.PI;
+//   }
+
+//   updateMap() {
+//     const {curPos, prevPos, curAng} = this.state;
+//     const curRot = this.getRotation(prevPos, curPos);
+//     this.map.animateCamera({heading: curRot, center: curPos, pitch: curAng});
+//   }
+
+//   render() {
+//     return (
+//       <View style={styles.flex}>
+//         <MapView
+//           ref={el => (this.map = el)}
+//           style={styles.flex}
+//           minZoomLevel={15}
+//           initialRegion={{
+//             ...this.state.curPos,
+//             latitudeDelta: this.state.latitudeDelta,
+//             longitudeDelta: this.state.longitudeDelta,
+//           }}>
+//           <Marker
+//             coordinate={this.state.curPos}
+//             anchor={{x: 0.5, y: 0.5}}
+//             image={carImage}
+//           />
+//         </MapView>
+//         <View style={styles.buttonContainerUpDown}>
+//           <TouchableOpacity
+//             style={[styles.button, styles.up]}
+//             onPress={() => this.changePosition(0.0001, 0)}>
+//             <Text>+ Lat</Text>
+//           </TouchableOpacity>
+//           <TouchableOpacity
+//             style={[styles.button, styles.down]}
+//             onPress={() => this.changePosition(-0.0001, 0)}>
+//             <Text>- Lat</Text>
+//           </TouchableOpacity>
+//         </View>
+//         <View style={styles.buttonContainerLeftRight}>
+//           <TouchableOpacity
+//             style={[styles.button, styles.left]}
+//             onPress={() => this.changePosition(0, -0.0001)}>
+//             <Text>- Lon</Text>
+//           </TouchableOpacity>
+//           <TouchableOpacity
+//             style={[styles.button, styles.right]}
+//             onPress={() => this.changePosition(0, 0.0001)}>
+//             <Text>+ Lon</Text>
+//           </TouchableOpacity>
+//         </View>
+//       </View>
+//     );
+//   }
+// }
