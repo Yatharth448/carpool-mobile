@@ -102,11 +102,12 @@ export default function OfferedRideDetails({ navigation, route }) {
                 <View style={{ width: '95%', alignItems: 'center', marginTop: 0, marginBottom: 10 }}>
                     <Surface elevation={4} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10, alignItems: 'center' }}>
 
-                        <View style={{ width: '95%', marginTop: 10 }}>
-                            <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsRegular, fontSize: 15, color: AppColors.themeBlackColor }}>{item.status}</Text>
+                        <View style={{ width: '95%', marginTop: 20 }}>
+                        <Text style={{ height: 20, paddingLeft: 5, paddingRight: 5, borderRadius: 5, fontFamily: AppFontFamily.PopinsBold, fontSize: 12, color: AppColors.themePrimaryColor }}>{item?.status.toUpperCase()}</Text>
+                            {/* <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsRegular, fontSize: 15, color: AppColors.themePrimaryColor }}>{item.status}</Text> */}
                         </View>
 
-                        <View style={{ width: '90%', marginTop: 0, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
+                        <View style={{ width: '90%', marginTop: 10, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
                         <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginLeft: 10, marginTop: 20 }}>
                             <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} />
                             <View style={{ justifyContent: 'center' }}>

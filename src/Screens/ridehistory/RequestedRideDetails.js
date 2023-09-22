@@ -129,10 +129,10 @@ export default function RequestedRideDetails({ navigation, route }) {
     const ViewRideRequestBtn = ({ }) => {
 
         return (
-            <View style={{ paddingLeft: 20, width: '88%', alignItems: 'left', marginTop: 10, marginBottom: 20, justifyContent: 'center' }}>
+            <View style={{ paddingLeft: 20, width: '88%', alignItems: 'left', marginTop: 10, marginBottom: 10, justifyContent: 'center' }}>
 
-                <Text style={{ fontSize: 14, fontFamily: AppFontFamily.PopinsBold, color: AppColors.themeBlackColor }}>
-                    {isCancel}
+                <Text style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsBold, color: AppColors.themePrimaryColor }}>
+                    {isCancel.toUpperCase()}
                 </Text>
 
             </View>
@@ -199,8 +199,10 @@ export default function RequestedRideDetails({ navigation, route }) {
 
                         <View style={{ width: '90%', marginTop: 0, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View> */}
                         <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginLeft: 10, marginTop: 20 }}>
+
                             <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} />
-                            <View style={{ justifyContent: 'center' }}>
+
+                            <View style={{ justifyContent: 'center' , width: '65%'}}>
 
                                 <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.name ?? "Sachin Gupta"}</Text>
                                 <View style={{ paddingLeft: 10, flexDirection: 'row', alignItems: 'center' }}>
@@ -208,7 +210,14 @@ export default function RequestedRideDetails({ navigation, route }) {
                                     <Text style={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{'4.5 rating'}</Text>
                                 </View>
                             </View>
+
+                            <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.user_id, 'id': item._id, 'cotravellerName': item.name })} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
+
+                                <Image source={require('../../assets/btnchat.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
+                            </Pressable>
                         </View>
+
+                        <View style={{ width: '100%', marginTop: 10, marginBottom: 5, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
 
                         <View style={{ flexDirection: 'row', width: '100%', marginTop: 0, justifyContent: 'center' }}>
 
@@ -255,8 +264,8 @@ export default function RequestedRideDetails({ navigation, route }) {
                             </View>
 
                         </View>
-                        <View style={{ width: '100%', marginTop: 10, marginBottom: 5, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
-                        <View style={{ justifyContent: 'flex-end', width: '95%', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}>
+                       
+                        {/* <View style={{ justifyContent: 'flex-end', width: '95%', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}> */}
                             {/* <View style={{ justifyContent: 'center', alignItems: 'flex-start', width: '55%' }}>
 
                                 <Pressable onPress={() => cancelAlert(item)} style={{ backgroundColor: AppColors.themeButtonRed, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
@@ -266,16 +275,16 @@ export default function RequestedRideDetails({ navigation, route }) {
 
 
                             </View> */}
-                            <Pressable onPress={() => Linking.openURL(`tel:${item?.contact}`)} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
+                            {/* <Pressable onPress={() => Linking.openURL(`tel:${item?.contact}`)} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
 
                                 <Image source={require('../../assets/btncall.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
-                            </Pressable>
-                            <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.user_id, 'id': item._id, 'cotravellerName': item.name })} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
+                            </Pressable> */}
+                            {/* <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.user_id, 'id': item._id, 'cotravellerName': item.name })} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
 
                                 <Image source={require('../../assets/btnchat.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
-                            </Pressable>
+                            </Pressable> */}
 
-                        </View>
+                        {/* </View> */}
 
 
                     </Surface>

@@ -6,6 +6,8 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AppKeys } from '../components/constants/AppKeys';
+import { showNotification } from '../components/notifications/LocalNotification';
 
 // Must be outside of any component LifeCycle (such as `componentDidMount`).
 
@@ -77,50 +79,57 @@ export const configureNotification = async () => {
 
   // Handle incoming notifications when app is in background
   messaging().onNotificationOpenedApp(async remoteMessage => {
-    console.log('Received background notification: ', remoteMessage);
+    // console.log('Received background notification: ', remoteMessage);
   });
 
   // Handle incoming notifications when app is closed
   messaging()
     .getInitialNotification()
     .then(async remoteMessage => {
-      console.log('Received closed app notification: ', remoteMessage);
+      // console.log('Received closed app notification: ', remoteMessage);
     });
 
   messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('Message handled in the background!', remoteMessage);
+    // console.log('Message handled in the background!', remoteMessage);
   });
 
   messaging().onMessage(async remoteMessage => {
-    console.log('ios', remoteMessage);
+    // console.log('ios', remoteMessage);
     if (!remoteMessage.notification) {
       return;
     }
-    Platform.OS == 'ios'
-      ? PushNotificationIOS.addNotificationRequest({
-          id: remoteMessage.messageId,
-          body: remoteMessage.notification.body,
-          title: remoteMessage.notification.title,
-          userInfo: remoteMessage.data,
-        })
-      : PushNotification.createChannel(
-          {
-            channelId: 'fcm_fallback_notification_channel', // (required)
-            channelName: 'My channel', // (required)
-            channelDescription: '',
-            soundName: 'default',
-            importance: 4,
-            vibrate: true,
-          },
-          created => console.log(`createChannel returned '${created}'`),
-        );
-    const dat = {
-      channelId: 'fcm_fallback_notification_channel', // (required)
-      channelName: 'My channel',
-      body: remoteMessage.notification.body, // (required)
-      title: remoteMessage.notification.title,
-    };
-    console.log('dat', dat);
-    PushNotification.localNotification(dat);
+    // Platform.OS == 'ios'
+    //   ? PushNotificationIOS.addNotificationRequest({
+    //       id: remoteMessage.messageId,
+    //       body: remoteMessage.notification.body,
+    //       title: remoteMessage.notification.title,
+    //       userInfo: remoteMessage.data,
+    //     })
+    //   : 
+      // PushNotification.createChannel(
+      //     {
+      //       channelId: AppKeys.LOCAL_NOTIFICATION_CHANNEL_ID, // (required)
+      //       channelName: AppKeys.LOCAL_NOTIFICATION_CHANNEL_NAME, // (required)
+      //       playSound: true, // (optional) default: true
+      //       soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+      //       importance: 4, // (optional) default: 4. Int value of the Android notification importance
+      //       vibrate: true,
+      //     },
+      //     created => console.log(`createChannel returned '${created}'`),
+      //   );
+    // const dat = {
+    //   channelId: AppKeys.LOCAL_NOTIFICATION_CHANNEL_ID, // Replace with your channel ID
+    //   channelName: AppKeys.LOCAL_NOTIFICATION_CHANNEL_NAME, // Replace with your channel name
+    //   body: remoteMessage.notification.body, // (required)
+    //   title: remoteMessage.notification.title,
+    // };
+    console.log('Received foreground notification: ', remoteMessage);
+    showNotification(
+      {
+          'title': remoteMessage.notification.title,
+          'message': remoteMessage.notification.body,
+      })
+    // console.log('dat', dat);
+    // PushNotification.localNotification(dat);
   });
 };
