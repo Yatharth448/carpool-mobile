@@ -5,7 +5,7 @@ import { Surface } from "react-native-paper";
 import { AppFontFamily } from "../constants/AppFonts";
 export const Header = ({ isBack = true, close, text = '', isRight= false, right , rightClick, count}) => {
 
-console.log(right, count, 'right')
+// console.log(right, count, 'right')
     return (
 
 

@@ -38,7 +38,9 @@ export default function OfferedRideDetails({ navigation, route }) {
                     setCotravellerArray(result.data?.cotravellerData)
                     setAcceptedData(result.data?.acceptedCotravellerData)
                     setIsLoading(true)
-                    console.log(result.data.acceptedCotravellerData, 'accepted cotraveller \n', result.data?.cotravellerData, 'cotraveller data \n', result.data.rideData, 'ride data', result.data)
+                    console.log(result.data.acceptedCotravellerData, '\naccepted cotraveller \n',
+                        result.data?.cotravellerData, '\ncotraveller data \n',
+                        result.data.rideData, '\nride data')
                 }
             })
         })();
@@ -59,14 +61,15 @@ export default function OfferedRideDetails({ navigation, route }) {
     const CustomerInfoView = ({ item }) => {
 
         return (
-            // <View style={{ width: Dimensions.get('screen').width, alignItems: 'center', justifyContent: 'center', paddingBottom: 10 }}>
-            <View style={{ width: '90%', marginTop: 5 }}>
+           
+                <View style={{ width: '90%', marginTop: 5 }}>
 
-                <Text style={{ marginTop: 10, fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
-                    {'Customer Info'}
-                </Text>
-            </View>
-            // </View>
+                    <Text style={{ marginTop: 10, fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
+                        {'Customer Info '}
+                    <Text style={{ fontFamily: AppFontFamily.PopinsMedium, fontSize: 13, color: AppColors.themeBlackColor }}>{'('+rideData[0].seat_left + ' out of ' + rideData[0].seat_available + ' seats available'+ ')'}</Text>
+                    </Text>
+                </View>
+              
         )
 
     }
@@ -91,13 +94,14 @@ export default function OfferedRideDetails({ navigation, route }) {
     const AcceptedRideView = ({ item, index }) => {
 
         // setActiveCard(index, 'current index')
-        console.log(item, 'item')
+        // console.log(item, 'item')
 
         return (
             <View style={{ width: Dimensions.get('screen').width, alignItems: 'center', justifyContent: 'center', paddingBottom: 10 }}>
 
                 <View style={{ width: '95%', alignItems: 'center', marginTop: 0, marginBottom: 10 }}>
                     <Surface elevation={4} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10, alignItems: 'center' }}>
+
                         <View style={{ width: '95%', marginTop: 10 }}>
                             <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsRegular, fontSize: 15, color: AppColors.themeBlackColor }}>{item.status}</Text>
                         </View>
@@ -207,7 +211,7 @@ export default function OfferedRideDetails({ navigation, route }) {
 
     const _acceptOfferedRide = async (item, ind) => {
         const result = await hitApiToAcceptOfferedRide(item.ride_id, item.user_id)
-        console.log(result, 'vvv')
+        // console.log(result, 'vvv')
         if (result.status) {
 
 
@@ -225,7 +229,7 @@ export default function OfferedRideDetails({ navigation, route }) {
 
     const _acceptRequestRide = async (item, ind) => {
         const result = await hitApiToAcceptRequestedRide(item._id, item.user_id, item.journey_published_by)
-        console.log(result, 'vvv')
+        // console.log(result, 'vvv')
         if (result.status) {
 
 
@@ -243,7 +247,7 @@ export default function OfferedRideDetails({ navigation, route }) {
 
     const _acceptRequestRide1 = async (item, ind) => {
         const result = await hitApiToAcceptRequestedRide(item._id, '', item.journey_published_by)
-        console.log(result, 'vvv')
+        // console.log(result, 'vvv')
         if (result.status) {
 
 
@@ -301,7 +305,7 @@ export default function OfferedRideDetails({ navigation, route }) {
 
     const CotravellerList = ({ cotravllerArray }) => {
 
-        console.log(cotravllerArray, 'len')
+        // console.log(cotravllerArray, 'len')
         return (
 
             <>
@@ -351,7 +355,7 @@ export default function OfferedRideDetails({ navigation, route }) {
 
         const result = await hitApiToCancelRideForDriver(item._id)
 
-        console.log(result, 'cancel result')
+        // console.log(result, 'cancel result')
         if (result.status) {
             Alert.alert('Ride cancelled successfully')
         }

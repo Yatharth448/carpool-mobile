@@ -16,6 +16,8 @@ export default function OTPScreen({ navigation, route }) {
   const [otp, setOtp] = React.useState("");
   const [newSecret, setNewSecter] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const [timer, setTimer] = React.useState(30);
+  const [isTimerRunning, setIsTimerRunning] = React.useState(false);
   console.log(route.params, 'route')
   const { email, secret } = route.params;
   // let { secret } = route.params;
@@ -23,9 +25,27 @@ export default function OTPScreen({ navigation, route }) {
   useEffect(() => {
 
 
+    
+    let interval;
+
+    if (isTimerRunning) {
+        interval = setInterval(() => {
+            if (timer > 0) {
+                setTimer(timer - 1);
+            } else {
+                setIsTimerRunning(false);
+                clearInterval(interval);
+            }
+        }, 1000);
+    }
     setNewSecter(secret)
+
+    return () => {
+        clearInterval(interval);
+    };
+
     // console.log(data, 'result')
-  }, []);
+  }, [isTimerRunning, timer]);
 
   const validateOTP = async (otp) => {
     setIsLoading(true)
@@ -64,8 +84,11 @@ export default function OTPScreen({ navigation, route }) {
 
   const resendOTP = async () => {
 
+    setIsLoading(true)
+        if (!isTimerRunning) {
     const result = await hitApiToResentOTP(email)
 
+    setTimer(30)
     console.log(result, 'resend otp result',)
     if (result) {
       // secret = result.secret
@@ -74,6 +97,8 @@ export default function OTPScreen({ navigation, route }) {
 
       Alert.alert('OTP resent successfully! Please check your email');
     }
+  }
+  setIsLoading(false)
 
   }
 
@@ -118,7 +143,10 @@ export default function OTPScreen({ navigation, route }) {
           <View style={{ width: '100%', alignItems: 'center', height: 50 }}>
             <TouchableOpacity onPress={() => resendOTP()} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
               <Text style={{ fontSize: 16, color: AppColors.themeTextGrayColor }}>{"Didn't receive code? "}
-                <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{' Resend Code'}</Text>
+              {isTimerRunning ?
+                            <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{` Resend in ${timer} seconds`}</Text>
+                            :
+                <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{' Resend Code'}</Text>}
               </Text>
             </TouchableOpacity>
           </View>

@@ -24,15 +24,14 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
     { screen: 'ActiveRideCarpooler', name: 'ACTIVE RIDE' },
     { screen: 'RideHistory', name: 'RIDE HISTORY' },
     { screen: 'MessageRoom', name: 'MESSAGES' },
-    { screen: 'Payment', name: 'PAYMENT' },
+    { screen: 'Wallet', name: 'PAYMENT' },
     { screen: 'Support', name: 'SUPPORT' },
     { screen: 'Signout', name: 'SIGN OUT' },
   ]);
   const [ind, setInd] = React.useState(0);
   const handleDrawerItemPress = (screenName, index) => {
     selectedInd(index);
-    if (screenName == 'Payment') {
-    } else if (screenName == 'FindRide') {
+    if (screenName == 'FindRide') {
       navigation.navigate(screenName, { from: 'reset' });
     } else if (screenName == 'Signout') {
       LogoutAlert();
@@ -44,9 +43,9 @@ const DrawerScreen = ({ data, getProfileDataRequest, navigation }) => {
   };
 
   useEffect(() => {
-    getProfileDataRequest();
+    // getProfileDataRequest();
 
-    console.log(data, 'result');
+    // console.log(data, 'result');
   }, []);
 
   const selectedInd = index => {

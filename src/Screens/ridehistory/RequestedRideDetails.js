@@ -51,7 +51,7 @@ export default function RequestedRideDetails({ navigation, route }) {
     const getRideDetail = async () => {
         const result = await hitApiToGetRequestedRideDetails(id)
 
-        console.log(result.data, 'status')
+        // console.log(result.data, 'status')
 
 
 
@@ -84,6 +84,7 @@ export default function RequestedRideDetails({ navigation, route }) {
     }
 
     const acceptRide = async (ind) => {
+        console.log(userData[0], 'userData')
         setAcceptLoader(true)
         const result = await hitApiToAcceptRequestedRide(userData[0].ride_id, userData[0].user_id, rideData[0].journey_published_by)
         // console.log(result, 'vvv')

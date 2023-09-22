@@ -34,6 +34,7 @@ import VerifyAadharOTP from '../../Screens/kyc/VerifyAadharOTP';
 import StartRideCarpooler from '../../Screens/startridecarpooler/StartRideCarpooler';
 import Notification from '../../Screens/notification/Notification';
 import AddGenderMobile from '../genderMobile/AddGenderMobile';
+import Wallet from '../../Screens/wallet/Wallet';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -113,6 +114,7 @@ export default function RootNav() {
         <Stack.Screen name="SearchLocation" component={SearchLocation} />
         <Stack.Screen name="AddGenderMobile" component={AddGenderMobile} />
         <Stack.Screen name="Notification" component={Notification} />
+        <Stack.Screen name="Wallet" component={Wallet} />
         <Stack.Screen
           name="RideDrawer"
           component={RideDrawer}

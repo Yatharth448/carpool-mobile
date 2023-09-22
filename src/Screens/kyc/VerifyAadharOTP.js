@@ -17,6 +17,8 @@ import CommonLoaders from '../../components/loader/Loader'
 
 export default function VerifyAadharOTP({ navigation, route }) {
     const [otp, setOtp] = React.useState("");
+    const [timer, setTimer] = React.useState(30);
+    const [isTimerRunning, setIsTimerRunning] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false)
     console.log(route.params, 'route')
     const { name, aadharNumber } = route.params;
@@ -24,10 +26,23 @@ export default function VerifyAadharOTP({ navigation, route }) {
 
     useEffect(() => {
 
-        // setNewSecter(secret)
+        let interval;
 
-        // console.log(data, 'result')
-    }, []);
+        if (isTimerRunning) {
+            interval = setInterval(() => {
+                if (timer > 0) {
+                    setTimer(timer - 1);
+                } else {
+                    setIsTimerRunning(false);
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, [isTimerRunning, timer]);
 
     const validateOTP = async (otp) => {
 
@@ -64,15 +79,18 @@ export default function VerifyAadharOTP({ navigation, route }) {
 
 
     const resendAadharOTP = async () => {
-
-        const result = await hitApiForVerifyAdhaarNumber(aadharNumber)
-
-        if (result.status) {
-
-            clientId = result.clientId
-            Toast.showWithGravity('OTP successfully sent to the number associated with your aadhar card', 2, Toast.TOP);
-            console.log(result, 'result')
+        setIsLoading(true)
+        if (!isTimerRunning) {
+            const result = await hitApiForVerifyAdhaarNumber(aadharNumber)
+setTimer(30)
+            setIsTimerRunning(true);
+            if (result.status) {
+                clientId = result.clientId
+                Toast.showWithGravity('OTP successfully sent to the number associated with your aadhar card', 2, Toast.TOP);
+                console.log(result, 'result')
+            }
         }
+        setIsLoading(false)
 
     }
 
@@ -172,10 +190,14 @@ export default function VerifyAadharOTP({ navigation, route }) {
             {/* </View> */}
 
 
-            <View style={{ width: '100%', alignItems: 'center', height: 50, position: 'absolute', bottom: 0 }}>
+            <View style={{ width: '100%', alignItems: 'center', height: 50, }}>
                 <TouchableOpacity onPress={() => resendAadharOTP()} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ fontSize: 16, color: AppColors.themeTextGrayColor }}>{"Didn't receive code? "}
-                        <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{' Resend Code'}</Text>
+                        {isTimerRunning ?
+                            <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{` Resend in ${timer} seconds`}</Text>
+                            :
+                            <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{' Resend OTP'}</Text>
+                        }
                     </Text>
                 </TouchableOpacity>
             </View>

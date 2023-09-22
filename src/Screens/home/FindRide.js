@@ -38,7 +38,7 @@ class FindRide extends Component {
         this.addCar = this.addCar.bind(this);
         this.recentSearchPress = this.recentSearchPress.bind(this);
         this.okPress = this.okPress.bind(this);
-        this.onOkPress = this.onOkPress.bind(this)
+        // this.onOkPress = this.onOkPress.bind(this)
         this.chooseAnother = this.chooseAnother.bind(this)
 
 
@@ -136,9 +136,9 @@ class FindRide extends Component {
 
             // if (this.props?.data?.kyc_status != 1)
             // {
-            this.props.getProfileDataRequest()
+               
             // }
-            console.log('loaded', this.props?.route.params)
+            // console.log('loaded', res)
             if (this.props.route.params?.from == 'reset') {
                 this.setState({ pickupLocation: '', dropLocation: '', selectedIndex: 0, selectedDate: 'Date and time of departure' })
             }
@@ -152,31 +152,25 @@ class FindRide extends Component {
 
             }
 
-            this.setState({ kycStatus: this.props?.data?.kyc_status })
-            const isKyc = this.props?.data?.kyc_status
 
 
-
-            // const res = await hitApiToGetProfile()
-            // console.log(this.props.data, 'redux profile', res, 'profile')
-
+            
+            this.props.getProfileDataRequest()
             await this.getRideNotificationData()
             await this.getSavedVehicles()
             await this.getRecentSearch()
-
-
+            
+            
         });
-
-        console.log('loaded')
-        //    await this.getRideNotificationData()
+       
 
 
 
     }
 
-    onOkPress() {
-        this.setState({ kycStatus: 1 })
-    }
+    // onOkPress() {
+    //     this.setState({ kycStatus: 1 })
+    // }
 
     async getSavedVehicles() {
 
@@ -549,7 +543,7 @@ class FindRide extends Component {
     }
 
 
-    KycNotification() {
+    KycNotification(kycStatus) {
 
         return (
             <View style={{
@@ -558,9 +552,9 @@ class FindRide extends Component {
             }}>
                 <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <View style={{ width: '80%', justifyContent: 'center', alignItems: 'flex-start' }}>
-                        <Text style={{ color: AppColors.themeBlackColor, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular }} onLayout={this.onTextLayout}>{this.state.kycStatus == 0 ? 'Your kyc is pending, Please update your kyc' : this.state.kycStatus == 2 ? 'Your kyc document is under review' : ''}</Text>
+                        <Text style={{ color: AppColors.themeBlackColor, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular }} onLayout={this.onTextLayout}>{kycStatus == 0 ? 'Your kyc is pending, Please update your kyc' : kycStatus == 2 ? 'Your kyc document is under review' : ''}</Text>
                     </View>
-                    {this.state.kycStatus == 0 ?
+                    {kycStatus == 0 ?
                         <View style={{ width: 53, justifyContent: 'center', alignItems: 'center' }}>
                             <ButtonPrimary
                                 style={{ height: 22 }}
@@ -577,10 +571,10 @@ class FindRide extends Component {
 
 
 
-    SearchOffer = (name, gender, image) => {
+    SearchOffer = (name, gender, image, kycStatus) => {
         return (
             <>
-                {this.props?.data?.kyc_status == 0 || this.props?.data?.kyc_status == 2 ?  this.KycNotification() : null}
+                {kycStatus == 0 || kycStatus == 2 ?  this.KycNotification(kycStatus) : null}
                 
                 {this.state.existingData?.status ? this.checkExistingRequest() : null }
                 <View style={{
@@ -759,7 +753,7 @@ class FindRide extends Component {
     }
 
 
-    HeaderView = ({ name, gender, count, image }) => {
+    HeaderView = ({ name, gender, count, image , kycStatus}) => {
         return (
             <>
                 <View style={{ height: this.state.isSearch == 'cancel' ? 300 : Dimensions.get('window').height * .65, width: '100%' }}>
@@ -776,7 +770,7 @@ class FindRide extends Component {
 
                 {
                     this.state.isSearch == 'cancel' ?
-                        this.SearchOffer(name, gender, image)
+                        this.SearchOffer(name, gender, image, kycStatus)
                         : this.state.isSearch == 'start' ?
                             <SearchLoaderScreen />
                             :
@@ -821,7 +815,7 @@ class FindRide extends Component {
                 < FlatList
                     data={['1']}
                     contentContainerStyle={{ width: Dimensions.get('window').width }}
-                    ListHeaderComponent={<this.HeaderView name={data?.name ?? ''} gender={data?.gender} count={data?.notification_count} image={data?.profilePath} />}
+                    ListHeaderComponent={<this.HeaderView name={data?.name ?? ''} gender={data?.gender} count={data?.notification_count} image={data?.profilePath} kycStatus={data?.kyc_status}/>}
                     keyExtractor={(item, index) => index}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (

@@ -9,7 +9,7 @@ import FastImage from 'react-native-fast-image'
 import { ImageLoader } from "../../components/imageloader/ImageLoader";
 export const AvtarView = ({ image, name, type }) => {
     const [loading, setLoading] = React.useState(false)
-    console.log(image, 'image')
+    // console.log(image, 'image')
 
     
 

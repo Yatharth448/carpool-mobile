@@ -32,7 +32,7 @@ const apiCaller = async (method, url, params = {}, headerOptions = {}) => {
             // options.onUploadProgress = onUploadProgress;
            
         }
-        console.log('header ', options.headers);
+        // console.log('header ', options.headers);
         if (authToken) {
 
             options.headers['authorization'] = "Bearer "+authToken

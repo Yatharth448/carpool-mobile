@@ -10,7 +10,7 @@ export const ImageLoader = ({ image, width, height, borderRadius, loaderColor=Ap
         ...{priority: FastImage.priority.high, cache: FastImage.cacheControl.immutable},
       };
       
-
+// console.log(Object.keys(image), 'image 6')
     return (
        
 
@@ -19,7 +19,7 @@ export const ImageLoader = ({ image, width, height, borderRadius, loaderColor=Ap
                 <FastImage
                     style={{ width: width, height: height }}
                     defaultSource={require('../../assets/avtar.png')}
-                    source={combinedObject}
+                    source={Object.keys(image ?? [])?.length == 0 ? image : combinedObject}
                     onLoadStart={(e) => setLoading(true)}
                     onLoadEnd={(e) => setLoading(false)}
                     resizeMode={FastImage.resizeMode.cover}

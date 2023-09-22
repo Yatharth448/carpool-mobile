@@ -67,7 +67,7 @@ export default function RequestedRides({ selectedRequest }) {
                                 <View style={{ justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
                                     <View style={{ width: '45%', alignItems: 'flex-start', justifyContent: 'center' }}>
 
-                                        <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(item.date).format('DD MMM YYYY, HH:mm')}</Text>
+                                        <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(item.journey_start_at).format('DD MMM YYYY, HH:mm')}</Text>
                                     </View>
                                     <View style={{ width: '55%', alignItems: 'flex-end', justifyContent: 'center' }}>
 
