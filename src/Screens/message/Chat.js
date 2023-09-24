@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, RefreshControl, Image, FlatList, Dimensions, TextInput, Pressable, StyleSheet, Linking, BackHandler, KeyboardAvoidingView } from 'react-native'
+import { View, Text, RefreshControl, Image, FlatList, Dimensions, TextInput, Pressable, StyleSheet, Linking, BackHandler, KeyboardAvoidingView, Platform } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader';
 import moment from 'moment';
@@ -124,24 +124,11 @@ export default class Chat extends Component {
 
         this.messageListener = messaging().onMessage(async remoteMessage => {
 
-            console.log("DEBUG: Received FCM message: " + JSON.stringify(remoteMessage));
-            const title = JSON.stringify(remoteMessage.notification.title)
-            const body = JSON.stringify(remoteMessage.notification.body)
-            //     const sentTime = JSON.stringify(remoteMessage.sentTime)
-            //     var oldTime;
 
-            // if (sentTime == oldTime)
-            // {
-            //     oldTime  = sentTime
-            showNotification(
-                {
-                    'title': title,
-                    'message': body,
-                })
 
             console.log('jwfdjwgfj')
             this.getAllMsg('push');
-            // }
+
 
         })
 
@@ -251,7 +238,7 @@ export default class Chat extends Component {
                     <View style={{ width: '100%', alignItems: 'flex-start' }}>
                         {/* {console.log(item)} */}
                         {/* <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: item.right ? AppColors.themesWhiteColor : AppColors.themeBlackColor }}>{(item.from_name)}</Text> */}
-                        <Text style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', marginTop: 0, fontSize: 15, color: AppColors.themeText2Color }}>{(item.message)}</Text>
+                        <Text style={{ fontFamily: AppFontFamily.PopinsRegular, marginTop: 0, fontSize: 15, color: AppColors.themeText2Color }}>{(item.message)}</Text>
 
                     </View>
 
@@ -315,14 +302,14 @@ export default class Chat extends Component {
             <Surface style={{ width: '100%', height: 60, flexDirection: 'row', alignItems: 'center' }}>
 
                 <View style={{ width: '82%', height: 40, justifyContent: 'center', alignItems: 'center', marginLeft: 10, borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 30, }}>
-                    {/* <Keybor style={{paddingBottom: 20}}> */}
-                        <TextInput
-                            onChangeText={text => this.setState({ text: text })}
-                            value={this.state.text}
-                            placeholder={"Enter message"}
-                            placeholderTextColor={AppColors.themeText2Color}
-                            style={{ paddingTop: 0, paddingBottom: 0, color: AppColors.themeBlackColor, paddingLeft: 10, paddingRight: 10, width: '100%', fontSize: 16, textAlign: 'left', height: 40 }}
-                        />
+
+                    <TextInput
+                        onChangeText={text => this.setState({ text: text })}
+                        value={this.state.text}
+                        placeholder={"Enter message"}
+                        placeholderTextColor={AppColors.themeText2Color}
+                        style={{ paddingTop: 0, paddingBottom: 0, color: AppColors.themeBlackColor, paddingLeft: 10, paddingRight: 10, width: '100%', fontSize: 16, textAlign: 'left', height: 40 }}
+                    />
                     {/* </KeyboardAvoidingView> */}
                 </View>
                 <Pressable onPress={() => this.sendMessage(this.state.text)} style={{ width: '15%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
@@ -339,36 +326,41 @@ export default class Chat extends Component {
 
 
         return (
-            <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
-                {this.TopHeader()}
+            // <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={10}>
+                <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
+                    {this.TopHeader()}
 
 
 
-                <View style={{ height: '88%' }}>
-                    <FlatList
-                        data={this.state.message}
-                        inverted
-                        ListHeaderComponent={this.footerView()}
-                        keyboardShouldPersistTaps
-                        automaticallyAdjustKeyboardInsets={true}
-                        keyExtractor={(item, index) => index}
-                        showsVerticalScrollIndicator={false}
-                        renderItem={({ item, index }) => (
-                            <View style={{ width: Dimensions.get('window').width, alignItems: 'center', padding: 10, paddingBottom: 0 }}>
-                                {item.right ? this.RightBubble(item) : this.LeftBubble(item)}
-                            </View>
-                        )}
+                    {/* <View style={{ height: '83%' }}> */}
+                        <FlatList
+                        // contentContainerStyle={{height: '100%'}}
+                            data={this.state.message}
+                            // inverted
+                            scrollEnabled
+                            style={{  transform: [{ scaleY: -1 }] }}
+                            // ListHeaderComponent={this.footerView()}
+                            // keyboardShouldPersistTaps
+                            automaticallyAdjustKeyboardInsets={true}
+                            keyExtractor={(item, index) => index}
+                            // showsVerticalScrollIndicator={false}
+                            renderItem={({ item, index }) => (
+                                <View style={{ width: Dimensions.get('window').width, alignItems: 'center', padding: 10, paddingBottom: 0, transform: [{ scaleY: -1 }] }}>
+                                    {item.right ? this.RightBubble(item) : this.LeftBubble(item)}
+                                </View>
+                            )}
 
-                    />
+                        />
+                    {/* </View> */}
+                    {this.footerView()}
+                    <CommonLoaders.ChatLoader isLoading={this.state.fetching} loaderText={'Loading... messages'} />
+
+
+
+
+
                 </View>
-
-                <CommonLoaders.ChatLoader isLoading={this.state.fetching} loaderText={'Loading... messages'} />
-
-
-
-
-
-            </View>
+            // </KeyboardAvoidingView>
         )
     }
 }
