@@ -8,6 +8,7 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
+  Linking,
 } from 'react-native';
 import {AppColors} from '../../components/constants/AppColor';
 import moment from 'moment';
