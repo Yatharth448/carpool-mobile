@@ -35,6 +35,7 @@ import StartRideCarpooler from '../../Screens/startridecarpooler/StartRideCarpoo
 import Notification from '../../Screens/notification/Notification';
 import AddGenderMobile from '../genderMobile/AddGenderMobile';
 import Wallet from '../../Screens/wallet/Wallet';
+import RideCotravaller from '../../Screens/ridecotravaller/RideCotravaller';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -46,12 +47,17 @@ function RideDrawer() {
       drawerContent={props => <DrawerScreen {...props} />}
       initialRouteName="FindRide"
       screenOptions={{headerShown: false, swipeEnabled: false}}>
-      <Drawer.Screen name="FindRide" component={FindRide} options={{swipeEnabled: false}}/>
+      <Drawer.Screen
+        name="FindRide"
+        component={FindRide}
+        options={{swipeEnabled: false}}
+      />
       <Drawer.Screen name="RideHistory" component={RideHistory} />
       <Drawer.Screen
-          name="ActiveRideCarpooler"
-          component={StartRideCarpooler}
-        />
+        name="ActiveRideCarpooler"
+        component={StartRideCarpooler}
+      />
+      <Drawer.Screen name="RideCotraveller" component={RideCotravaller} />
       <Drawer.Screen name="Payment" component={Payment} />
       <Drawer.Screen name="Wallet" component={Wallet} />
       {/* <Drawer.Screen name='MapRoutes' component={MapRoutes} />
@@ -115,7 +121,7 @@ export default function RootNav() {
         <Stack.Screen name="SearchLocation" component={SearchLocation} />
         <Stack.Screen name="AddGenderMobile" component={AddGenderMobile} />
         <Stack.Screen name="Notification" component={Notification} />
-        
+
         <Stack.Screen
           name="RideDrawer"
           component={RideDrawer}

@@ -52,6 +52,39 @@ const latitudeArrays = [
   [29.870355, 77.868219],
 ];
 
+function getRegionForCoordinates(points) {
+  // points should be an array of { latitude: X, longitude: Y }
+  let minX, maxX, minY, maxY;
+
+  // init first point
+  (point => {
+    minX = point.latitude;
+    maxX = point.latitude;
+    minY = point.longitude;
+    maxY = point.longitude;
+  })(points[0]);
+
+  // calculate rect
+  points.map(point => {
+    minX = Math.min(minX, point.latitude);
+    maxX = Math.max(maxX, point.latitude);
+    minY = Math.min(minY, point.longitude);
+    maxY = Math.max(maxY, point.longitude);
+  });
+
+  const midX = (minX + maxX) / 2;
+  const midY = (minY + maxY) / 2;
+  const deltaX = maxX - minX;
+  const deltaY = maxY - minY;
+
+  return {
+    latitude: midX,
+    longitude: midY,
+    latitudeDelta: deltaX,
+    longitudeDelta: deltaY,
+  };
+}
+
 export default function StartRideCarpooler({navigation, route}) {
   // let  path1 = [];
   const mapRef = React.useRef(null);
@@ -65,18 +98,15 @@ export default function StartRideCarpooler({navigation, route}) {
   const [openPrice, setOpenPrice] = React.useState(false);
   const [estimatedPrice, setEstimatedPrice] = React.useState('');
   const [journeyId, setJourneyId] = React.useState('');
-  let {width, height} = Dimensions.get('window');
-  let totalHeight = height / 1.75;
-  const ASPECT_RATIO = width / totalHeight;
-  const LATITUDE_DELTA = 0.003;
-  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+  const [LATITUDE_DELTA, setLATITUDE_DELTA] = React.useState(0.0922);
+  const [LONGITUDE_DELTA, setLONGITUDE_DELTA] = React.useState(0.0421);
   const [newLocation, setNewLocation] = useState(null);
   const [state, setState] = useState({
     curLoc: {
       latitude: null,
       longitude: null,
     },
-    curAng: 45,
+    curAng: 67.5,
     prevLoc: {
       latitude: null,
       longitude: null,
@@ -88,6 +118,7 @@ export default function StartRideCarpooler({navigation, route}) {
     destinationCords: {},
     isLoading: false,
   });
+
   // openPrice
   const fetchRideDetails = async () => {
     const result = await apigetRideDetails(id);
@@ -110,6 +141,19 @@ export default function StartRideCarpooler({navigation, route}) {
         ...result.ride,
         paths: path,
       });
+      if (result.ride.status == 'running') {
+        let {width, height} = Dimensions.get('window');
+        let totalHeight = height / 1.75;
+        const ASPECT_RATIO = width / totalHeight;
+        const LATITUDE_DELTA1 = 0.001;
+        const LONGITUDE_DELTA1 = LATITUDE_DELTA1 * ASPECT_RATIO;
+        setLATITUDE_DELTA(LATITUDE_DELTA1);
+        setLONGITUDE_DELTA(LONGITUDE_DELTA1);
+      } else {
+        let initialRegion1 = getRegionForCoordinates(path);
+        setLATITUDE_DELTA(initialRegion1.latitudeDelta);
+        setLONGITUDE_DELTA(initialRegion1.longitudeDelta);
+      }
       if (result.ride.status == 'running' && result.ride.current_lat) {
         let tempState = JSON.parse(JSON.stringify(state));
         setState({
@@ -178,7 +222,7 @@ export default function StartRideCarpooler({navigation, route}) {
       mapRef.current.animateCamera({
         heading: curRot,
         center: curLoc,
-        pitch: 75,
+        pitch: 90,
       });
     }
   };
@@ -356,7 +400,7 @@ export default function StartRideCarpooler({navigation, route}) {
               ref={markerRef}
               coordinate={state.curLoc}>
               <Image
-                source={require('../../assets/map_marker.png')}
+                source={require('../../assets/car_top.png')}
                 style={{width: 30, height: 33}}
                 resizeMode="contain"
               />
