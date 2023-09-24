@@ -64,7 +64,7 @@ export default function RequestedRideDetails({ navigation, route }) {
             setUserData(result.data.userData)
             setIsLoading(true)
 
-            // console.log(result.data)
+             console.log(result.data, 'data')
         }
     }
 

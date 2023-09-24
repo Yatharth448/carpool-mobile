@@ -227,9 +227,9 @@ export default function LoginScreen({ navigation }) {
                 <View style={{ width: '100%', marginTop: 40 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
 
-                        <View style={{ width: '25%', height: 2, backgroundColor: AppColors.themePrimaryColor }} />
+                        <View style={{ width: '22%', height: 2, backgroundColor: AppColors.themePrimaryColor }} />
                         <Text style={{ color: AppColors.themePrimaryColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'   or continue with   '}</Text>
-                        <View style={{ width: '25%', height: 2, backgroundColor: AppColors.themePrimaryColor }} />
+                        <View style={{ width: '22%', height: 2, backgroundColor: AppColors.themePrimaryColor }} />
 
                     </View>
                 </View>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, RefreshControl, Image, FlatList, Dimensions, TextInput, Pressable, StyleSheet, Linking, BackHandler } from 'react-native'
+import { View, Text, RefreshControl, Image, FlatList, Dimensions, TextInput, Pressable, StyleSheet, Linking, BackHandler, KeyboardAvoidingView } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader';
 import moment from 'moment';
@@ -21,6 +21,7 @@ export default class Chat extends Component {
             message: [],
             text: '',
             fetching: false,
+            id: ''
 
 
         }
@@ -101,17 +102,34 @@ export default class Chat extends Component {
     }
     async componentDidMount() {
 
+
+        this.setState({ id: this.props.route.params?.id })
+
+        if (this.props.route.params?.from == 'chat') {
+            const result = await hitApiToChackeChatExist(this.props.route.params?.coTravellerId)
+            console.log(result)
+            if (result?.data) {
+                this.setState({ id: result.data._id })
+
+
+                await this.getAllMsg('')
+            }
+
+        }
+
+
+
         await this.getAllMsg('push');
 
 
         this.messageListener = messaging().onMessage(async remoteMessage => {
 
-                console.log("DEBUG: Received FCM message: " + JSON.stringify(remoteMessage));
-                const title = JSON.stringify(remoteMessage.notification.title)
-                const body = JSON.stringify(remoteMessage.notification.body)
+            console.log("DEBUG: Received FCM message: " + JSON.stringify(remoteMessage));
+            const title = JSON.stringify(remoteMessage.notification.title)
+            const body = JSON.stringify(remoteMessage.notification.body)
             //     const sentTime = JSON.stringify(remoteMessage.sentTime)
             //     var oldTime;
-        
+
             // if (sentTime == oldTime)
             // {
             //     oldTime  = sentTime
@@ -120,7 +138,7 @@ export default class Chat extends Component {
                     'title': title,
                     'message': body,
                 })
-        
+
             console.log('jwfdjwgfj')
             this.getAllMsg('push');
             // }
@@ -155,7 +173,7 @@ export default class Chat extends Component {
             this.setState({ fetching: true })
         }
 
-        const result = await hitApiToMessageForParticularUser(this.props.route.params?.id);
+        const result = await hitApiToMessageForParticularUser(this.state.id);
         console.log("ride list", result);
         if (result.status) {
 
@@ -225,11 +243,11 @@ export default class Chat extends Component {
     }
 
 
-    LeftBubble({ item }) {
+    LeftBubble(item) {
         return (
             <View style={{ width: '98%', alignItems: 'flex-start', paddingBottom: 0 }}>
 
-                <View style={{ justifyContent: 'center', padding: 10, backgroundColor: AppColors.themesWhiteColor, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, borderTopRightRadius: 10 }}>
+                <View style={{ maxWidth: '80%', alignItems: 'flex-start', justifyContent: 'center', padding: 10, backgroundColor: AppColors.themesWhiteColor, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, borderTopRightRadius: 10 }}>
                     <View style={{ width: '100%', alignItems: 'flex-start' }}>
                         {/* {console.log(item)} */}
                         {/* <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: item.right ? AppColors.themesWhiteColor : AppColors.themeBlackColor }}>{(item.from_name)}</Text> */}
@@ -258,15 +276,14 @@ export default class Chat extends Component {
         )
     }
 
-    RightBubble({ item }) {
+    RightBubble(item) {
         return (
             <View style={{ width: '98%', alignItems: 'flex-end', paddingBottom: 0 }}>
 
-                <View style={{ justifyContent: 'center', padding: 10, backgroundColor: AppColors.themePrimaryColor, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, borderTopLeftRadius: 10 }}>
-                    <View style={{ width: '100%', alignItems: 'flex-end' }}>
-                        {/* {console.log(item)} */}
-                        {/* <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: item.right ? AppColors.themesWhiteColor : AppColors.themeBlackColor }}>{(item.from_name)}</Text> */}
-                        <Text style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', marginTop: 0, fontSize: 15, color: AppColors.themesWhiteColor }}>{(item.message)}</Text>
+                <View style={{ maxWidth: '80%', alignItems: 'flex-end', justifyContent: 'center', padding: 10, backgroundColor: AppColors.themePrimaryColor, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, borderTopLeftRadius: 10 }}>
+                    <View style={{ width: '100%', alignItems: 'center' }}>
+
+                        <Text style={{ fontFamily: AppFontFamily.PopinsRegular, marginTop: 0, fontSize: 15, color: AppColors.themesWhiteColor }}>{(item.message)}</Text>
 
                     </View>
 
@@ -291,6 +308,33 @@ export default class Chat extends Component {
         )
     }
 
+    footerView() {
+        return (
+
+
+            <Surface style={{ width: '100%', height: 60, flexDirection: 'row', alignItems: 'center' }}>
+
+                <View style={{ width: '82%', height: 40, justifyContent: 'center', alignItems: 'center', marginLeft: 10, borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 30, }}>
+                    {/* <Keybor style={{paddingBottom: 20}}> */}
+                        <TextInput
+                            onChangeText={text => this.setState({ text: text })}
+                            value={this.state.text}
+                            placeholder={"Enter message"}
+                            placeholderTextColor={AppColors.themeText2Color}
+                            style={{ paddingTop: 0, paddingBottom: 0, color: AppColors.themeBlackColor, paddingLeft: 10, paddingRight: 10, width: '100%', fontSize: 16, textAlign: 'left', height: 40 }}
+                        />
+                    {/* </KeyboardAvoidingView> */}
+                </View>
+                <Pressable onPress={() => this.sendMessage(this.state.text)} style={{ width: '15%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 20, backgroundColor: AppColors.themePrimaryColor }}>
+                        <Image source={require('../../assets/sendmsg.png')} style={{ tintColor: AppColors.themesWhiteColor, width: 20, height: 20, resizeMode: 'contain' }} />
+                    </View>
+                </Pressable>
+
+            </Surface>
+        )
+    }
+
     render() {
 
 
@@ -300,29 +344,18 @@ export default class Chat extends Component {
 
 
 
-                <View style={{ height: '80%' }}>
+                <View style={{ height: '88%' }}>
                     <FlatList
                         data={this.state.message}
-                        // refreshControl={
-                        //     <RefreshControl
-                        //         onRefresh={async () => await getAllMsg('get')}
-                        //         refreshing={fetching}
-                        //         title={'Loding...'}
-                        //         tintColor={AppColors.themeBlackColor}
-                        //         titleColor={AppColors.themeBlackColor}
-                        //     />
-                        // }
-                        // initialScrollIndex={message?.messages?.length ? message.messages.length - 1 : 7}
-                        // ref={listViewRef}
                         inverted
+                        ListHeaderComponent={this.footerView()}
+                        keyboardShouldPersistTaps
+                        automaticallyAdjustKeyboardInsets={true}
                         keyExtractor={(item, index) => index}
-                        // ListHeaderComponent={this.headerView()}
                         showsVerticalScrollIndicator={false}
-                        // extraData={this.state}
-                        // onEndReached={() => this.getCartList()}
                         renderItem={({ item, index }) => (
                             <View style={{ width: Dimensions.get('window').width, alignItems: 'center', padding: 10, paddingBottom: 0 }}>
-                                {item.right ? <this.RightBubble item={item} /> : <this.LeftBubble item={item} />}
+                                {item.right ? this.RightBubble(item) : this.LeftBubble(item)}
                             </View>
                         )}
 
@@ -333,27 +366,7 @@ export default class Chat extends Component {
 
 
 
-                <Surface style={{ width: '100%', height: 60, flexDirection: 'row', alignItems: 'center' }}>
 
-                    {/* <View style={{ width: '10%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={require('../../assets/add.png')} style={{ borderColor: AppColors.themeCardBorderColor, width: 30, height: 30, resizeMode: 'contain' }} />
-                </View> */}
-                    <View style={{ width: '85%', height: 60, justifyContent: 'center', alignItems: 'center', paddingLeft: 10 }}>
-                        <TextInput
-                            onChangeText={text => this.setState({ text: text })}
-                            value={this.state.text}
-                            placeholder={"Enter message"}
-                            placeholderTextColor={AppColors.themeText2Color}
-                            style={{ color: AppColors.themeBlackColor, padding: 10, width: '100%', fontSize: 16, textAlign: 'left', borderColor: AppColors.themeCardBorderColor, borderWidth: 1, borderRadius: 30, height: 40 }}
-                        />
-                    </View>
-                    <Pressable onPress={() => this.sendMessage(this.state.text)} style={{ width: '15%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
-                        <View style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 20, backgroundColor: AppColors.themePrimaryColor }}>
-                            <Image source={require('../../assets/sendmsg.png')} style={{ tintColor: AppColors.themesWhiteColor, width: 20, height: 20, resizeMode: 'contain' }} />
-                        </View>
-                    </Pressable>
-
-                </Surface>
 
             </View>
         )

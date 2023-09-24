@@ -65,7 +65,7 @@ export default function OfferedRideDetails({ navigation, route }) {
                 <View style={{ width: '90%', marginTop: 5 }}>
 
                     <Text style={{ marginTop: 10, fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
-                        {'Customer Info '}
+                        {'Co-travellers '}
                     <Text style={{ fontFamily: AppFontFamily.PopinsMedium, fontSize: 13, color: AppColors.themeBlackColor }}>{'('+rideData[0].seat_left + ' out of ' + rideData[0].seat_available + ' seats available'+ ')'}</Text>
                     </Text>
                 </View>
