@@ -50,6 +50,7 @@
     "react-native-gesture-handler": "^2.12.0",
     "react-native-google-places-autocomplete": "^2.5.1",
     "react-native-image-crop-picker": "^0.38.0",
+    "react-native-keep-awake": "^4.0.0",
     "react-native-keyboard-manager": "^6.5.4-4",
     "react-native-linear-gradient": "^2.8.2",
     "react-native-maps": "^1.7.1",

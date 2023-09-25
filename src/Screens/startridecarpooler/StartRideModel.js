@@ -49,6 +49,43 @@ export const apiUpdateLocation = async (ride_id, lat, lng) => {
   }
 };
 
+export const apiUpdateLocationStatus = async (ride_id, status, error) => {
+  try {
+    const result = await connection.postAPI('/api/ride/updatelocationstatus', {
+      ride_id: ride_id,
+      status: status,
+      error: error,
+    });
+    console.log('Location status update ', ride_id, status, error);
+    if (result.status) {
+      return result;
+    } else {
+      return result;
+    }
+  } catch (error) {
+    console.error('login modal', error);
+    throw error;
+  }
+};
+
+export const apiUpdateRideWatch = async (ride_id, watch_id) => {
+  try {
+    const result = await connection.postAPI('/api/ride/updateridewatch', {
+      ride_id: ride_id,
+      watch_id: watch_id,
+    });
+    console.log('Ride watch updated ', ride_id, watch_id);
+    if (result.status) {
+      return result;
+    } else {
+      return result;
+    }
+  } catch (error) {
+    console.error('login modal', error);
+    throw error;
+  }
+};
+
 export const apiEndRide = async ride_id => {
   try {
     const result = await connection.postAPI('/api/ride/closeride', {

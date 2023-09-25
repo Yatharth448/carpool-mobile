@@ -14,6 +14,7 @@ import {AppColors} from '../../components/constants/AppColor';
 import moment from 'moment';
 import {Header} from '../../components/commomheader/CommonHeader';
 import messaging from '@react-native-firebase/messaging';
+import KeepAwake from 'react-native-keep-awake';
 
 import Toast from 'react-native-simple-toast';
 import MapView, {Polyline, Marker} from 'react-native-maps';
@@ -96,6 +97,11 @@ export default function RideCotravaller({navigation, route}) {
         ...result.ride,
         paths: path,
       });
+      if (result.ride.status == 'running') {
+        KeepAwake.activate();
+      } else {
+        KeepAwake.deactivate();
+      }
       if (result.ride.status == 'running' && result.ride.current_lat) {
         let tempState = JSON.parse(JSON.stringify(state));
         setState({
@@ -195,12 +201,17 @@ export default function RideCotravaller({navigation, route}) {
   const listenToMessage = () => {
     messaging().onMessage(async remoteMessage => {
       console.log('location received ', remoteMessage);
-      if (remoteMessage.data) {
+      if (remoteMessage.data && remoteMessage.data.type == 'location') {
         const {lat, long} = remoteMessage.data;
         setNewLocation({
           latitude: parseFloat(lat),
           longitude: parseFloat(long),
         });
+      } else if (
+        remoteMessage.data &&
+        remoteMessage.data.type == 'ride_completed'
+      ) {
+        await fetchRideDetails();
       }
     });
   };

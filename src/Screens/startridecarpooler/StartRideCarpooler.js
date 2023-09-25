@@ -20,10 +20,13 @@ import MapView, {Polyline, Marker} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import {PriceSelection} from '../../components/priceselection/PriceSelection';
 import {AppFontFamily} from '../../components/constants/AppFonts';
+import KeepAwake from 'react-native-keep-awake';
 import {
   apiEndRide,
   apiStartRide,
   apiUpdateLocation,
+  apiUpdateLocationStatus,
+  apiUpdateRideWatch,
   apigetRideDetails,
 } from './StartRideModel';
 import {ButtonPrimary} from '../../components/button/buttonPrimary';
@@ -142,14 +145,21 @@ export default function StartRideCarpooler({navigation, route}) {
         paths: path,
       });
       if (result.ride.status == 'running') {
+        if (result.ride.watch_id == null || result.ride.watch_id == undefined) {
+          Geolocation.stopObserving();
+          let watchId = startLocationWatch();
+          await apiUpdateRideWatch(id, watchId);
+        }
+        KeepAwake.activate();
         let {width, height} = Dimensions.get('window');
         let totalHeight = height / 1.75;
         const ASPECT_RATIO = width / totalHeight;
-        const LATITUDE_DELTA1 = 0.001;
+        const LATITUDE_DELTA1 = 0.0005;
         const LONGITUDE_DELTA1 = LATITUDE_DELTA1 * ASPECT_RATIO;
         setLATITUDE_DELTA(LATITUDE_DELTA1);
         setLONGITUDE_DELTA(LONGITUDE_DELTA1);
       } else {
+        KeepAwake.deactivate();
         let initialRegion1 = getRegionForCoordinates(path);
         setLATITUDE_DELTA(initialRegion1.latitudeDelta);
         setLONGITUDE_DELTA(initialRegion1.longitudeDelta);
@@ -273,6 +283,28 @@ export default function StartRideCarpooler({navigation, route}) {
     };
   }, []);
 
+  const startLocationWatch = () => {
+    checkLocationPermission();
+    let watchId = Geolocation.watchPosition(
+      data => {
+        console.log('Sucess ', data);
+        apiUpdateLocation(id, data.coords.latitude, data.coords.longitude);
+      },
+      error => {
+        console.log('Error GeoLocation', error);
+        apiUpdateLocationStatus(id, 'error', JSON.stringify(error.message));
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        fastestInterval: 3000,
+        interval: 5000,
+        distanceFilter: 5,
+      },
+    );
+    return watchId;
+  };
+
   const saveRide = async () => {
     if (
       routeData.status &&
@@ -285,23 +317,7 @@ export default function StartRideCarpooler({navigation, route}) {
       );
       return;
     }
-    checkLocationPermission();
-    let watchId = Geolocation.watchPosition(
-      data => {
-        console.log('Sucess ', data);
-        apiUpdateLocation(id, data.coords.latitude, data.coords.longitude);
-      },
-      error => {
-        console.log('Error ', error);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        fastestInterval: 3000,
-        interval: 5000,
-        distanceFilter: 5,
-      },
-    );
+    let watchId = startLocationWatch();
     const result = await apiStartRide(id, watchId);
     console.log(result);
     if (result.status) {
@@ -318,7 +334,7 @@ export default function StartRideCarpooler({navigation, route}) {
 
   const endride = async () => {
     console.log(' end ride', routeData.watch_id);
-
+    KeepAwake.deactivate();
     // var i = 0;
     // var timer = setInterval(function () {
     //   let currentLat = latitudeArrays[i][0];
