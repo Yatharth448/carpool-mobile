@@ -145,11 +145,13 @@ export default function StartRideCarpooler({navigation, route}) {
         paths: path,
       });
       if (result.ride.status == 'running') {
-        if (result.ride.watch_id == null || result.ride.watch_id == undefined) {
-          Geolocation.stopObserving();
-          let watchId = startLocationWatch();
-          await apiUpdateRideWatch(id, watchId);
+        if (result.ride.watch_id != null || result.ride.watch_id != undefined) {
+          Geolocation.clearWatch(result.ride.watch_id);
         }
+        Geolocation.stopObserving();
+        let watchId = startLocationWatch();
+        await apiUpdateRideWatch(id, watchId);
+
         KeepAwake.activate();
         let {width, height} = Dimensions.get('window');
         let totalHeight = height / 1.75;
