@@ -38,7 +38,7 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
     } else if (screenName == 'Signout') {
       LogoutAlert();
     } else if (screenName == 'RideCotraveller') {
-      navigation.navigate(screenName, {id: '650b130805766d844025e23a'});
+      navigation.navigate(screenName, {id: '65104eb1ec47fad3b733a8ca'});
     } else {
       navigation.navigate(screenName);
     }

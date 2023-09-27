@@ -20,10 +20,14 @@ import Toast from 'react-native-simple-toast';
 import MapView, {Polyline, Marker} from 'react-native-maps';
 import {PriceSelection} from '../../components/priceselection/PriceSelection';
 import {AppFontFamily} from '../../components/constants/AppFonts';
-import {apigetRideDetails} from './RideCotravallerModel';
+import {
+  apiUpdateRideRunningStatus,
+  apigetRideDetails,
+} from './RideCotravallerModel';
 import {ButtonPrimary} from '../../components/button/buttonPrimary';
 import MapComponent from '../../components/map/MapComponent';
 import {Surface} from 'react-native-paper';
+import Switch from '../../Utils/Switch';
 
 const latitudeArrays = [
   [29.87149, 77.866261],
@@ -47,6 +51,7 @@ export default function RideCotravaller({navigation, route}) {
   const markerRef = useRef(null);
   const {id} = route.params;
   const [routeData, setRouteData] = useState(null);
+  const [insideRide, setInsideRide] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
   const [chatId, setChatId] = useState(null);
   let {width, height} = Dimensions.get('window');
@@ -93,15 +98,21 @@ export default function RideCotravaller({navigation, route}) {
       if (result.chatId) {
         setChatId(result.chatId);
       }
+      if (result.active_ride && result.active_ride.inside_ride) {
+        setInsideRide(true);
+      } else {
+        setInsideRide(false);
+      }
       setRouteData({
         ...result.ride,
         paths: path,
       });
-      if (result.ride.status == 'running') {
-        KeepAwake.activate();
-      } else {
-        KeepAwake.deactivate();
-      }
+      if (result)
+        if (result.ride.status == 'running') {
+          KeepAwake.activate();
+        } else {
+          KeepAwake.deactivate();
+        }
       if (result.ride.status == 'running' && result.ride.current_lat) {
         let tempState = JSON.parse(JSON.stringify(state));
         setState({
@@ -172,6 +183,21 @@ export default function RideCotravaller({navigation, route}) {
         center: curLoc,
         pitch: 90,
       });
+    }
+  };
+
+  const onChange = async () => {
+    if (insideRide) {
+      // handle issue raise
+    } else {
+      setInsideRide(true);
+      let result = await apiUpdateRideRunningStatus(id, true, null);
+      if (result.status) {
+        Toast.showWithGravity('You have boarded the ride', 2, Toast.TOP);
+      } else {
+        setInsideRide(false);
+        Toast.showWithGravity(result.message, 2, Toast.TOP);
+      }
     }
   };
 
@@ -530,7 +556,7 @@ export default function RideCotravaller({navigation, route}) {
                 flexDirection: 'row',
                 alignItems: 'center',
                 borderWidth: 1,
-                marginTop: 10,
+                marginTop: 20,
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 borderColor: AppColors.themeSeperatorColor,
@@ -678,6 +704,57 @@ export default function RideCotravaller({navigation, route}) {
           ) : (
             ''
           )}
+
+          <View
+            style={{
+              width: '90%',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              marginTop: 10,
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: 5,
+              borderColor: AppColors.themeSeperatorColor,
+            }}>
+            <Text
+              style={{
+                fontFamily: 'Poppins-Bold',
+              }}>
+              <Image
+                source={require('../../assets/carseat.png')}
+                style={{height: 28, resizeMode: 'contain'}}
+              />
+              INSIDE THIS RIDE
+            </Text>
+            <Switch
+              barHeight={30}
+              switchWidth={50}
+              switchHeight={20}
+              value={insideRide}
+              onValueChange={onChange}
+              disabled={false}
+              backgroundActive={'#0095ff'}
+              backgroundInactive={'#d1d1d1'}
+              circleActiveColor={'white'}
+              circleInActiveColor={'white'}
+              // renderInsideCircle={() => <CustomComponent />} // custom component to render inside the Switch circle (Text, Image, etc.)
+              changeValueImmediately={true} // if rendering inside circle, change state immediately or wait for animation to complete
+              innerCircleStyle={{
+                borderWidth: 0,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }} // style for inner animated circle for what you (may) be rendering inside the circle
+              outerCircleStyle={{}} // style for outer animated circle
+              renderActiveText={false}
+              renderInActiveText={false}
+              switchLeftPx={3} // denominator for logic when sliding to TRUE position. Higher number = more space from RIGHT of the circle to END of the slider
+              switchRightPx={3} // denominator for logic when sliding to FALSE position. Higher number = more space from LEFT of the circle to BEGINNING of the slider
+              switchWidthMultiplier={2} // multiplied by the `circleSize` prop to calculate total width of the Switch
+              switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
+            />
+          </View>
 
           {userDetails ? (
             <View
