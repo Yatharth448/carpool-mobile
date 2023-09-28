@@ -28,6 +28,7 @@ import {ButtonPrimary} from '../../components/button/buttonPrimary';
 import MapComponent from '../../components/map/MapComponent';
 import {Surface} from 'react-native-paper';
 import Switch from '../../Utils/Switch';
+import {RaiseIssueModal} from '../../components/popupComponents/RaiseIssueModal';
 
 const latitudeArrays = [
   [29.87149, 77.866261],
@@ -50,6 +51,7 @@ export default function RideCotravaller({navigation, route}) {
   const mapRef = React.useRef(null);
   const markerRef = useRef(null);
   const {id} = route.params;
+  const [raiseIssueModal, setRaiseIssueModa] = useState(null);
   const [routeData, setRouteData] = useState(null);
   const [insideRide, setInsideRide] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
@@ -188,7 +190,7 @@ export default function RideCotravaller({navigation, route}) {
 
   const onChange = async () => {
     if (insideRide) {
-      // handle issue raise
+      setRaiseIssueModa(true);
     } else {
       setInsideRide(true);
       let result = await apiUpdateRideRunningStatus(id, true, null);
@@ -198,6 +200,26 @@ export default function RideCotravaller({navigation, route}) {
         setInsideRide(false);
         Toast.showWithGravity(result.message, 2, Toast.TOP);
       }
+    }
+  };
+
+  const onIssue = async message => {
+    if (!message) {
+      Toast.showWithGravity(
+        'Please enter information about issue',
+        2,
+        Toast.TOP,
+      );
+      return;
+    }
+    let result = await apiUpdateRideRunningStatus(id, false, message);
+    if (result.status) {
+      Toast.showWithGravity('Issue is submitted', 2, Toast.TOP);
+      setInsideRide(false);
+      setRaiseIssueModa(false);
+    } else {
+      setRaiseIssueModa(false);
+      Toast.showWithGravity(result.message, 2, Toast.TOP);
     }
   };
 
@@ -402,7 +424,6 @@ export default function RideCotravaller({navigation, route}) {
           style={{
             marginTop: -20,
             width: Dimensions.get('window').width,
-            height: Dimensions.get('window').height / 1.25,
             backgroundColor: AppColors.themesWhiteColor,
             borderTopRightRadius: 20,
             borderTopLeftRadius: 20,
@@ -705,58 +726,62 @@ export default function RideCotravaller({navigation, route}) {
             ''
           )}
 
-          <View
-            style={{
-              width: '90%',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              marginTop: 10,
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: 5,
-              borderColor: AppColors.themeSeperatorColor,
-            }}>
-            <Text
+          {routeData && routeData.status == 'running' ? (
+            <View
               style={{
-                fontFamily: 'Poppins-Bold',
-              }}>
-              <Image
-                source={require('../../assets/carseat.png')}
-                style={{height: 28, resizeMode: 'contain'}}
-              />
-              INSIDE THIS RIDE
-            </Text>
-            <Switch
-              barHeight={30}
-              switchWidth={50}
-              switchHeight={20}
-              value={insideRide}
-              onValueChange={onChange}
-              disabled={false}
-              backgroundActive={'#0095ff'}
-              backgroundInactive={'#d1d1d1'}
-              circleActiveColor={'white'}
-              circleInActiveColor={'white'}
-              // renderInsideCircle={() => <CustomComponent />} // custom component to render inside the Switch circle (Text, Image, etc.)
-              changeValueImmediately={true} // if rendering inside circle, change state immediately or wait for animation to complete
-              innerCircleStyle={{
-                borderWidth: 0,
+                width: '90%',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                marginTop: 10,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
                 alignItems: 'center',
-                justifyContent: 'center',
-              }} // style for inner animated circle for what you (may) be rendering inside the circle
-              outerCircleStyle={{}} // style for outer animated circle
-              renderActiveText={false}
-              renderInActiveText={false}
-              switchLeftPx={3} // denominator for logic when sliding to TRUE position. Higher number = more space from RIGHT of the circle to END of the slider
-              switchRightPx={3} // denominator for logic when sliding to FALSE position. Higher number = more space from LEFT of the circle to BEGINNING of the slider
-              switchWidthMultiplier={2} // multiplied by the `circleSize` prop to calculate total width of the Switch
-              switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
-            />
-          </View>
+                padding: 5,
+                borderColor: AppColors.themeSeperatorColor,
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Bold',
+                }}>
+                <Image
+                  source={require('../../assets/carseat.png')}
+                  style={{height: 28, resizeMode: 'contain'}}
+                />
+                INSIDE THIS RIDE
+              </Text>
+              <Switch
+                barHeight={30}
+                switchWidth={50}
+                switchHeight={20}
+                value={insideRide}
+                onValueChange={onChange}
+                disabled={false}
+                backgroundActive={'#0095ff'}
+                backgroundInactive={'#d1d1d1'}
+                circleActiveColor={'white'}
+                circleInActiveColor={'white'}
+                // renderInsideCircle={() => <CustomComponent />} // custom component to render inside the Switch circle (Text, Image, etc.)
+                changeValueImmediately={true} // if rendering inside circle, change state immediately or wait for animation to complete
+                innerCircleStyle={{
+                  borderWidth: 0,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }} // style for inner animated circle for what you (may) be rendering inside the circle
+                outerCircleStyle={{}} // style for outer animated circle
+                renderActiveText={false}
+                renderInActiveText={false}
+                switchLeftPx={3} // denominator for logic when sliding to TRUE position. Higher number = more space from RIGHT of the circle to END of the slider
+                switchRightPx={3} // denominator for logic when sliding to FALSE position. Higher number = more space from LEFT of the circle to BEGINNING of the slider
+                switchWidthMultiplier={2} // multiplied by the `circleSize` prop to calculate total width of the Switch
+                switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
+              />
+            </View>
+          ) : (
+            ''
+          )}
 
-          {userDetails ? (
+          {userDetails && routeData && routeData.status == 'running' ? (
             <View
               style={{
                 justifyContent: 'space-around',
@@ -835,6 +860,7 @@ export default function RideCotravaller({navigation, route}) {
               <Pressable
                 onPress={() => {
                   // code for issue modal
+                  setRaiseIssueModa(true);
                 }}
                 style={{
                   justifyContent: 'center',
@@ -865,6 +891,13 @@ export default function RideCotravaller({navigation, route}) {
           ) : (
             ''
           )}
+          <RaiseIssueModal
+            onSubmit={text => {
+              onIssue(text);
+            }}
+            visible={raiseIssueModal}
+            onClose={setRaiseIssueModa}
+          />
           {routeData && routeData.status == 'completed' ? (
             <View
               style={{
@@ -872,6 +905,7 @@ export default function RideCotravaller({navigation, route}) {
                 display: 'flex',
                 alignItems: 'center',
                 borderRadius: 5,
+                marginTop: 10,
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
@@ -894,7 +928,7 @@ export default function RideCotravaller({navigation, route}) {
           ) : (
             ''
           )}
-          <View
+          {/* <View
             style={{
               paddingLeft: 20,
               width: '88%',
@@ -911,7 +945,7 @@ export default function RideCotravaller({navigation, route}) {
               }}>
               Reviews
             </Text>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
     </SafeAreaView>
