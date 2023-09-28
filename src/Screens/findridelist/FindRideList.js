@@ -151,14 +151,14 @@ export default function FindRideList({ navigation, route }) {
                                             <View style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
 
                                                 <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                    <Text numberOfLines={1} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.pick_main_text}</Text>
+                                                    <Text numberOfLines={1} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.intresected_source_address}</Text>
                                                 </View>
                                             </View>
                                             <View style={{ marginLeft: 0, width: '100%', height: 20 }}></View>
                                             <View style={{ width: '100%', alignItems: 'center', marginBottom: 10 }}>
 
                                                 <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                    <Text numberOfLines={1} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.drop_main_text}</Text>
+                                                    <Text numberOfLines={1} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{item.intresected_destination_address}</Text>
                                                 </View>
                                             </View>
 
@@ -167,7 +167,7 @@ export default function FindRideList({ navigation, route }) {
                                     </View>
 
                                     <View style={{ width: '25%', alignItems: 'flex-end' }}>
-                                        <Text style={{ paddingTop: 8, paddingRight: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{AppTexts.Rupee_Symbol + Number(item.journey_expected_price_per_seat).toFixed(0)}</Text>
+                                        <Text style={{ paddingTop: 8, paddingRight: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{AppTexts.Rupee_Symbol + Number(item.request_charge).toFixed(0)}</Text>
                                         <Text style={{ padding: 10, paddingTop: 5, paddingBottom: 0, fontFamily: AppFontFamily.PopinsRegular, fontSize: 13, color: AppColors.themeBlackColor }}>{item.seat_available + " seats left"}</Text>
 
                                     </View>

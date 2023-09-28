@@ -20,6 +20,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { hitApiForGoogleSignUp, hitApiForSignUp } from './SignupModal'
 import { FindRideFilterView } from '../findridelist/FindRideComp'
 import { CommonActions } from '@react-navigation/native'
+import CommonLoaders from '../../components/loader/Loader'
 // import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 // Configure Google Sign-In
@@ -39,6 +40,7 @@ export default function SignupScreen({ navigation }) {
     const [selectedIndex, setIndex] = React.useState(0)
     const [gender, setGender] = React.useState('m')
     const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
     const countryCode = '+91';
 
 
@@ -55,6 +57,7 @@ export default function SignupScreen({ navigation }) {
 
     _signIn = async () => {
         try {
+            setIsLoadingGoogle(true)
             await signOut()
             await GoogleSignin.hasPlayServices();
             console.log('success 1')
@@ -68,16 +71,17 @@ export default function SignupScreen({ navigation }) {
             setloggedIn(true);
         } catch (error) {
 
+            setIsLoadingGoogle(false)
             console.log(error, 'error')
 
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 // user cancelled the login flow
-                alert('Cancel');
+                // alert('Cancel');
             } else if (error.code === statusCodes.IN_PROGRESS) {
-                alert('Signin in progress');
+                // alert('Signin in progress');
                 // operation (f.e. sign in) is in progress already
             } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                alert('PLAY_SERVICES_NOT_AVAILABLE');
+                // alert('PLAY_SERVICES_NOT_AVAILABLE');
                 // play services not available or outdated
             } else {
                 // some other error happened
@@ -121,6 +125,7 @@ export default function SignupScreen({ navigation }) {
 
             Toast.showWithGravity(result.message, 2, Toast.TOP);
         }
+        setIsLoadingGoogle(false)
 
     }
 
@@ -286,7 +291,7 @@ export default function SignupScreen({ navigation }) {
                         </Text>
                     </TouchableOpacity>
                 </View>
-
+                <CommonLoaders.startLoader isLoading={isLoadingGoogle} />
             </ScrollView >
         </View >
     )

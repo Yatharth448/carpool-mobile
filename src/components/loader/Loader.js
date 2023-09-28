@@ -117,6 +117,23 @@ const CommonLoaders =
         )
     },
 
+    startLoader: ({ isLoading, loaderText }) => {
+        return (
+            <Modal visible={isLoading}
+                onRequestClose={() => console.log('closed')} transparent={true}>
+                <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)' }} >
+
+                    <ActivityIndicator size={'large'} color={AppColors.themePrimaryColor} >
+
+                    </ActivityIndicator>
+                    <View style={{ alignItems: 'center', justifyContent: 'center', width: '80%', marginTop: 20 }}>
+                        <Text style={{ marginTop: 0, fontSize: 15, color: AppColors.themeTextGrayColor, textAlign: 'center', fontFamily: AppFontFamily.PopinsSemiBold }}>{loaderText} </Text>
+                    </View>
+                </View>
+            </Modal>
+        )
+    },
+
 }
 export default CommonLoaders;
 

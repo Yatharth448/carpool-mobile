@@ -18,6 +18,7 @@ import {
 import auth from '@react-native-firebase/auth';
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { CommonActions } from '@react-navigation/native';
+import CommonLoaders from '../../components/loader/Loader'
 
 
 export default function LoginScreen({ navigation }) {
@@ -28,6 +29,7 @@ export default function LoginScreen({ navigation }) {
     const [checked, setChecked] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(true);
     const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
     const countryCode = '+91';
 
 
@@ -56,6 +58,7 @@ export default function LoginScreen({ navigation }) {
 
     _signIn = async () => {
         try {
+            setIsLoadingGoogle(true)
             await signOut()
             await GoogleSignin.hasPlayServices();
             console.log('success 1')
@@ -69,16 +72,17 @@ export default function LoginScreen({ navigation }) {
             setloggedIn(true);
         } catch (error) {
 
+            setIsLoadingGoogle(false)
             console.log(error, 'error')
 
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 // user cancelled the login flow
-                alert('Cancel');
+                // alert('Cancel');
             } else if (error.code === statusCodes.IN_PROGRESS) {
-                alert('Signin in progress');
+                // alert('Signin in progress');
                 // operation (f.e. sign in) is in progress already
             } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                alert('PLAY_SERVICES_NOT_AVAILABLE');
+                // alert('PLAY_SERVICES_NOT_AVAILABLE');
                 // play services not available or outdated
             } else {
                 // some other error happened
@@ -122,7 +126,7 @@ export default function LoginScreen({ navigation }) {
 
             Toast.showWithGravity(result.message, 2, Toast.TOP);
         }
-
+        setIsLoadingGoogle(false)
     }
 
     const userLogin = async () => {
@@ -131,9 +135,9 @@ export default function LoginScreen({ navigation }) {
         if (!email) {
             setIsLoading(false)
             // console.log('2')
-            Toast.showWithGravity('Enter mobile number', 2, Toast.TOP);
+            Toast.showWithGravity('Enter mobile email', 2, Toast.TOP);
         }
-        else  if (!password) {
+        else if (!password) {
             setIsLoading(false)
             Toast.showWithGravity('Enter password', 2, Toast.TOP);
         }
@@ -154,7 +158,7 @@ export default function LoginScreen({ navigation }) {
                 }
                 else {
                     navigation.navigate('KycScreen')
-    
+
                 }
 
                 // navigation.dispatch(
@@ -166,11 +170,11 @@ export default function LoginScreen({ navigation }) {
 
             }
             else {
-               
+
                 Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
             }
             // 
-            setIsLoading(false)   
+            setIsLoading(false)
             console.log(loginRes, '3')
 
         }
@@ -262,7 +266,7 @@ export default function LoginScreen({ navigation }) {
 
 
 
-            <View style={{ width: '100%', alignItems: 'center', height: 50}}>
+            <View style={{ width: '100%', alignItems: 'center', height: 50 }}>
                 <TouchableOpacity onPress={() => navigation.navigate('SignupScreen')} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ fontSize: 16, color: AppColors.themeTextGrayColor }}>{"Don't have an account? "}
                         <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>{' Signup'}</Text>
@@ -270,7 +274,7 @@ export default function LoginScreen({ navigation }) {
                 </TouchableOpacity>
             </View>
 
-
+            <CommonLoaders.startLoader isLoading={isLoadingGoogle} />
         </View>
     )
 }

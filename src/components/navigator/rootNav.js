@@ -36,6 +36,7 @@ import Notification from '../../Screens/notification/Notification';
 import AddGenderMobile from '../genderMobile/AddGenderMobile';
 import Wallet from '../../Screens/wallet/Wallet';
 import RideCotravaller from '../../Screens/ridecotravaller/RideCotravaller';
+import PaymentHistory from '../../Screens/payment/PaymentHistory';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -59,7 +60,8 @@ function RideDrawer() {
       />
       <Drawer.Screen name="RideCotraveller" component={RideCotravaller} />
       <Drawer.Screen name="Payment" component={Payment} />
-      <Drawer.Screen name="Wallet" component={Wallet} />
+      <Drawer.Screen name="PaymentHistory" component={PaymentHistory} />
+     
       {/* <Drawer.Screen name='MapRoutes' component={MapRoutes} />
                 <Drawer.Screen name='ProfileScreen' component={ProfileScreen} /> */}
       {/* <Drawer.Screen name='FindRideList' component={FindRideList} /> */}
@@ -103,6 +105,7 @@ export default function RootNav() {
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         <Stack.Screen name="MapRoutes" component={MapRoutes} />
         <Stack.Screen name="Cotravellers" component={Cotravellers} />
+        {/* <Stack.Screen name="Wallet" component={Wallet} /> */}
         <Stack.Screen
           name="OfferedRideDetails"
           component={OfferedRideDetails}

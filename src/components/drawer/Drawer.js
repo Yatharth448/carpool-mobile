@@ -24,7 +24,7 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
     {screen: 'RideCotraveller', name: 'ACTIVE RIDE'},
     {screen: 'RideHistory', name: 'RIDE HISTORY'},
     {screen: 'MessageRoom', name: 'MESSAGES'},
-    {screen: 'Payment', name: 'PAYMENT'},
+    {screen: 'PaymentHistory', name: 'PAYMENT'},
     {screen: 'Support', name: 'SUPPORT'},
     {screen: 'Signout', name: 'SIGN OUT'},
   ]);
