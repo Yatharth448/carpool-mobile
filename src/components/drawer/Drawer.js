@@ -21,7 +21,7 @@ import {ImageLoader} from '../imageloader/ImageLoader';
 const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
   const [menu, setMenu] = React.useState([
     {screen: 'FindRide', name: 'HOME'},
-    {screen: 'RideCotraveller', name: 'ACTIVE RIDE'},
+    {screen: 'ActiveRideCarpooler', name: 'ACTIVE RIDE'},
     {screen: 'RideHistory', name: 'RIDE HISTORY'},
     {screen: 'MessageRoom', name: 'MESSAGES'},
     {screen: 'PaymentHistory', name: 'PAYMENT'},
@@ -37,8 +37,8 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
       navigation.navigate(screenName, {from: 'reset'});
     } else if (screenName == 'Signout') {
       LogoutAlert();
-    } else if (screenName == 'RideCotraveller') {
-      navigation.navigate(screenName, {id: '65104eb1ec47fad3b733a8ca'});
+    } else if (screenName == 'ActiveRideCarpooler') {
+      navigation.navigate(screenName, {id: '6516e6d69d0aeef2edcf94e3'});
     } else {
       navigation.navigate(screenName);
     }

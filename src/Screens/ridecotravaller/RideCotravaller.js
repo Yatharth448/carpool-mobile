@@ -481,29 +481,22 @@ export default function RideCotravaller({navigation, route}) {
           {userDetails ? (
             <View
               style={{
-                left: 0,
-                marginTop: 20,
-                backgroundColor: 'white',
+                width: 'auto',
+                display: 'inline-block',
               }}>
               <View
                 style={{
-                  width: 'auto',
-                  display: 'inline-block',
-                }}>
-                <View
-                  style={{
-                    backgroundColor: '#aaa',
-                    width: 40,
-                    height: 4,
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 50,
-                    marginTop: -60,
-                  }}></View>
-              </View>
+                  backgroundColor: '#aaa',
+                  width: 40,
+                  height: 4,
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 50,
+                  marginTop: -40,
+                }}></View>
             </View>
           ) : (
             ''
@@ -577,7 +570,7 @@ export default function RideCotravaller({navigation, route}) {
                 flexDirection: 'row',
                 alignItems: 'center',
                 borderWidth: 1,
-                marginTop: 20,
+                marginTop: 10,
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 borderColor: AppColors.themeSeperatorColor,
