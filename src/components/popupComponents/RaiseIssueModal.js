@@ -113,6 +113,7 @@ export const RaiseIssueModal = ({visible, onClose, onSubmit}) => {
               onPress={() => {
                 if (onSubmit) {
                   onSubmit(issue);
+                  setIssue('');
                 }
               }}>
               <Text style={styles.textStyle}>Submit</Text>

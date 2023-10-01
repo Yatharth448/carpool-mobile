@@ -102,3 +102,22 @@ export const apiEndRide = async ride_id => {
     throw error;
   }
 };
+
+export const apiUpdateUserIssue = async (ride_id, user_id, message) => {
+  try {
+    const result = await connection.postAPI('/api/ride/driverstatus', {
+      ride_id: ride_id,
+      user_id: user_id,
+      driver_issue: message,
+    });
+    console.log('Ride status updated ', result);
+    if (result.status) {
+      return result;
+    } else {
+      return result;
+    }
+  } catch (error) {
+    console.error('login modal', error);
+    throw error;
+  }
+};

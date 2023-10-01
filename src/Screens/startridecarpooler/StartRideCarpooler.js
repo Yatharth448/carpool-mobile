@@ -4,14 +4,15 @@ import {
   Text,
   Image,
   Pressable,
-  FlatList,
   Dimensions,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
   TextInput,
+  Linking,
 } from 'react-native';
+import {Surface} from 'react-native-paper';
 import {AppColors} from '../../components/constants/AppColor';
 import moment from 'moment';
 import {Header} from '../../components/commomheader/CommonHeader';
@@ -29,6 +30,7 @@ import {
   apiUpdateLocation,
   apiUpdateLocationStatus,
   apiUpdateRideWatch,
+  apiUpdateUserIssue,
   apigetRideDetails,
 } from './StartRideModel';
 import {ButtonPrimary} from '../../components/button/buttonPrimary';
@@ -40,6 +42,7 @@ import MapComponent from '../../components/map/MapComponent';
 import {ButtonDanger} from '../../components/button/buttonDanger';
 
 import {firebase} from '@react-native-firebase/auth';
+import {RaiseIssueModal} from '../../components/popupComponents/RaiseIssueModal';
 
 const latitudeArrays = [
   [29.87149, 77.866261],
@@ -99,10 +102,8 @@ export default function StartRideCarpooler({navigation, route}) {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [routeData, setRouteData] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
-  const [selectedDistance, setSelectedDistance] = React.useState(0);
-  const [openPrice, setOpenPrice] = React.useState(false);
-  const [estimatedPrice, setEstimatedPrice] = React.useState('');
-  const [journeyId, setJourneyId] = React.useState('');
+  const [raiseIssueModal, setRaiseIssueModa] = useState(null);
+  const [cotravellerList, setCotravallerList] = useState([]);
   const [LATITUDE_DELTA, setLATITUDE_DELTA] = React.useState(0.0922);
   const [LONGITUDE_DELTA, setLONGITUDE_DELTA] = React.useState(0.0421);
   const [newLocation, setNewLocation] = useState(null);
@@ -142,10 +143,14 @@ export default function StartRideCarpooler({navigation, route}) {
         };
       });
       setUserDetails(result.user);
+
       setRouteData({
         ...result.ride,
         paths: path,
       });
+      if (result.cotraveller && result.cotraveller.length > 0) {
+        setCotravallerList(result.cotraveller);
+      }
       if (result.ride.status == 'running') {
         if (result.ride.watch_id != null || result.ride.watch_id != undefined) {
           Geolocation.clearWatch(result.ride.watch_id);
@@ -287,6 +292,25 @@ export default function StartRideCarpooler({navigation, route}) {
     };
   }, []);
 
+  const onIssue = async (user, message) => {
+    if (!message) {
+      Toast.showWithGravity(
+        'Please enter information about issue',
+        2,
+        Toast.TOP,
+      );
+      return;
+    }
+    let result = await apiUpdateUserIssue(id, user, message);
+    if (result.status) {
+      Toast.showWithGravity('Issue is submitted', 2, Toast.TOP);
+      setRaiseIssueModa(false);
+    } else {
+      setRaiseIssueModa(false);
+      Toast.showWithGravity(result.message, 2, Toast.TOP);
+    }
+  };
+
   const startLocationWatch = () => {
     checkLocationPermission();
     let watchId = Geolocation.watchPosition(
@@ -334,6 +358,169 @@ export default function StartRideCarpooler({navigation, route}) {
         Toast.TOP,
       );
     }
+  };
+
+  const userList = ({item}) => {
+    return (
+      <View
+        key={item._id}
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          marginTop: 10,
+          marginBottom: 10,
+        }}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <View>
+            {item.profile ? (
+              <Image
+                src={item.profile}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 50,
+                  resizeMode: 'contain',
+                }}
+              />
+            ) : (
+              <Image
+                source={require('../../assets/avtar.png')}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 5,
+                  resizeMode: 'contain',
+                }}
+              />
+            )}
+          </View>
+          <View
+            style={{
+              marginLeft: 10,
+            }}>
+            <Text
+              style={{
+                fontFamily: AppFontFamily.PopinsSemiBold,
+                fontSize: 16,
+                color: AppColors.textColor,
+              }}>
+              {item.name}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            justifyContent: 'space-around',
+            flexDirection: 'row',
+            width: '40%',
+            alignItems: 'center',
+          }}>
+          <Pressable
+            onPress={() => Linking.openURL(`tel:${userDetails.contact_number}`)}
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Surface
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+                elevation: 4,
+              }}>
+              <Image
+                source={require('../../assets/phone-call.png')}
+                style={{
+                  marginLeft: 0,
+                  marginBottom: 0,
+                  width: 20,
+                  height: 20,
+                  resizeMode: 'contain',
+                }}
+              />
+            </Surface>
+          </Pressable>
+          <Pressable
+            onPress={() =>
+              navigation.navigate('Chat', {
+                coTravellerId: item._id,
+                id: item.chat_id,
+                cotravellerName: item.name,
+                from: 'chat',
+                phone: item.contact_number,
+              })
+            }
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Surface
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+                elevation: 4,
+              }}>
+              <Image
+                source={require('../../assets/chat.png')}
+                style={{
+                  marginLeft: 0,
+                  marginBottom: 0,
+                  width: 20,
+                  height: 20,
+                  resizeMode: 'contain',
+                }}
+              />
+            </Surface>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              // code for issue modal
+              setRaiseIssueModa({
+                id: item._id,
+              });
+            }}
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Surface
+              style={{
+                padding: 8,
+                height: 40,
+                width: 40,
+                borderRadius: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+                elevation: 4,
+              }}>
+              <Image
+                source={require('../../assets/issue.png')}
+                style={{
+                  marginLeft: 0,
+                  width: 20,
+                  height: 20,
+                  resizeMode: 'contain',
+                }}
+              />
+            </Surface>
+          </Pressable>
+        </View>
+      </View>
+    );
   };
 
   const endride = async () => {
@@ -818,6 +1005,40 @@ export default function StartRideCarpooler({navigation, route}) {
           ) : (
             ''
           )}
+          {cotravellerList && cotravellerList.length ? (
+            <View
+              style={{
+                width: '90%',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                marginTop: 20,
+              }}>
+              <Text
+                style={{
+                  width: '100%',
+                  color: AppColors.themeBlackColor,
+                  fontFamily: AppFontFamily.PopinsBold,
+                  fontSize: 18,
+                  color: AppColors.textColor,
+                }}>
+                Cotravallers
+              </Text>
+              <View>
+                {cotravellerList.map(e => {
+                  return userList({item: e});
+                })}
+              </View>
+            </View>
+          ) : (
+            ''
+          )}
+          <RaiseIssueModal
+            onSubmit={text => {
+              onIssue(raiseIssueModal.id, text);
+            }}
+            visible={raiseIssueModal ? true : false}
+            onClose={setRaiseIssueModa}
+          />
 
           {routeData && routeData.status == 'completed' ? (
             <View
