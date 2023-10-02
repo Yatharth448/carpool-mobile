@@ -234,7 +234,7 @@ export default function PaymentHistory({ navigation, route }) {
                                 </Surface>
                             </View>
                             :
-                            CommonLoaders.NoDataInList('No transaction yet')
+                            CommonLoaders.NoDataInList('No transaction yet', {height: 300})
                     )}
                 />
 

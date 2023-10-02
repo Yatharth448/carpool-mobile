@@ -1,31 +1,32 @@
-import React, {useEffect} from 'react';
-import {Text, View, Image, TouchableOpacity} from 'react-native';
-import {AppColors} from '../../components/constants/AppColor';
-import {TextInput} from 'react-native-paper';
+import React, { useEffect } from 'react';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { AppColors } from '../../components/constants/AppColor';
+import { TextInput } from 'react-native-paper';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-simple-toast';
-import {useRoute} from '@react-navigation/native';
-import {hitApiForVerifyOTP} from './otpModal';
+import { useRoute } from '@react-navigation/native';
+import { hitApiForVerifyOTP } from './otpModal';
 import Storage from '../../components/localStorage/storage';
-import {AppKeys} from '../../components/constants/AppKeys';
-import {ButtonPrimary} from '../../components/button/buttonPrimary';
-import {AppFontFamily} from '../../components/constants/AppFonts';
-import {hitApiForSignUp} from '../signup/SignupModal';
+import { AppKeys } from '../../components/constants/AppKeys';
+import { ButtonPrimary } from '../../components/button/buttonPrimary';
+import { AppFontFamily } from '../../components/constants/AppFonts';
+import { hitApiForSignUp } from '../signup/SignupModal';
 import {
   hitApiForVerifyAdhaarNumber,
   hitApiForVerifyAdhaarOTP,
 } from './KycModal';
 import CommonLoaders from '../../components/loader/Loader';
 
-export default function VerifyAadharOTP({navigation, route}) {
+export default function VerifyAadharOTP({ navigation, route }) {
   const [otp, setOtp] = React.useState('');
   const [timer, setTimer] = React.useState(30);
   const [isTimerRunning, setIsTimerRunning] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [resend, setResend] = React.useState(false);
   console.log(route.params, 'route');
-  const {name, aadharNumber} = route.params;
-  let {clientId} = route.params;
+  const { name, aadharNumber } = route.params;
+  let { clientId } = route.params;
 
   useEffect(() => {
     let interval;
@@ -58,7 +59,7 @@ export default function VerifyAadharOTP({navigation, route}) {
         // if (result.kyc_status) {
         navigation.reset({
           index: 0,
-          routes: [{name: 'RideDrawer'}],
+          routes: [{ name: 'RideDrawer' }],
         });
         // }
         // else {
@@ -74,7 +75,7 @@ export default function VerifyAadharOTP({navigation, route}) {
   };
 
   const resendAadharOTP = async () => {
-    setIsLoading(true);
+    setResend(true);
     if (!isTimerRunning) {
       const result = await hitApiForVerifyAdhaarNumber(aadharNumber);
       setTimer(30);
@@ -89,12 +90,12 @@ export default function VerifyAadharOTP({navigation, route}) {
         console.log(result, 'result');
       }
     }
-    setIsLoading(false);
+    setResend(false);
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: AppColors.themesWhiteColor}}>
-      <View style={{width: '100%', height: '20%'}}>
+    <View style={{ flex: 1, backgroundColor: AppColors.themesWhiteColor }}>
+      <View style={{ width: '100%', height: '20%' }}>
         <Image
           source={require('../../assets/logo.jpg')}
           style={{
@@ -106,8 +107,8 @@ export default function VerifyAadharOTP({navigation, route}) {
         />
       </View>
 
-      <View style={{width: '100%', alignItems: 'center'}}>
-        <View style={{width: '90%', justifyContent: 'center'}}>
+      <View style={{ width: '100%', alignItems: 'center' }}>
+        <View style={{ width: '90%', justifyContent: 'center' }}>
           <Text
             style={{
               fontSize: 28,
@@ -172,100 +173,70 @@ export default function VerifyAadharOTP({navigation, route}) {
             />
           </View>
 
+
+
+          <View style={{ width: '100%', alignItems: 'center', marginBottom: 10 }}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('UploadDocuments', {
+                  data: { index: 0, name: 'Aadhar Card', type: 'Aadhar Number' },
+                })
+              }
+              style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{ fontSize: 16, color: AppColors.themeTextGrayColor }}>
+                {'Not working? '}
+
+                <Text style={{ fontSize: 16, color: AppColors.themePrimaryColor }}>
+                  {' Upload documents'}
+                </Text>
+
+              </Text>
+            </TouchableOpacity>
+          </View>
+
           <View
             style={{
               alignItems: 'center',
-              display: 'flex',
               flexDirection: 'row',
+              justifyContent: 'space-between',
               marginTop: 10,
+
             }}>
-            <View style={{alignItems: 'center'}}>
-              <TouchableOpacity
-                onPress={() => resendAadharOTP()}
-                style={{
-                  width: '100%',
-                  height: 50,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{fontSize: 16, color: AppColors.themeTextGrayColor}}>
-                  {isTimerRunning ? (
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        color: AppColors.themePrimaryColor,
-                      }}>{` Resend in ${timer} seconds`}</Text>
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        color: AppColors.themePrimaryColor,
-                      }}>
-                      {' Resend OTP'}
-                    </Text>
-                  )}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <ButtonPrimary
-                text={'Verify'}
-                onPress={() =>
-                  isLoading ? console.log('already clicked') : validateOTP()
-                }
-                loader={isLoading}
-              />
-            </View>
+
+
+            <ButtonPrimary
+              style={{ width: '48%', backgroundColor: AppColors.themesWhiteColor , borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 5}}
+              textStyle={{color: AppColors.themePrimaryColor}}
+              text={isTimerRunning ? ` Resend in ${timer} ` : 'Resend OTP'}
+              onPress={() =>
+                isTimerRunning ? console.log('already clicked') : resendAadharOTP()
+              }
+              loader={isTimerRunning}
+              loaderColor={AppColors.themePrimaryColor}
+            />
+
+
+            <ButtonPrimary
+              style={{ width: '48%' }}
+              text={'Verify'}
+              onPress={() =>
+                isLoading ? console.log('already clicked') : validateOTP()
+              }
+              loader={isLoading}
+            />
+
+
           </View>
         </View>
       </View>
 
-      {/* <View style={{ width: '100%', justifyContent: 'flex-start', alignItems: 'center', height: '30%' }}> */}
-      {/* <Text style={{ fontSize: 26, fontWeight: 'bold', color: AppColors.themeBlackColor }}>
-          {'Verification code'}
-        </Text>
-        <Text style={{ fontSize: 18, fontWeight: '300', textAlign: 'center', marginTop: 30, width: '70%', color: AppColors.themeBlackColor }}>
-          {'Enter the code sent to'}
-        </Text>
-        <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginTop: 0, width: '70%', color: AppColors.themeBlackColor }}>
-          {mobile}
-        </Text> */}
 
-      {/* <View style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
-          <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-            <OTPInputView
-              style={{ width: '50%', height: 40 }}
-              pinCount={4}
-              autoFocusOnLoad
-              textContentType={'oneTimeCode'}
-              onCodeChanged={(otpNumber) => setOtp(otpNumber)}
-              codeInputFieldStyle={{ borderWidth: 0, borderBottomWidth: 1.5, height: 50, marginRight: 8, color: AppColors.themeBlackColor, fontSize: 20, borderBottomColor: AppColors.themeTextGrayColor, }}
-              codeInputHighlightStyle={{ borderBottomWidth: 1.5, borderBottomColor: AppColors.themePrimaryColor, }}
-              keyboardType="numeric"
-              code={otp}
-              // clearInputs={this.state.clearOTP}
-              onCodeFilled={(otpNumber => {
-                if (otpNumber.length == 4) {
-                  validateOTP(otpNumber)
-                }
-                // console.log(`Code is ${otpNumber}, you are good to go!`)
-              })}
-            />
-          </View>
-          <View style={{ alignItems: 'center', marginTop: 40 }}>
-            <Text style={{ fontSize: 14, fontWeight: '400', textAlign: 'center', color: AppColors.themeTextGrayColor }}>
-              {"Didn't you receive the OTP?"}
-              <Text style={{ fontSize: 14, fontWeight: '600', textAlign: 'center', color: AppColors.themePrimaryColor }}>
-                {" Resend OTP"}
-              </Text>
-            </Text>
 
-          </View>
-        </View> */}
-      {/* </View> */}
-
-      <View style={{width: '100%', alignItems: 'center', height: 50}}>
+      {/* <View style={{width: '100%', alignItems: 'center', height: 50}}>
         <TouchableOpacity
           onPress={() => resendAadharOTP()}
           style={{
@@ -289,36 +260,9 @@ export default function VerifyAadharOTP({navigation, route}) {
             )}
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
-      <View style={{width: '100%', alignItems: 'center'}}>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('UploadDocuments', {
-              data: {index: 0, name: 'Aadhar Card', type: 'Aadhar Number'},
-            })
-          }
-          style={{
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{fontSize: 16, color: AppColors.themeTextGrayColor}}>
-            {'Not working? '}
-            {isTimerRunning ? (
-              <Text
-                style={{
-                  fontSize: 16,
-                  color: AppColors.themePrimaryColor,
-                }}>{` Resend in ${timer} seconds`}</Text>
-            ) : (
-              <Text style={{fontSize: 16, color: AppColors.themePrimaryColor}}>
-                {' Upload documents'}
-              </Text>
-            )}
-          </Text>
-        </TouchableOpacity>
-      </View>
+
 
       {/* <CommonLoaders.ChatLoader isLoading={isLoading} loaderText={'OTP verification in process...Please wait'} /> */}
     </View>

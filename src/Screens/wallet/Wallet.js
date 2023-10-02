@@ -11,20 +11,20 @@ import { Header } from '../../components/commomheader/CommonHeader'
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { ScrollView } from 'react-native-gesture-handler'
 
-export default function Wallet({ isLoading, closePopup, onPaymentPress }) {
+export default function Wallet({ isLoading, closePopup, onPaymentPress, loader=false }) {
 
     const [price, setPrice] = React.useState('')
     const [ind, setInd] = React.useState('')
-const data = ['500', '1000', '1500', '2000', '5000']
+    const data = ['500', '1000', '1500', '2000', '5000']
     const selectedIndex = (ind) => {
         setPrice(data[ind])
         setInd(ind)
     }
 
     const pay = (amount) => {
-       
-            onPaymentPress(amount)
-       
+
+        onPaymentPress(amount)
+
     }
 
     return (
@@ -39,7 +39,7 @@ const data = ['500', '1000', '1500', '2000', '5000']
                         <Image source={require('../../assets/close.png')} style={{ marginLeft: 0, width: 20, height: 20, resizeMode: 'contain' }} />
                     </Pressable>
                     <Surface elevation={4} style={{ padding: 0, width: '90%', height: 550, alignItems: 'center', borderRadius: 10, backgroundColor: AppColors.themesWhiteColor }}>
-{/* <ScrollView keyboardShouldPersistTaps={'handled'}> */}
+                        {/* <ScrollView keyboardShouldPersistTaps={'handled'}> */}
 
 
                         <Text style={{ marginTop: 20, width: '80%', textAlign: 'center', fontSize: 18, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
@@ -47,7 +47,7 @@ const data = ['500', '1000', '1500', '2000', '5000']
                         </Text>
 
 
-                        <View style={{ width: '100%', alignItems: 'center', marginTop: 0, marginBottom: 10}}>
+                        <View style={{ width: '100%', alignItems: 'center', marginTop: 0, marginBottom: 10 }}>
 
                             <View style={{ width: '95%', justifyContent: 'center', alignItems: 'center' }}>
                                 <Image source={require('../../assets/Wallet.png')} style={{ marginLeft: 0, width: 250, height: 150, resizeMode: 'contain' }} />
@@ -87,7 +87,7 @@ const data = ['500', '1000', '1500', '2000', '5000']
                             {/* <Pressable> */}
 
                             <TextInput
-                                style={{paddingLeft: 10, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBtnDisableColor }}
+                                style={{ paddingLeft: 10, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBtnDisableColor }}
                                 placeholder={'Enter amount'}
                                 placeholderTextColor={AppColors.themeTextGrayColor}
                                 value={price}
@@ -104,8 +104,8 @@ const data = ['500', '1000', '1500', '2000', '5000']
                             <ButtonPrimary
                                 style={{ width: '80%' }}
                                 text={'Pay'}
-                                onPress={()=> pay(price)}
-                                loader={false}
+                                onPress={() => pay(price)}
+                                loader={loader}
                             />
 
                         </View>

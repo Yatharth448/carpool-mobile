@@ -22,6 +22,8 @@ import MapView, { Polyline, Marker } from 'react-native-maps';
 import { PriceSelection } from '../../components/priceselection/PriceSelection';
 import { AppFontFamily } from '../../components/constants/AppFonts';
 import { ButtonPrimary } from '../../components/button/buttonPrimary';
+import { AppKeys } from '../../components/constants/AppKeys';
+import { AppTexts } from '../../components/constants/AppTexts';
 export default function MapRoutes({ navigation, route }) {
   // let  path1 = [];
   const mapRef = React.useRef(null);
@@ -220,7 +222,7 @@ export default function MapRoutes({ navigation, route }) {
           close={() => {
             navigation.goBack();
           }}
-          text="Select your route"
+          text=""
         />
       </View>
 
@@ -327,7 +329,7 @@ export default function MapRoutes({ navigation, route }) {
                 fontSize: 16,
                 color: AppColors.themeBlackColor,
               }}>
-              {'Price per seat'}
+              {'Price per seat ' + `(${AppTexts.Rupee_Symbol})`}
             </Text>
           </View>
           <View

@@ -117,11 +117,11 @@ const CommonLoaders =
         )
     },
 
-    startLoader: ({ isLoading, loaderText }) => {
+    startLoader: ({ isLoading, loaderText, style }) => {
         return (
             <Modal visible={isLoading}
                 onRequestClose={() => console.log('closed')} transparent={true}>
-                <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)' }} >
+                <View style={[{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)' }, style]} >
 
                     <ActivityIndicator size={'large'} color={AppColors.themePrimaryColor} >
 

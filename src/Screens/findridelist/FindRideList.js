@@ -13,6 +13,8 @@ import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import CommonLoaders from '../../components/loader/Loader';
 import Toast from 'react-native-simple-toast'
 import { showNotification } from '../../components/notifications/LocalNotification';
+import Wallet from '../wallet/Wallet';
+import { hitApiToAddMoneyToWallet } from '../payment/PaymentModal';
 export default function FindRideList({ navigation, route }) {
 
 
@@ -21,6 +23,8 @@ export default function FindRideList({ navigation, route }) {
     const [selectedIndex, setIndex] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(false)
     const [startLoader, setStartLoader] = React.useState(false)
+    const [openWallet, setOpenWallet] = React.useState(false)
+    const [walletLoader, setWalletLoader] = React.useState(false)
 
     useEffect(() => {
 
@@ -84,9 +88,10 @@ export default function FindRideList({ navigation, route }) {
         else {
 
             setStartLoader(false)
-            Toast.showWithGravity(result.message ?? result.error ?? 'Something went wrong', 2, Toast.TOP);
+            // Toast.showWithGravity(result.message ?? result.error ?? 'Something went wrong', 2, Toast.TOP);
             if (result.message == "Please add money to wallet") {
-                Alert.alert(result.message)
+                // Alert.alert(result.message)
+                setOpenWallet(true)
             }
 
         }
@@ -128,7 +133,7 @@ export default function FindRideList({ navigation, route }) {
                                 <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
                                     <View style={{ justifyContent: 'center' }}>
 
-                                        <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(item.journey_start_at).format('DD MMM YYYY, HH:mm')}</Text>
+                                        <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themePrimaryColor }}>{moment(item.journey_start_at).format('DD MMM YYYY, HH:mm')}</Text>
 
                                     </View>
                                 </View>
@@ -198,7 +203,7 @@ export default function FindRideList({ navigation, route }) {
 
                                     </View>
 
-                                    <View style={{ width: '50%', alignItems: 'flex-end'}}>
+                                    <View style={{ width: '50%', alignItems: 'flex-end' }}>
                                         {item?.alreadyRequest ?
 
                                             <View style={{ width: '70%' }}>
@@ -234,6 +239,25 @@ export default function FindRideList({ navigation, route }) {
         )
     }
 
+    const payPressed = async (amount) => {
+        if (amount == '') {
+            Alert.alert('enter amount')
+
+        }
+        else {
+            setWalletLoader(true)
+            const result = await hitApiToAddMoneyToWallet(amount)
+            if (result.status) {
+
+                setOpenWallet(false)
+                Alert.alert('amount added successfully')
+            }
+            setWalletLoader(false)
+            console.log(result)
+        }
+
+    }
+
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
             <Header close={() => { navigation.navigate('RideDrawer', { screen: 'FindRide', params: { from: 'reset' } }) }} text='Ride options' />
@@ -243,6 +267,13 @@ export default function FindRideList({ navigation, route }) {
 
             {isLoading ? rideList.length ? ListView() : CommonLoaders.NoDataInList('No rides found') : CommonLoaders.RideHistoryLoader()}
 
+            <Wallet
+                isLoading={openWallet}
+                closePopup={() => setOpenWallet(false)}
+                onPaymentPress={payPressed}
+                loader={walletLoader}
+
+            />
 
 
         </View>

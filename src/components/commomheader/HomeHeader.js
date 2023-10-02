@@ -28,9 +28,9 @@ export const HomeHeader = ({ isBack = true, close, text = '', isRight = false, r
             <Pressable onPress={walletClick} style={{ width: '30%', height: 50, alignItems: 'flex-end', justifyContent: 'center' }}>
                 
 
-                    <Surface style={{ backgroundColor: AppColors.themesWhiteColor, padding: 8, borderRadius: 5, justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', marginBottom: 10 }} elevation={4}>
-                        <Image source={require('../../assets/walletsmall.png')} style={{ width: 25, height: 25 }} />
-                        <Text style={{ textAlign: 'center', fontFamily: AppFontFamily.PopinsMedium, fontSize: 10, color: AppColors.themeBlackColor }}>{"Balance: " + (walletAmount ? walletAmount ?? 0 : 0)}</Text>
+                    <Surface style={{ backgroundColor: AppColors.themesWhiteColor, padding: 8, paddingTop: 5, paddingBottom: 5, borderRadius: 5, justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', marginBottom: 10 }} elevation={4}>
+                        <Image source={require('../../assets/walletsmall.png')} style={{ width: 25, height: 25, marginRight: 3 }} />
+                        <Text style={{ textAlign: 'center', fontFamily: AppFontFamily.PopinsMedium, fontSize: 10, color: AppColors.themeBlackColor }}>{"Balance:  " + (walletAmount ? walletAmount ?? 0 : 0)}</Text>
                     </Surface>
 
                 

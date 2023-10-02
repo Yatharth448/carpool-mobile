@@ -41,7 +41,8 @@ class FindRide extends Component {
         this.addCar = this.addCar.bind(this);
         this.recentSearchPress = this.recentSearchPress.bind(this);
         this.okPress = this.okPress.bind(this);
-        // this.onOkPress = this.onOkPress.bind(this)
+        this.walletClick = this.walletClick.bind(this)
+        this.payPressed = this.payPressed.bind(this)
         this.chooseAnother = this.chooseAnother.bind(this)
 
 
@@ -116,6 +117,7 @@ class FindRide extends Component {
             kycStatus: 1,
             textHeight: 90,
             openWallet: false,
+            walletLoader: false,
 
 
         }
@@ -312,7 +314,7 @@ class FindRide extends Component {
 
     getSearchData = async (pick, drop, date, seat) => {
 
-        if (this.props?.data?.kyc_status == 1) {
+        // if (this.props?.data?.kyc_status == 1) {
 
             this.setState({ isSearch: 'start', loading: true })
             const result = await hitApiToGetRideList(pick, drop, date, seat, this.state.pickMainText, this.state.dropMainText);
@@ -331,15 +333,15 @@ class FindRide extends Component {
                 }
 
             }
-        }
-        else if (this.props?.data?.kyc_status == 0) {
+        // }
+        // else if (this.props?.data?.kyc_status == 0) {
 
-            alertWithNav('', 'Your kyc is pending, Please update your kyc', this.okPress)
-        }
-        else if (this.props?.data?.kyc_status == 2) {
+        //     alertWithNav('', 'Your kyc is pending, Please update your kyc', this.okPress)
+        // }
+        // else if (this.props?.data?.kyc_status == 2) {
 
-            Alert.alert('', 'Your kyc is under review, You will get a message/notification once review is completed')
-        }
+        //     Alert.alert('', 'Your kyc is under review, You will get a message/notification once review is completed')
+        // }
 
         // else  
         // {
@@ -403,14 +405,17 @@ class FindRide extends Component {
 
             Toast.showWithGravity('Select Date', 2, Toast.TOP);
         }
+        else if (!Object.keys(this.state.rideVehicle).length) {
 
+            Toast.showWithGravity('Select your vehicle', 2, Toast.TOP);
+        }
         else if (!this.state.avilSeat) {
 
             Toast.showWithGravity('Select no of seats available', 2, Toast.TOP);
         }
         else {
 
-            if (this.props?.data?.kyc_status == 1) {
+            // if (this.props?.data?.kyc_status == 1) {
                 this.setState({ offerSearchLoader: true })
                 const routeData = await this.getPolylineCoordinats(this.state.pickupLocation, this.state.dropLocation)
 
@@ -426,15 +431,15 @@ class FindRide extends Component {
                         routeData,
                         vehicle: this.state.rideVehicle,
                     })
-            }
-            else if (this.props?.data?.kyc_status == 0) {
+            // }
+            // else if (this.props?.data?.kyc_status == 0) {
 
-                alertWithNav('', 'Your kyc is pending, Please update your kyc', this.okPress)
-            }
-            else if (this.props?.data?.kyc_status == 2) {
+            //     alertWithNav('', 'Your kyc is pending, Please update your kyc', this.okPress)
+            // }
+            // else if (this.props?.data?.kyc_status == 2) {
 
-                Alert.alert('', 'Your kyc is under review, You will get a message/notification once review is completed')
-            }
+            //     Alert.alert('', 'Your kyc is under review, You will get a message/notification once review is completed')
+            // }
         }
 
     }
@@ -820,11 +825,13 @@ class FindRide extends Component {
 
         }
         else {
+            this.setState({walletLoader: true})
             const result = await hitApiToAddMoneyToWallet(amount)
             if (result.status) {
                 this.setState({openWallet: false})
                 Alert.alert('amount added successfully')
             }
+            this.setState({walletLoader: false})
             console.log(result)
         }
 
@@ -866,8 +873,9 @@ class FindRide extends Component {
 
                 <Wallet
                     isLoading={this.state.openWallet}
-                    closePopup={() => this.setState({openWallet: true})}
+                    closePopup={() => this.setState({openWallet: false})}
                     onPaymentPress={this.payPressed}
+                    loader={this.state.walletLoader}
 
                 />
             </View >

@@ -1,5 +1,6 @@
 export const AppColors = {
   themePrimaryColor: '#403ADD',
+  themeSecondaryColor: '#9FA6B2',
   themeMapColor: '#01b0ff',
   themeMapColorBorder: '#1867d2',
   themeSecondaryMapColor: '#bcbdbf',
