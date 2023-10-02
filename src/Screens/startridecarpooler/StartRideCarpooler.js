@@ -102,6 +102,7 @@ export default function StartRideCarpooler({navigation, route}) {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [routeData, setRouteData] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
+  const [cotravellerStatusUpdate, setcotravellerStatusUpdate] = useState(null);
   const [raiseIssueModal, setRaiseIssueModa] = useState(null);
   const [cotravellerList, setCotravallerList] = useState([]);
   const [LATITUDE_DELTA, setLATITUDE_DELTA] = React.useState(0.0922);
@@ -253,6 +254,26 @@ export default function StartRideCarpooler({navigation, route}) {
   }, [state]);
 
   useEffect(() => {
+    if (cotravellerStatusUpdate) {
+      let finalList = [];
+      for (let i = 0; i < cotravellerList.length; i++) {
+        if (
+          String(cotravellerList[i]._id) == String(cotravellerStatusUpdate.id)
+        ) {
+          finalList.push({
+            ...cotravellerList[i],
+            inside_ride: cotravellerStatusUpdate.status,
+          });
+        } else {
+          finalList.push(cotravellerList[i]);
+        }
+      }
+      setCotravallerList(finalList);
+      setcotravellerStatusUpdate(null);
+    }
+  }, [cotravellerStatusUpdate]);
+
+  useEffect(() => {
     if (newLocation) {
       let tempState = JSON.parse(JSON.stringify(state));
       setState({
@@ -273,11 +294,19 @@ export default function StartRideCarpooler({navigation, route}) {
     messaging().onMessage(async remoteMessage => {
       console.log('location received ', remoteMessage);
       if (remoteMessage.data) {
-        const {lat, long} = remoteMessage.data;
-        setNewLocation({
-          latitude: parseFloat(lat),
-          longitude: parseFloat(long),
-        });
+        const {lat, long, type, id, status} = remoteMessage.data;
+        if (type == 'ride_status') {
+          setcotravellerStatusUpdate({
+            id: id,
+            status: status,
+          });
+        }
+        if (lat && long) {
+          setNewLocation({
+            latitude: parseFloat(lat),
+            longitude: parseFloat(long),
+          });
+        }
       }
     });
   };
@@ -304,6 +333,17 @@ export default function StartRideCarpooler({navigation, route}) {
     let result = await apiUpdateUserIssue(id, user, message);
     if (result.status) {
       Toast.showWithGravity('Issue is submitted', 2, Toast.TOP);
+      setRaiseIssueModa(false);
+    } else {
+      setRaiseIssueModa(false);
+      Toast.showWithGravity(result.message, 2, Toast.TOP);
+    }
+  };
+
+  const onResolve = async user => {
+    let result = await apiUpdateUserIssue(id, user, null);
+    if (result.status) {
+      Toast.showWithGravity('Previous issue has resolved', 2, Toast.TOP);
       setRaiseIssueModa(false);
     } else {
       setRaiseIssueModa(false);
@@ -414,6 +454,25 @@ export default function StartRideCarpooler({navigation, route}) {
               }}>
               {item.name}
             </Text>
+            {item.inside_ride ? (
+              <Text
+                style={{
+                  fontFamily: AppFontFamily.PopinsSemiBold,
+                  fontSize: 13,
+                  color: AppColors.themeGreenColor,
+                }}>
+                In-Ride
+              </Text>
+            ) : (
+              <Text
+                style={{
+                  fontFamily: AppFontFamily.PopinsSemiBold,
+                  fontSize: 13,
+                  color: AppColors.themeSecondaryColor,
+                }}>
+                Out of ride
+              </Text>
+            )}
           </View>
         </View>
         <View
@@ -1035,6 +1094,9 @@ export default function StartRideCarpooler({navigation, route}) {
           <RaiseIssueModal
             onSubmit={text => {
               onIssue(raiseIssueModal.id, text);
+            }}
+            onResolve={() => {
+              onResolve(raiseIssueModal.id);
             }}
             visible={raiseIssueModal ? true : false}
             onClose={setRaiseIssueModa}

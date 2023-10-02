@@ -223,6 +223,18 @@ export default function RideCotravaller({navigation, route}) {
     }
   };
 
+  const onResolve = async () => {
+    let result = await apiUpdateRideRunningStatus(id, true, null);
+    if (result.status) {
+      Toast.showWithGravity('Issue has resolved', 2, Toast.TOP);
+      setInsideRide(true);
+      setRaiseIssueModa(false);
+    } else {
+      setRaiseIssueModa(false);
+      Toast.showWithGravity(result.message, 2, Toast.TOP);
+    }
+  };
+
   useEffect(() => {
     if (state.curLoc.latitude && state.curLoc.longitude) {
       updateMap();
@@ -887,6 +899,9 @@ export default function RideCotravaller({navigation, route}) {
           <RaiseIssueModal
             onSubmit={text => {
               onIssue(text);
+            }}
+            onResolve={() => {
+              onResolve();
             }}
             visible={raiseIssueModal}
             onClose={setRaiseIssueModa}

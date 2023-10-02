@@ -21,7 +21,7 @@ import {ImageLoader} from '../imageloader/ImageLoader';
 const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
   const [menu, setMenu] = React.useState([
     {screen: 'FindRide', name: 'HOME'},
-    {screen: 'KycScreen', name: 'ACTIVE RIDE'},
+    {screen: 'ActiveRideCarpooler', name: 'ACTIVE RIDE'},
     {screen: 'RideHistory', name: 'RIDE HISTORY'},
     {screen: 'MessageRoom', name: 'MESSAGES'},
     {screen: 'PaymentHistory', name: 'PAYMENT'},

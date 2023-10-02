@@ -13,7 +13,7 @@ import {
 import {AppColors} from '../constants/AppColor';
 import {AppFontFamily} from '../constants/AppFonts';
 import CommonLoaders from '../loader/Loader';
-export const RaiseIssueModal = ({visible, onClose, onSubmit}) => {
+export const RaiseIssueModal = ({visible, onClose, onResolve, onSubmit}) => {
   const [issue, setIssue] = React.useState('');
   // const carArray = [{ 'value': '1', 'label': 'Tata Nexon' }, { 'value': '2', 'label': 'MG Hector' }]
   React.useEffect(() => {
@@ -105,8 +105,13 @@ export const RaiseIssueModal = ({visible, onClose, onSubmit}) => {
             }}>
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => onClose(!visible)}>
-              <Text style={styles.textStyle}>Close</Text>
+              onPress={() => {
+                if (onResolve) {
+                  onResolve(issue);
+                  setIssue('');
+                }
+              }}>
+              <Text style={styles.textStyle1}>Resolve Issue</Text>
             </Pressable>
             <Pressable
               style={[styles.button, styles.buttonOpen]}
@@ -150,10 +155,17 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.themePrimaryColor,
   },
   buttonClose: {
-    backgroundColor: AppColors.themeTextGrayColor,
+    backgroundColor: AppColors.themesWhiteColor,
+    borderWidth: 1,
+    borderColor: AppColors.themePrimaryColor,
   },
   textStyle: {
     color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  textStyle1: {
+    color: AppColors.themePrimaryColor,
     fontWeight: 'bold',
     textAlign: 'center',
   },
