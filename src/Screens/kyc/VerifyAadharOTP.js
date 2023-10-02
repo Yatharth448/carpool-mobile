@@ -172,14 +172,51 @@ export default function VerifyAadharOTP({navigation, route}) {
             />
           </View>
 
-          <View style={{alignItems: 'center', marginTop: 10}}>
-            <ButtonPrimary
-              text={'Verify'}
-              onPress={() =>
-                isLoading ? console.log('already clicked') : validateOTP()
-              }
-              loader={isLoading}
-            />
+          <View
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              flexDirection: 'row',
+              marginTop: 10,
+            }}>
+            <View style={{alignItems: 'center'}}>
+              <TouchableOpacity
+                onPress={() => resendAadharOTP()}
+                style={{
+                  width: '100%',
+                  height: 50,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{fontSize: 16, color: AppColors.themeTextGrayColor}}>
+                  {isTimerRunning ? (
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: AppColors.themePrimaryColor,
+                      }}>{` Resend in ${timer} seconds`}</Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: AppColors.themePrimaryColor,
+                      }}>
+                      {' Resend OTP'}
+                    </Text>
+                  )}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              <ButtonPrimary
+                text={'Verify'}
+                onPress={() =>
+                  isLoading ? console.log('already clicked') : validateOTP()
+                }
+                loader={isLoading}
+              />
+            </View>
           </View>
         </View>
       </View>
