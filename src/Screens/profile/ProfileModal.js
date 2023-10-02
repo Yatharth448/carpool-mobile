@@ -5,6 +5,7 @@ export const hitApiToGetProfile = async () => {
     try {
         const otpData = await connection.getAPI('api/user/profile')
 
+        console.log(otpData, 'profile data')
         if (otpData.success) {
             return otpData
         }

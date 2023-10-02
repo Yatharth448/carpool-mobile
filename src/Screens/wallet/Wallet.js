@@ -83,7 +83,7 @@ const data = ['500', '1000', '1500', '2000', '5000']
 
                         </View>
 
-                        <View style={{ width: '85%', justifyContent: 'center', marginTop: 20, backgroundColor: AppColors.themePickupDropSearchBg, borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 10 }}>
+                        <View style={{ width: '80%', justifyContent: 'center', marginTop: 20, backgroundColor: AppColors.themePickupDropSearchBg, borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 5 }}>
                             {/* <Pressable> */}
 
                             <TextInput
@@ -102,7 +102,7 @@ const data = ['500', '1000', '1500', '2000', '5000']
                             {/* {acceptBtn(item, index)} */}
 
                             <ButtonPrimary
-                                style={{ width: '68%' }}
+                                style={{ width: '80%' }}
                                 text={'Pay'}
                                 onPress={()=> pay(price)}
                                 loader={false}

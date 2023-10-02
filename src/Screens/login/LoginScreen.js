@@ -135,7 +135,7 @@ export default function LoginScreen({ navigation }) {
         if (!email) {
             setIsLoading(false)
             // console.log('2')
-            Toast.showWithGravity('Enter mobile email', 2, Toast.TOP);
+            Toast.showWithGravity('Enter email id', 2, Toast.TOP);
         }
         else if (!password) {
             setIsLoading(false)

@@ -138,22 +138,22 @@ export default function PaymentHistory({ navigation, route }) {
 
                 </View>
 
+                {paymentData.walletHistory.length ?
+                    <View style={{ width: '90%', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 50, marginTop: 10 }}>
 
-                <View style={{ width: '90%', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 50, marginTop: 10 }}>
+                        <Pressable onPress={() => TabPressed('all')} style={{ width: '30%', backgroundColor: tab == 'all' ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, alignItems: 'center', justifyContent: 'center', borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 10, }}>
+                            <Text style={{ paddingTop: 8, paddingBottom: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: tab == 'all' ? AppColors.themesWhiteColor : AppColors.themePrimaryColor }}>{`All (${paymentData.walletHistory.length})`}</Text>
+                        </Pressable>
 
-                    <Pressable onPress={() => TabPressed('all')} style={{ width: '30%', backgroundColor: tab == 'all' ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, alignItems: 'center', justifyContent: 'center', borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 10, }}>
-                        <Text style={{ paddingTop: 8, paddingBottom: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: tab == 'all' ? AppColors.themesWhiteColor : AppColors.themePrimaryColor }}>{`All (${paymentData.walletHistory.length})`}</Text>
-                    </Pressable>
+                        <Pressable onPress={() => TabPressed('spent')} style={{ width: '32%', backgroundColor: tab == 'spent' ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, alignItems: 'center', justifyContent: 'center', borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 10, }}>
+                            <Text style={{ paddingTop: 8, paddingBottom: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: tab == 'spent' ? AppColors.themesWhiteColor : AppColors.themePrimaryColor }}>{`Spent (${paymentData.debit.length})`}</Text>
+                        </Pressable>
 
-                    <Pressable onPress={() => TabPressed('spent')} style={{ width: '32%', backgroundColor: tab == 'spent' ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, alignItems: 'center', justifyContent: 'center', borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 10, }}>
-                        <Text style={{ paddingTop: 8, paddingBottom: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: tab == 'spent' ? AppColors.themesWhiteColor : AppColors.themePrimaryColor }}>{`Spent (${paymentData.debit.length})`}</Text>
-                    </Pressable>
+                        <Pressable onPress={() => TabPressed('received')} style={{ width: '34%', backgroundColor: tab == 'received' ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, alignItems: 'center', justifyContent: 'center', borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 10, }}>
+                            <Text style={{ paddingTop: 8, paddingBottom: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: tab == 'received' ? AppColors.themesWhiteColor : AppColors.themePrimaryColor }}>{`Received (${paymentData.cred.length})`}</Text>
+                        </Pressable>
 
-                    <Pressable onPress={() => TabPressed('received')} style={{ width: '34%', backgroundColor: tab == 'received' ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, alignItems: 'center', justifyContent: 'center', borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 10, }}>
-                        <Text style={{ paddingTop: 8, paddingBottom: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: tab == 'received' ? AppColors.themesWhiteColor : AppColors.themePrimaryColor }}>{`Received (${paymentData.cred.length})`}</Text>
-                    </Pressable>
-
-                </View>
+                    </View> : null}
 
             </View>
         )
@@ -249,8 +249,7 @@ export default function PaymentHistory({ navigation, route }) {
         }
         else {
             const result = await hitApiToAddMoneyToWallet(amount)
-            if (result.status)
-            {
+            if (result.status) {
                 await getPaymentHistory()
                 setOpenWallet(false)
                 Alert.alert('amount added successfully')

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Image, TouchableOpacity, Platform, TextInput, Pressable, FlatList, Dimensions, BackHandler, StyleSheet } from "react-native";
+import { Text, View, Image, TouchableOpacity, Platform, TextInput, Pressable, FlatList, Dimensions, BackHandler, StyleSheet, Alert } from "react-native";
 import { AppColors } from "../../components/constants/AppColor";
 import { FindAndOfferRide } from "../../components/findandoffer/FindAndOfferRide";
 import { PickupAndDrop } from "../../components/pickupanddrop/PickupAndDrop"
@@ -29,6 +29,9 @@ import PushNotification from 'react-native-push-notification';
 import { AppKeys } from "../../components/constants/AppKeys";
 import FastImage from 'react-native-fast-image'
 import { hitApiToSetSeenNotifications } from "../notification/NotificationModal";
+import { HomeHeader } from "../../components/commomheader/HomeHeader";
+import Wallet from "../wallet/Wallet";
+import { hitApiToAddMoneyToWallet } from "../payment/PaymentModal";
 class FindRide extends Component {
 
     constructor(props) {
@@ -112,6 +115,7 @@ class FindRide extends Component {
             offerSearchLoader: false,
             kycStatus: 1,
             textHeight: 90,
+            openWallet: false,
 
 
         }
@@ -136,7 +140,7 @@ class FindRide extends Component {
 
             // if (this.props?.data?.kyc_status != 1)
             // {
-               
+
             // }
             // console.log('loaded', res)
             if (this.props.route.params?.from == 'reset') {
@@ -154,15 +158,15 @@ class FindRide extends Component {
 
 
 
-            
+
             this.props.getProfileDataRequest()
             await this.getRideNotificationData()
             await this.getSavedVehicles()
             await this.getRecentSearch()
-            
-            
+
+
         });
-       
+
 
 
 
@@ -332,6 +336,10 @@ class FindRide extends Component {
 
             alertWithNav('', 'Your kyc is pending, Please update your kyc', this.okPress)
         }
+        else if (this.props?.data?.kyc_status == 2) {
+
+            Alert.alert('', 'Your kyc is under review, You will get a message/notification once review is completed')
+        }
 
         // else  
         // {
@@ -422,6 +430,10 @@ class FindRide extends Component {
             else if (this.props?.data?.kyc_status == 0) {
 
                 alertWithNav('', 'Your kyc is pending, Please update your kyc', this.okPress)
+            }
+            else if (this.props?.data?.kyc_status == 2) {
+
+                Alert.alert('', 'Your kyc is under review, You will get a message/notification once review is completed')
             }
         }
 
@@ -560,7 +572,7 @@ class FindRide extends Component {
                                 style={{ height: 22 }}
                                 textStyle={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12 }}
                                 text={'View'}
-                                onPress={() =>  this.props.navigation.navigate('KycScreen')}
+                                onPress={() => this.props.navigation.navigate('KycScreen')}
                                 loader={false}
                             />
                         </View> : null}
@@ -574,9 +586,9 @@ class FindRide extends Component {
     SearchOffer = (name, gender, image, kycStatus) => {
         return (
             <>
-                {kycStatus == 0 || kycStatus == 2 ?  this.KycNotification(kycStatus) : null}
-                
-                {this.state.existingData?.status ? this.checkExistingRequest() : null }
+                {kycStatus == 0 || kycStatus == 2 ? this.KycNotification(kycStatus) : null}
+
+                {this.state.existingData?.status ? this.checkExistingRequest() : null}
                 <View style={{
                     alignItems: 'center', backgroundColor: AppColors.themesWhiteColor, marginTop: -50,
                     width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, borderColor: AppColors.themeCardBorderColor, borderWidth: 1
@@ -753,7 +765,7 @@ class FindRide extends Component {
     }
 
 
-    HeaderView = ({ name, gender, count, image , kycStatus}) => {
+    HeaderView = ({ name, gender, count, image, kycStatus, walletAmount }) => {
         return (
             <>
                 <View style={{ height: this.state.isSearch == 'cancel' ? 300 : Dimensions.get('window').height * .65, width: '100%' }}>
@@ -764,7 +776,7 @@ class FindRide extends Component {
                 </View>
                 <View style={{ position: 'absolute', width: '100%', backgroundColor: 'transparent' }}>
                     {/* <Header isBack={false} close={() => this.props.navigation.openDrawer()} isRight={true} right={require('../../assets/notification.png')} /> */}
-                    <Header isBack={this.state.isSearch == 'notfound' ? true : false} close={() => this.menuBtnClick()} isRight={true} right={require('../../assets/notification.png')} rightClick={() => this.notiClick(count)} count={count} />
+                    <HomeHeader isBack={this.state.isSearch == 'notfound' ? true : false} close={() => this.menuBtnClick()} isRight={true} right={require('../../assets/notification.png')} rightClick={() => this.notiClick(count)} count={count} walletAmount={walletAmount} walletClick={this.walletClick} />
                 </View>
 
 
@@ -795,6 +807,28 @@ class FindRide extends Component {
     }
 
 
+    async walletClick() {
+
+        this.setState({openWallet: true})
+        // this.props.navigation.navigate('Notification')
+
+    }
+
+    async payPressed (amount)  {
+        if (amount == '') {
+            Alert.alert('enter amount')
+
+        }
+        else {
+            const result = await hitApiToAddMoneyToWallet(amount)
+            if (result.status) {
+                this.setState({openWallet: false})
+                Alert.alert('amount added successfully')
+            }
+            console.log(result)
+        }
+
+    }
 
 
 
@@ -815,7 +849,7 @@ class FindRide extends Component {
                 < FlatList
                     data={['1']}
                     contentContainerStyle={{ width: Dimensions.get('window').width }}
-                    ListHeaderComponent={<this.HeaderView name={data?.name ?? ''} gender={data?.gender} count={data?.notification_count} image={data?.profilePath} kycStatus={data?.kyc_status}/>}
+                    ListHeaderComponent={<this.HeaderView name={data?.name ?? ''} gender={data?.gender} count={data?.notification_count} image={data?.profilePath} kycStatus={data?.kyc_status} walletAmount={data?.wallet_amount} />}
                     keyExtractor={(item, index) => index}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (
@@ -830,14 +864,12 @@ class FindRide extends Component {
 
 
 
-                {/* < SearchLocation
-                    headerText={'Select address'}
-                    isLoading={this.state.openSearch ? true : false}
-                    closePopup={this.openLocationSearch}
-                    onSelectionPress={this.onSelectionPress}
-                    lat={this.state.location.latitude}
-                    lng={this.state.location.longitude}
-                /> */}
+                <Wallet
+                    isLoading={this.state.openWallet}
+                    closePopup={() => this.setState({openWallet: true})}
+                    onPaymentPress={this.payPressed}
+
+                />
             </View >
         )
     }
