@@ -11,10 +11,6 @@ import { Checkbox, Button, Surface } from 'react-native-paper';
 import { InputView } from '../../components/Input/InputView'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from '../../components/constants/AppFonts'
-import {
-    GoogleSignin,
-    statusCodes,
-} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { CommonActions } from '@react-navigation/native';
@@ -35,13 +31,6 @@ export default function LoginScreen({ navigation }) {
 
 
     useEffect(() => {
-        // Configure Google Sign-In
-        GoogleSignin.configure({
-            scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
-            webClientId:
-                '330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-            offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-        });
 
         BackHandler.addEventListener("hardwareBackPress", backActionHandler);
 
@@ -62,10 +51,11 @@ export default function LoginScreen({ navigation }) {
     }
 
     const googleData = (userInfo) => {
+        console.log(userInfo, 'google')
         setIsLoadingGoogle(true)
-        if (userInfo?.data) {
+        if (userInfo?.user) {
             userGoogleLogin(userInfo)
-            console.log(userInfo, 'google')
+           
         }
         else {
             console.log(userInfo, 'google error')
@@ -95,7 +85,7 @@ export default function LoginScreen({ navigation }) {
 
         }
         else {
-            if (result.message == 'No user found with this email') {
+            if (result.message == 'User Doest not exist with the given email') {
                 userGoogleSignup(userInfo)
             }
             else {

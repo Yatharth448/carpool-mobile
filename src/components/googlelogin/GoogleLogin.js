@@ -34,7 +34,7 @@ export function GoogleLogin({ userData, startLoader }) {
             if (userInfo?.user) {
 
                 // await userGoogleLogin(userInfo)
-                userData({data: userInfo})
+                userData({user: userInfo.user})
             }
             console.log(userInfo, 'success')
             // setloggedIn(true);
