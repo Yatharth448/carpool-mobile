@@ -97,7 +97,7 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
               image={
                 data?.profilePath
                   ? {uri: data.profilePath}
-                  : require('../../assets/avtar.png')
+                  : ""
               }
               loaderColor={AppColors.themesWhiteColor}
             />

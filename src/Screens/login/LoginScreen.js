@@ -19,6 +19,7 @@ import auth from '@react-native-firebase/auth';
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { CommonActions } from '@react-navigation/native';
 import CommonLoaders from '../../components/loader/Loader'
+import { GoogleLogin } from '../../components/googlelogin/GoogleLogin'
 
 
 export default function LoginScreen({ navigation }) {
@@ -56,50 +57,21 @@ export default function LoginScreen({ navigation }) {
 
     });
 
-    _signIn = async () => {
-        try {
-            setIsLoadingGoogle(true)
-            await signOut()
-            await GoogleSignin.hasPlayServices();
-            console.log('success 1')
-            // const { accessToken, idToken } = await GoogleSignin.signIn();
-            const userInfo = await GoogleSignin.signIn();
-            if (userInfo?.user) {
+    const startLoader = (start) => {
+        setIsLoadingGoogle(start)
+    }
 
-                await userGoogleLogin(userInfo)
-            }
-            console.log(userInfo, 'success')
-            setloggedIn(true);
-        } catch (error) {
-
-            setIsLoadingGoogle(false)
-            console.log(error, 'error')
-
-            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                // user cancelled the login flow
-                // alert('Cancel');
-            } else if (error.code === statusCodes.IN_PROGRESS) {
-                // alert('Signin in progress');
-                // operation (f.e. sign in) is in progress already
-            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                // alert('PLAY_SERVICES_NOT_AVAILABLE');
-                // play services not available or outdated
-            } else {
-                // some other error happened
-            }
+    const googleData = (userInfo) => {
+        setIsLoadingGoogle(true)
+        if (userInfo?.data) {
+            userGoogleLogin(userInfo)
+            console.log(userInfo, 'google')
         }
-    };
-
-    signOut = async () => {
-        try {
-            await GoogleSignin.revokeAccess();
-            await GoogleSignin.signOut();
-            //   setloggedIn(false);
-            //   setuserInfo([]);
-        } catch (error) {
-            console.error(error);
+        else {
+            console.log(userInfo, 'google error')
         }
-    };
+        setIsLoadingGoogle(false)
+    }
 
 
     const userGoogleLogin = async (userInfo) => {
@@ -110,7 +82,7 @@ export default function LoginScreen({ navigation }) {
         if (result.status) {
             Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
 
-            if (result?.kyc_status) {
+            if (result?.kyc_status == 1 || result?.kyc_status == 2) {
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'RideDrawer' }],
@@ -123,10 +95,37 @@ export default function LoginScreen({ navigation }) {
 
         }
         else {
+            if (result.message == 'No user found with this email') {
+                userGoogleSignup(userInfo)
+            }
+            else {
+
+                Toast.showWithGravity(result.message, 2, Toast.TOP);
+            }
+        }
+        setIsLoadingGoogle(false)
+    }
+
+
+    const userGoogleSignup = async (userInfo) => {
+
+        if (userInfo) {
+
+            // navigation.navigate('OTPScreen', { email: email, secret: result.secret })
+            if (!userInfo?.gender || !userInfo?.mobile) {
+                navigation.navigate('AddGenderMobile', { "email": userInfo?.email, 'familyName': userInfo?.familyName, 'givenName': userInfo?.givenName, 'id': userInfo?.id, 'photo': userInfo?.photo })
+            }
+            else {
+
+                navigation.navigate('KycScreen')
+            }
+        }
+        else {
 
             Toast.showWithGravity(result.message, 2, Toast.TOP);
         }
         setIsLoadingGoogle(false)
+
     }
 
     const userLogin = async () => {
@@ -213,20 +212,7 @@ export default function LoginScreen({ navigation }) {
 
             <View style={{ width: '100%', alignItems: 'center' }}>
 
-                <Pressable onPress={() => _signIn()} style={{ width: '100%', marginTop: 40, alignItems: 'center' }}>
-
-                    <Surface style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 47, borderRadius: 5 }} elevation={4}>
-
-                        <View style={{ width: '30%', justifyContent: 'center', alignItems: 'center' }}>
-                            <Image source={require('../../assets/googlelogo.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
-                        </View>
-                        <View style={{ width: '60%', justifyContent: 'center', justifyContent: 'center' }}>
-                            <Text style={{ color: AppColors.themeBlackColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Sign in with Google'}</Text>
-                        </View>
-
-                    </Surface>
-
-                </Pressable>
+                <GoogleLogin userData={googleData} startLoader={startLoader}/>
 
                 <View style={{ width: '100%', marginTop: 40 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>

@@ -155,3 +155,18 @@ export const hitApiToGetRecentSearch = async () => {
   }
 };
 
+export const hitApiToGetWalletAndNotification = async () => {
+  try {
+    const result = await connection.getAPI('api/user/notification');
+
+    if (result.success) {
+      return result;
+    } else {
+      return result;
+    }
+  } catch (error) {
+    console.error('login modal', error);
+    throw error;
+  }
+};
+

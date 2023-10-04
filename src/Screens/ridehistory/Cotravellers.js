@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, Image, Dimensions, FlatList, ImageBackground, Pressable, StyleSheet } from 'react-native'
+import { View, Text, Image, Dimensions, FlatList, ImageBackground, Pressable, StyleSheet, Alert } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { Header } from '../../components/commomheader/CommonHeader'
 import { Surface } from 'react-native-paper'
@@ -58,9 +58,27 @@ setCotravellerArray(data)
 
             navigation.goBack()
         }
+        else{
+            if (result.message == 'kyc not verified')
+            {
+
+                kycAlert()
+            }
+        }
         setAcceptLoader(false)
 
     }
+
+    const kycAlert = () => {
+        Alert.alert(
+          '',
+          'KYC pending! Please complete your KYC',
+          [{text: 'cancel'}, {text: 'OK', onPress: () =>  navigation.navigate('KycScreen')}],
+          {
+            cancelable: false,
+          },
+        );
+      };
 
 
     const _rejectOfferedRide = async (item, ind) => {
@@ -78,6 +96,13 @@ setCotravellerArray(data)
 
 
             navigation.goBack()
+        }
+        else{
+            if (result.message == 'kyc not verified')
+            {
+
+                kycAlert()
+            }
         }
         setRejectLoader(false)
 

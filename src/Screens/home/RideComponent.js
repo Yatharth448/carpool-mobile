@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Text,
   Image,
@@ -7,14 +7,12 @@ import {
   Pressable,
   Dimensions,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 import {AppColors} from '../../components/constants/AppColor';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppFontFamily} from '../../components/constants/AppFonts';
 import {ButtonPrimary} from '../../components/button/buttonPrimary';
 import CommonLoaders from '../../components/loader/Loader';
-import FastImage from 'react-native-fast-image';
 import {ImageLoader} from '../../components/imageloader/ImageLoader';
 export const AvtarView = ({image, name, type}) => {
   const [loading, setLoading] = React.useState(false);

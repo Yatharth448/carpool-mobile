@@ -6,28 +6,18 @@ import { PickupAndDrop } from "../../components/pickupanddrop/PickupAndDrop"
 import moment from 'moment';
 import DateTimeView from "../../components/datetimeview/DateTimeView";
 import Toast from 'react-native-simple-toast'
-import { hitApiToAllGetVehicle, hitApiToCheckExistingRide, hitApiToGetRecentSearch, hitApiToGetRoutes } from "./RideModal";
+import { hitApiToAllGetVehicle, hitApiToCheckExistingRide, hitApiToGetRecentSearch, hitApiToGetRoutes, hitApiToGetWalletAndNotification } from "./RideModal";
 import { GetCurrentLocation, checkLocationPermission } from "../../components/location/GetCurrentLocation";
 import { AvtarView, CotravellerView, NoRideFound, PendingKYC, SearchLoaderScreen, SeatsView } from "./RideComponent";
 import { ButtonPrimary } from "../../components/button/buttonPrimary";
 import { RecentHorizontal } from "../../components/RecentSearch/RecentHorizontal";
-import { SearchLocation } from "../../components/GooglLocation/SearchLocation";
 import MapComponent from "../../components/map/MapComponent";
 import { hitApiToGetRideList } from "../findridelist/RideListModal";
-import { Header } from "../../components/commomheader/CommonHeader";
 import { connect } from "react-redux";
 import { getProfileDataRequest } from '../../redux/actions/actions';
 import { AppFontFamily } from "../../components/constants/AppFonts";
 import { AddVehiclePopup } from "../../components/popupComponents/AddVehiclePopup";
-import CommonLoaders from "../../components/loader/Loader";
 import { decode } from "@mapbox/polyline";
-import { showMessage } from "react-native-flash-message";
-import { alertWithNav } from "../../components/commonfunction/CommonFunctions";
-import { hitApiToGetProfile } from "../profile/ProfileModal";
-import { CreateNotificationChannel, showNotification } from "../../components/notifications/LocalNotification";
-import PushNotification from 'react-native-push-notification';
-import { AppKeys } from "../../components/constants/AppKeys";
-import FastImage from 'react-native-fast-image'
 import { hitApiToSetSeenNotifications } from "../notification/NotificationModal";
 import { HomeHeader } from "../../components/commomheader/HomeHeader";
 import Wallet from "../wallet/Wallet";
@@ -116,6 +106,8 @@ class FindRide extends Component {
             offerSearchLoader: false,
             kycStatus: 1,
             textHeight: 90,
+            walletBal: 0,
+            notiCount: 0,
             openWallet: false,
             walletLoader: false,
 
@@ -161,15 +153,16 @@ class FindRide extends Component {
 
 
 
-            this.props.getProfileDataRequest()
+           
             await this.getRideNotificationData()
+            await this.getWalletNotification()
             await this.getSavedVehicles()
             await this.getRecentSearch()
 
 
         });
 
-
+ this.props.getProfileDataRequest()
 
 
     }
@@ -177,6 +170,13 @@ class FindRide extends Component {
     // onOkPress() {
     //     this.setState({ kycStatus: 1 })
     // }
+
+
+    async getWalletNotification() {
+        const result = await hitApiToGetWalletAndNotification()
+        console.log(result, 'wallet')
+        this.setState({walletBal: result.data?.wallet, notiCount: result.data?.notification?.count, kycStatus: result.data.kyc})
+    }
 
     async getSavedVehicles() {
 
@@ -603,7 +603,7 @@ class FindRide extends Component {
 
                         {FindAndOfferRide(this.findRide, this.offerRide, this.state.find)}
 
-                        <AvtarView image={image ? { uri: image } : require('../../assets/avtar.png')} name={name} type={this.state.find} />
+                        <AvtarView image={image ? { uri: image } : ""} name={name} type={this.state.find} />
                         <View style={{ width: '94%', height: 1, marginTop: 20, backgroundColor: AppColors.themeCardBorderColor }} />
                         {this.state.find ?
                             <>
@@ -856,7 +856,7 @@ class FindRide extends Component {
                 < FlatList
                     data={['1']}
                     contentContainerStyle={{ width: Dimensions.get('window').width }}
-                    ListHeaderComponent={<this.HeaderView name={data?.name ?? ''} gender={data?.gender} count={data?.notification_count} image={data?.profilePath} kycStatus={data?.kyc_status} walletAmount={data?.wallet_amount} />}
+                    ListHeaderComponent={<this.HeaderView name={data?.name ?? ''} gender={data?.gender} count={this.state.notiCount} image={data?.profilePath} kycStatus={this.state.kycStatus} walletAmount={this.state.walletBal} />}
                     keyExtractor={(item, index) => index}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (

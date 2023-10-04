@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, Alert, Image, FlatList, Dimensions } from 'react-native'
+import { View, Text, Alert, Image, FlatList, Dimensions, Pressable, Linking } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import { hitApiToGetRideList, hitApiToRequestARide } from './RideListModal';
 import { Header } from '../../components/commomheader/CommonHeader';
@@ -15,6 +15,7 @@ import Toast from 'react-native-simple-toast'
 import { showNotification } from '../../components/notifications/LocalNotification';
 import Wallet from '../wallet/Wallet';
 import { hitApiToAddMoneyToWallet } from '../payment/PaymentModal';
+import { createOpenLink } from 'react-native-open-maps';
 export default function FindRideList({ navigation, route }) {
 
 
@@ -35,11 +36,14 @@ export default function FindRideList({ navigation, route }) {
             // const result = await hitApiToGetRideList(pick, drop, date, seat);
             // console.log("ride list", result);
             // if (result.status) {
-            setRideList(data ?? [])
+
+            const updatedArray = data.map(obj => { return { ...obj, loader: false } })
+
+            setRideList(updatedArray ?? [])
             setIsLoading(true)
             // }
             // else {
-            //     console.log(result)
+            console.log(updatedArray)
             // }
 
 
@@ -59,7 +63,13 @@ export default function FindRideList({ navigation, route }) {
 
 
     const requestRide = async (item, itemIndex) => {
-        setStartLoader(true)
+        // setStartLoader(true)
+        const updatedArray = rideList.map((obj, index) =>
+        index === itemIndex ? { ...obj, loader: true } : obj
+    );
+    updatedArray.reverse()
+    setRideList(updatedArray);
+
         const result = await hitApiToRequestARide(
             item._id,
             seat,
@@ -71,12 +81,12 @@ export default function FindRideList({ navigation, route }) {
         console.log(result, 'request ride response')
         if (result.status) {
 
-            const updatedArray = rideList.map((obj, index) =>
-                index === itemIndex ? { ...obj, alreadyRequest: true } : obj
+            const updatedArra = rideList.map((obj, index) =>
+                index === itemIndex ? { ...obj, alreadyRequest: true, loader: false } : obj
             );
-            updatedArray.reverse()
-            setRideList(updatedArray);
-            setStartLoader(false)
+            updatedArra.reverse()
+            setRideList(updatedArra);
+            // setStartLoader(false)
 
             showNotification(
                 {
@@ -95,6 +105,29 @@ export default function FindRideList({ navigation, route }) {
             }
 
         }
+    }
+
+    const openGoogleMapDirections = (sourceLat, sourceLng, destinationLat, destinationLng) => {
+        const source = `${sourceLat},${sourceLng}`;
+        const destination = `${destinationLat},${destinationLng}`;
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${source}&destination=${destination}`;
+
+        Linking.canOpenURL(url)
+            .then(supported => {
+                if (!supported) {
+                    console.error("Can't handle url: " + url);
+                } else {
+                    return Linking.openURL(url);
+                }
+            })
+            .catch(err => console.error('An error occurred', err));
+    };
+
+    const openNavigation = (item) => {
+        console.log('nav clicked', item)
+        openGoogleMapDirections(item.intresected_source_lat, item.intresected_source_long, item.intresected_destination_lat, item.intresected_destination_long)
+        // createOpenLink({ latitude: 37.865101, longitude: -119.538330, query: 'Yosemite Trails', zoom: 0 })
+
     }
 
     const ListView = () => {
@@ -179,12 +212,12 @@ export default function FindRideList({ navigation, route }) {
                                 </View>
 
 
+                                <Pressable onPress={() => openNavigation(item)} style={{ width: '100%', height: 50, alignItems: 'center' }}>
+                                    <View style={{ width: '95%' }}>
+                                        <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 14, color: AppColors.themeText2Color }}>{"Get direction"}</Text>
+                                    </View>
+                                </Pressable>
 
-                                {/* <View style={{ width: '90%', alignItems: 'flex-end' }}>
-                                <Text style={{ width: '100%', padding: 10, paddingTop: 5, paddingBottom: 0, fontFamily: AppFontFamily.PopinsRegular, fontSize: 16, color: AppColors.themeText2Color }}>{item.seat_available + " seat available"}</Text>
-                                <Text style={{ width: '100%', paddingLeft: 10, fontWeight: '400', fontSize: 16, color: AppColors.themeText2Color }}>{"Total travel distance " + convertToKms(item.journey_approx_distance)}</Text>
-                                <Text style={{ width: '100%', padding: 10, paddingTop: 0, fontWeight: '400', fontSize: 16, color: AppColors.themeText2Color }}>{"You are " + item.distance_from_source + " kms away from the nearest pickup point"}</Text>
-                            </View> */}
                                 <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
                                 <View style={{ width: '95%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
                                     <View style={{ width: '50%', flexDirection: 'row' }}>
@@ -223,7 +256,7 @@ export default function FindRideList({ navigation, route }) {
                                                     textStyle={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12 }}
                                                     text={'Request Ride'}
                                                     onPress={() => startLoader ? console.log('empty') : requestRide(item, index)}
-                                                    loader={startLoader}
+                                                    loader={item.loader}
                                                 />
                                             </View>
                                         }

@@ -19,7 +19,7 @@ export const ImageLoader = ({ image, width, height, borderRadius, loaderColor=Ap
                 <FastImage
                     style={{ width: width, height: height }}
                     defaultSource={require('../../assets/avtar.png')}
-                    source={Object.keys(image ?? [])?.length == 0 ? image : combinedObject}
+                    source={image == "" ? require('../../assets/avtar.png') : combinedObject}
                     onLoadStart={(e) => setLoading(true)}
                     onLoadEnd={(e) => setLoading(false)}
                     resizeMode={FastImage.resizeMode.cover}

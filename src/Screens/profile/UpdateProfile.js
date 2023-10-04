@@ -23,6 +23,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
     const [isLoading, setIsLoading] = React.useState(false);
     const [openPhoto, setOpenPhoto] = React.useState(false)
     const [progress, setProgress] = React.useState(0);
+    const [newImg, setNewImg] = React.useState(false);
 
     const [img, setImg] = React.useState()
 
@@ -32,7 +33,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
         setFullName(data.name)
         setEmail(data.email)
         setMobile(data.contact_number)
-        setImg(data?.profilePath ? {uri: data?.profilePath} : require('../../assets/avtar.png'))
+        setImg(data?.profilePath ? {uri: data?.profilePath} : "")
         console.log(data, 'result')
 
     }, []);
@@ -50,6 +51,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                 imageName = imageName.length > 20 ? `${String(imageName).substring(0, 18)}...` + extension : imageName;
                 setImg(data.path);
                 setOpenPhoto(false)
+                setNewImg(true)
 
             }
             else {
@@ -72,6 +74,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
             if (error.code == 'file_size') {
                 Alert.alert(error.message || 'File size cannot exceed 5MB')
                 setOpenPhoto(false)
+                setNewImg(false)
             }
         }
 
@@ -90,6 +93,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                 imageName = imageName.length > 20 ? `${String(imageName).substring(0, 18)}...` + extension : imageName;
                 // setBackImg(data.path)
                 setImg(data.path);
+                setNewImg(true)
                 setOpenPhoto(false)
 
             }
@@ -114,6 +118,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
             if (error.code == 'file_size') {
                 Alert.alert(error.message || 'File size cannot exceed 5MB')
                 // this.setState({ openPopup: false })
+                setNewImg(false)
             }
         }
 
@@ -143,11 +148,15 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                 const params = new FormData();
                 params.append('name', fullName);
                 params.append('contact_number', mobile);
-                params.append('file', {
-                    uri: img,
-                    type: 'image/jpeg',
-                    name: 'profile',
-                })
+               if (newImg)
+               {
+
+                   params.append('file', {
+                       uri: img,
+                       type: 'image/jpeg',
+                       name: 'profile',
+                   }) 
+               }
 
                 const accountRes = await hitApiToUpdateProfile(params)
 

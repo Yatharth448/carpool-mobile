@@ -163,10 +163,10 @@ export default function PaymentHistory({ navigation, route }) {
     const debitCredit = (type) => {
 
         if (type == 'debit') {
-            return "+ " + AppTexts.Rupee_Symbol
+            return "- " + AppTexts.Rupee_Symbol
         }
         else if (type == 'credit') {
-            return "- " + AppTexts.Rupee_Symbol
+            return "+ " + AppTexts.Rupee_Symbol
         }
         else {
             return "" + AppTexts.Rupee_Symbol

@@ -42,12 +42,12 @@ export default function RideHistory({ navigation, route }) {
         else {
 
             setIsRequest(false)
-            const result = await hitApiToGetOfferedRide()
+            // const result = await hitApiToGetOfferedRide()
 
             // console.log(result.data[result.data.length-1].count, 'count')
-            if (result.status) {
-                setOfferCount(result.data[result.data.length-1].count ?? '')
-            }
+            // if (result.status) {
+            //     setOfferCount(result.data[result.data.length-1].count ?? '')
+            // }
 
         }
     }
@@ -91,7 +91,7 @@ export default function RideHistory({ navigation, route }) {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{ width: '40%', height: 50, alignItems: 'center', justifyContent: 'center' }} onPress={() => changeTab('offer')}>
-                    <Text style={{ width: '100%', textAlign: 'center', color: isRequest ? AppColors.themeTextPrimaryColor : AppColors.themePrimaryColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Offered Rides ' + offerCount}</Text>
+                    <Text style={{ width: '100%', textAlign: 'center', color: isRequest ? AppColors.themeTextPrimaryColor : AppColors.themePrimaryColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Offered Rides '}</Text>
                     <View style={{ marginTop: 10, width: '100%', height: 2.5, backgroundColor: isRequest ? null : AppColors.themePrimaryColor }} />
                 </TouchableOpacity>
 

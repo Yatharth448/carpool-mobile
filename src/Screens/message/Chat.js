@@ -157,14 +157,14 @@ export default class Chat extends Component {
         if (load == '') {
 
             // setFetching(true)
-            this.setState({ fetching: true })
+            // this.setState({ fetching: true })
         }
 
         const result = await hitApiToMessageForParticularUser(this.state.id);
         console.log("ride list", result);
         if (result.status) {
 
-            this.setState({ message: (result.data[0]?.messages.reverse()) ?? [], fetching: false })
+            this.setState({ message: (result.data[0]?.messages.reverse()) ?? [] })
             // setMessage()
             // setFetching(false)
             // scrollToBottom(result.data[0]?.messages)
@@ -187,14 +187,14 @@ export default class Chat extends Component {
         else {
 
             // setFetching(true)
-            this.setState({ fetching: true })
+            // this.setState({ fetching: true })
             const result = await hitApiToSendMessage(this.props.route.params?.coTravellerId, msg)
             console.log(result, 'send')
             if (result.status) {
                 // setText('')
                 this.setState({ text: '' })
                 id = result.data
-                this.setState({ fetching: false })
+                // this.setState({ fetching: false })
                 await this.getAllMsg('')
             }
             else {

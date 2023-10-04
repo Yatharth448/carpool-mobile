@@ -63,7 +63,7 @@ function ProfileScreen({
               image={
                 data && data?.profilePath
                   ? {uri: data?.profilePath}
-                  : require('../../assets/avtar.png')
+                  : ""
               }
               width={80}
               height={80}

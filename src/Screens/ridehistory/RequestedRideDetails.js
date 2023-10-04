@@ -83,6 +83,18 @@ export default function RequestedRideDetails({ navigation, route }) {
 
     }
 
+    const kycAlert = () => {
+        Alert.alert(
+          '',
+          'KYC pending! Please complete your KYC',
+          [{text: 'cancel'}, {text: 'OK', onPress: () =>  navigation.navigate('KycScreen')}],
+          {
+            cancelable: false,
+          },
+        );
+      };
+
+
     const acceptRide = async (ind) => {
         console.log(userData[0], 'userData')
         setAcceptLoader(true)
@@ -98,6 +110,13 @@ export default function RequestedRideDetails({ navigation, route }) {
             setCotravellerArray(updatedArray)
 
             // navigation.goBack()
+        }
+        else{
+            if (result.message == 'kyc not verified')
+            {
+
+                kycAlert()
+            }
         }
         await getRideDetail()
         setAcceptLoader(false)
@@ -119,6 +138,13 @@ export default function RequestedRideDetails({ navigation, route }) {
             setCotravellerArray(updatedArray)
 
             // navigation.goBack()
+        }
+        else{
+            if (result.message == 'kyc not verified')
+            {
+
+                kycAlert()
+            }
         }
         await getRideDetail()
         setRejectLoader(false)
