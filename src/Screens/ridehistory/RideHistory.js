@@ -81,7 +81,9 @@ export default function RideHistory({ navigation, route }) {
     return (
         <View style={{ flex: 1, backgroundColor: AppColors.themePickupDropSearchBg }}>
 
-            <Header isBack={false} close={() => { navigation.openDrawer() }} text='Ride History' right={false} />
+            <Header close={() => { navigation.goBack() }} text='Ride History' isBack={true} />
+
+            {/* <Header isBack={true} close={() => { navigation.goBack() }} text='Ride History' right={false} /> */}
 
             <View style={{ flexDirection: 'row', width: '100%', height: 50, alignItems: 'center', justifyContent: 'space-evenly', marginTop: 10 }}>
 

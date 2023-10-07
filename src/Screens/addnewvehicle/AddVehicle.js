@@ -25,7 +25,7 @@ export default function AddVehicle({ navigation, route }) {
 
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themesWhiteColor, alignItems: 'center' }}>
-            <Header close={() => { navigation.navigate('FindRide', {'from': ''}) }} isBack={true} text='Add Vehicle' />
+            <Header close={() => { navigation.navigate('FindRide', {'from': 'vehicle'}) }} isBack={true} text='Add Vehicle' />
 
             <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 30 }}>
 

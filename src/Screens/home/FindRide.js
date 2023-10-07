@@ -7,7 +7,7 @@ import moment from 'moment';
 import DateTimeView from "../../components/datetimeview/DateTimeView";
 import Toast from 'react-native-simple-toast'
 import { hitApiToAllGetVehicle, hitApiToCheckExistingRide, hitApiToGetRecentSearch, hitApiToGetRoutes, hitApiToGetWalletAndNotification } from "./RideModal";
-import { GetCurrentLocation, checkLocationPermission } from "../../components/location/GetCurrentLocation";
+import { GetCurrentLocation, checkLocationPermission, getCurrentLocationFromLatLong } from "../../components/location/GetCurrentLocation";
 import { AvtarView, CotravellerView, NoRideFound, PendingKYC, SearchLoaderScreen, SeatsView } from "./RideComponent";
 import { ButtonPrimary } from "../../components/button/buttonPrimary";
 import { RecentHorizontal } from "../../components/RecentSearch/RecentHorizontal";
@@ -22,6 +22,7 @@ import { hitApiToSetSeenNotifications } from "../notification/NotificationModal"
 import { HomeHeader } from "../../components/commomheader/HomeHeader";
 import Wallet from "../wallet/Wallet";
 import { hitApiToAddMoneyToWallet } from "../payment/PaymentModal";
+import { showNotification } from "../../components/notifications/LocalNotification";
 class FindRide extends Component {
 
     constructor(props) {
@@ -138,7 +139,9 @@ class FindRide extends Component {
             // }
             // console.log('loaded', res)
             if (this.props.route.params?.from == 'reset') {
+
                 this.setState({ pickupLocation: '', dropLocation: '', selectedIndex: 0, selectedDate: 'Date and time of departure' })
+               
             }
             else if (this.props.route.params?.from == 'search') {
                 this.setState({
@@ -149,20 +152,33 @@ class FindRide extends Component {
                 })
 
             }
+            else if (this.props.route.params?.from == 'vehicle') {
+                await this.getSavedVehicles()
+            }
+
+
+            if(this.state.pickupLocation == '')
+            {
+                this.setState({
+                    pickupLocation: await getCurrentLocationFromLatLong(this.state.location.latitude, this.state.location.longitude),
+                    pickMainText: await getCurrentLocationFromLatLong(this.state.location.latitude, this.state.location.longitude)
+                })
+            }
 
 
 
-
-           
             await this.getRideNotificationData()
             await this.getWalletNotification()
-            await this.getSavedVehicles()
             await this.getRecentSearch()
 
 
-        });
 
- this.props.getProfileDataRequest()
+
+
+        });
+       
+        await this.getSavedVehicles()
+        this.props.getProfileDataRequest()
 
 
     }
@@ -175,7 +191,7 @@ class FindRide extends Component {
     async getWalletNotification() {
         const result = await hitApiToGetWalletAndNotification()
         console.log(result, 'wallet')
-        this.setState({walletBal: result.data?.wallet, notiCount: result.data?.notification?.count, kycStatus: result.data.kyc})
+        this.setState({ walletBal: result.data?.wallet, notiCount: result.data?.notification?.count, kycStatus: result.data.kyc })
     }
 
     async getSavedVehicles() {
@@ -185,17 +201,27 @@ class FindRide extends Component {
         if (result.status) {
 
             const vehData = result.data?.vehicle_info
-            // console.log(result.data, 'all vehicle')
+            console.log(result.data, 'all vehicle')
             for (const data of vehData) {
                 data.label = data.vehicle_name
             }
+
+
+
             // const updatedArray = vehData.map((obj) =>  ...obj, obj.vehicle_name = 'vehicle_name');
             this.setState({ vehicleArray: vehData })
+
+            if (this.state.vehicleArray.length > 0) {
+                this.setState({ addVehicle: this.state.vehicleArray[0].label, rideVehicle: this.state.vehicleArray[0] })
+            }
+
             // console.log(vehData, 'all vehicle')
         }
         else {
 
         }
+       
+
     }
 
     async getRecentSearch() {
@@ -283,7 +309,7 @@ class FindRide extends Component {
 
         this.setState({
             pickupLocation: val.pick,
-            pickMainText: val.pickMain,
+            pickMainText: val.pickMain == '' ? val.pick : val.pickMain,
             dropLocation: val.drop,
             dropMainText: val.dropMain,
             openSearch: ''
@@ -316,23 +342,23 @@ class FindRide extends Component {
 
         // if (this.props?.data?.kyc_status == 1) {
 
-            this.setState({ isSearch: 'start', loading: true })
-            const result = await hitApiToGetRideList(pick, drop, date, seat, this.state.pickMainText, this.state.dropMainText);
+        this.setState({ isSearch: 'start', loading: true })
+        const result = await hitApiToGetRideList(pick, drop, date, seat, this.state.pickMainText, this.state.dropMainText);
 
-            this.setState({ loading: false })
-            if (result.status) {
+        this.setState({ loading: false })
+        if (result.status) {
 
-                this.setState({ isSearch: 'cancel' })
-                this.props.navigation.navigate('FindRideList', { data: result.data, seat: this.state.passengerValue })
+            this.setState({ isSearch: 'cancel' })
+            this.props.navigation.navigate('FindRideList', { data: result.data, seat: this.state.passengerValue })
 
+        }
+        else {
+            // console.log(result)
+            if (result.message == 'No ride found') {
+                this.setState({ isSearch: 'notfound' })
             }
-            else {
-                // console.log(result)
-                if (result.message == 'No ride found') {
-                    this.setState({ isSearch: 'notfound' })
-                }
 
-            }
+        }
         // }
         // else if (this.props?.data?.kyc_status == 0) {
 
@@ -416,21 +442,21 @@ class FindRide extends Component {
         else {
 
             // if (this.props?.data?.kyc_status == 1) {
-                this.setState({ offerSearchLoader: true })
-                const routeData = await this.getPolylineCoordinats(this.state.pickupLocation, this.state.dropLocation)
+            this.setState({ offerSearchLoader: true })
+            const routeData = await this.getPolylineCoordinats(this.state.pickupLocation, this.state.dropLocation)
 
-                this.setState({ offerSearchLoader: false })
-                this.props.navigation.navigate('MapRoutes',
-                    {
-                        pick: this.state.pickupLocation,
-                        pickMainText: this.state.pickMainText,
-                        drop: this.state.dropLocation,
-                        dropMainText: this.state.dropMainText,
-                        date: this.state.rawDate,
-                        seat: this.state.avilSeat,
-                        routeData,
-                        vehicle: this.state.rideVehicle,
-                    })
+            this.setState({ offerSearchLoader: false })
+            this.props.navigation.navigate('MapRoutes',
+                {
+                    pick: this.state.pickupLocation,
+                    pickMainText: this.state.pickMainText,
+                    drop: this.state.dropLocation,
+                    dropMainText: this.state.dropMainText,
+                    date: this.state.rawDate,
+                    seat: this.state.avilSeat,
+                    routeData,
+                    vehicle: this.state.rideVehicle,
+                })
             // }
             // else if (this.props?.data?.kyc_status == 0) {
 
@@ -814,24 +840,30 @@ class FindRide extends Component {
 
     async walletClick() {
 
-        this.setState({openWallet: true})
+        this.setState({ openWallet: true })
         // this.props.navigation.navigate('Notification')
 
     }
 
-    async payPressed (amount)  {
+    async payPressed(amount) {
         if (amount == '') {
             Alert.alert('enter amount')
 
         }
         else {
-            this.setState({walletLoader: true})
+            this.setState({ walletLoader: true })
             const result = await hitApiToAddMoneyToWallet(amount)
             if (result.status) {
-                this.setState({openWallet: false})
-                Alert.alert('amount added successfully')
+                this.getWalletNotification()
+                this.setState({ openWallet: false })
+                showNotification(
+                    {
+                        "title": 'Wallet recharge successful',
+                        "message": 'Your wallet has been recharged successfully'
+                    }
+                )
             }
-            this.setState({walletLoader: false})
+            this.setState({ walletLoader: false })
             console.log(result)
         }
 
@@ -873,7 +905,7 @@ class FindRide extends Component {
 
                 <Wallet
                     isLoading={this.state.openWallet}
-                    closePopup={() => this.setState({openWallet: false})}
+                    closePopup={() => this.setState({ openWallet: false })}
                     onPaymentPress={this.payPressed}
                     loader={this.state.walletLoader}
 

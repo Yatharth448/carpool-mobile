@@ -41,7 +41,7 @@ export default function OfferedRides({ selectedData }) {
     }, []);
 
 
-    
+
 
     const listView = () => {
         return (
@@ -66,9 +66,14 @@ export default function OfferedRides({ selectedData }) {
                     <Pressable onPress={() => selectedData(item)} style={{ width: Dimensions.get('window').width, alignItems: 'center', marginTop: 10, marginBottom: 10 }}>
                         <Surface elevation={4} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
                             <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
-                                <View style={{ justifyContent: 'center' }}>
+                                <View style={{ justifyContent: 'center', width: '50%' }}>
 
                                     <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themeText2Color }}>{moment(item.journey_start_at).format('DD MMM YYYY, HH:mm')}</Text>
+
+                                </View>
+                                <View style={{ justifyContent: 'center', alignItems: 'flex-end', width: '50%'  }}>
+
+                                    <Text style={{ padding: 5, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themePrimaryColor }}>{item.status}</Text>
 
                                 </View>
                             </View>
@@ -103,7 +108,7 @@ export default function OfferedRides({ selectedData }) {
                                         <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginTop: 20, marginBottom: 0 }}>
 
                                             <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.pick_main_text}</Text>
+                                                <Text numberOfLines={2} style={{ fontFamily: AppFontFamily.PopinsRegular, width: '100%', color: AppColors.themeTextPrimaryColor, fontSize: 15 }}>{item.pick_main_text == '' ? item.journey_origin_address : item.pick_main_text}</Text>
                                             </View>
                                         </View>
                                         <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
@@ -128,7 +133,7 @@ export default function OfferedRides({ selectedData }) {
     }
 
     return (
-        <View style={{ height: Dimensions.get('window').height * .83 , paddingBottom: 50}}>
+        <View style={{ height: Dimensions.get('window').height * .83, paddingBottom: 50 }}>
             {isLoading ? offeredArr.length ? listView() : CommonLoaders.NoDataInList('No offered ride found') : CommonLoaders.RideHistoryLoader()}
         </View>
     )

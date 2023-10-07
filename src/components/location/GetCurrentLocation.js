@@ -1,6 +1,7 @@
-import {Alert, Linking, Platform} from 'react-native';
+import { Alert, Linking, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import {request, PERMISSIONS} from 'react-native-permissions';
+import { request, PERMISSIONS } from 'react-native-permissions';
+import { AppKeys } from '../constants/AppKeys';
 
 export const GetCurrentLocation = async () => {
   return new Promise((resolve, reject) => {
@@ -16,7 +17,7 @@ export const GetCurrentLocation = async () => {
 
         errorCallback => {
           console.log('error 2');
-          return resolve({latitude: 0.0, longitude: 0.0});
+          return resolve({ latitude: 0.0, longitude: 0.0 });
         },
         {
           enableHighAccuracy: true,
@@ -27,7 +28,7 @@ export const GetCurrentLocation = async () => {
       );
     } catch (ex) {
       console.log('error', ex);
-      return resolve({latitude: 0.0, longitude: 0.0});
+      return resolve({ latitude: 0.0, longitude: 0.0 });
     }
   });
 };
@@ -62,18 +63,41 @@ export function locationAlert() {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'ALLOW', onPress: () => requestLocationPermission()},
+      { text: 'ALLOW', onPress: () => requestLocationPermission() },
     ],
-    {cancelable: false},
+    { cancelable: false },
   );
 }
 export function requestLocationPermission() {
   Alert.alert(
     'Location Permission',
     'This app needs the location permission, Please on your GPS location',
-    [{text: 'Enable Location', onPress: () => Linking.openSettings()}],
+    [{ text: 'Enable Location', onPress: () => Linking.openSettings() }],
     {
       cancelable: false,
     },
   );
 }
+
+
+export const getCurrentLocationFromLatLong = async (lat, long) => {
+
+  console.log(lat, long, 'lat lng')
+
+  const placeName = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&sensor=true/false&key=${AppKeys.API_KEY}`
+
+  try {
+    const response = await fetch(placeName);
+    const data = await response.json();
+    if (data) {
+      
+     return data.results[0].formatted_address
+
+    }
+  } catch (error) {
+    console.error('Error fetching predictions:', error);
+  }
+};
+
+
+

@@ -16,6 +16,7 @@ import { showNotification } from '../../components/notifications/LocalNotificati
 import Wallet from '../wallet/Wallet';
 import { hitApiToAddMoneyToWallet } from '../payment/PaymentModal';
 import { createOpenLink } from 'react-native-open-maps';
+import { GetCurrentLocation } from '../../components/location/GetCurrentLocation';
 export default function FindRideList({ navigation, route }) {
 
 
@@ -36,7 +37,8 @@ export default function FindRideList({ navigation, route }) {
             // const result = await hitApiToGetRideList(pick, drop, date, seat);
             // console.log("ride list", result);
             // if (result.status) {
-
+               
+            
             const updatedArray = data.map(obj => { return { ...obj, loader: false } })
 
             setRideList(updatedArray ?? [])
@@ -97,6 +99,11 @@ export default function FindRideList({ navigation, route }) {
         }
         else {
 
+            const updatedArra = rideList.map((obj, index) =>
+            index === itemIndex ? { ...obj, alreadyRequest: false, loader: false } : obj
+        );
+        updatedArra.reverse()
+        setRideList(updatedArra);
             setStartLoader(false)
             // Toast.showWithGravity(result.message ?? result.error ?? 'Something went wrong', 2, Toast.TOP);
             if (result.message == "Please add money to wallet") {
@@ -107,9 +114,11 @@ export default function FindRideList({ navigation, route }) {
         }
     }
 
-    const openGoogleMapDirections = (sourceLat, sourceLng, destinationLat, destinationLng) => {
-        const source = `${sourceLat},${sourceLng}`;
-        const destination = `${destinationLat},${destinationLng}`;
+    const openGoogleMapDirections = async (sourceLat, sourceLng) => {
+
+        const loc = await GetCurrentLocation()
+        const source = `${loc.latitude},${loc.longitude}`;
+        const destination = `${sourceLat},${sourceLng}`;
         const url = `https://www.google.com/maps/dir/?api=1&origin=${source}&destination=${destination}`;
 
         Linking.canOpenURL(url)
@@ -212,9 +221,9 @@ export default function FindRideList({ navigation, route }) {
                                 </View>
 
 
-                                <Pressable onPress={() => openNavigation(item)} style={{ width: '100%', height: 50, alignItems: 'center' }}>
+                                <Pressable onPress={() => openNavigation(item)} style={{ width: '100%',  alignItems: 'center' }}>
                                     <View style={{ width: '95%' }}>
-                                        <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 14, color: AppColors.themeText2Color }}>{"Get direction"}</Text>
+                                        <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBoldItalics, fontSize: 12, color: AppColors.themePrimaryColor }}>{"Click here, to get direction to your nearest pickup point"}</Text>
                                     </View>
                                 </Pressable>
 

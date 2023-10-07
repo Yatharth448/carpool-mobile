@@ -86,7 +86,7 @@ export default function LoginScreen({ navigation }) {
         }
         else {
             if (result.message == 'User Doest not exist with the given email') {
-                userGoogleSignup(userInfo)
+                userGoogleSignup(userInfo.user)
             }
             else {
 
@@ -100,8 +100,9 @@ export default function LoginScreen({ navigation }) {
     const userGoogleSignup = async (userInfo) => {
 
         if (userInfo) {
+            // const { email, familyName, givenName, id, photo } = route.params;
 
-            // navigation.navigate('OTPScreen', { email: email, secret: result.secret })
+            // console.log(userInfo, userInfo?.email,  userInfo?.familyName, userInfo?.givenName,  userInfo?.id,  userInfo?.photo )
             if (!userInfo?.gender || !userInfo?.mobile) {
                 navigation.navigate('AddGenderMobile', { "email": userInfo?.email, 'familyName': userInfo?.familyName, 'givenName': userInfo?.givenName, 'id': userInfo?.id, 'photo': userInfo?.photo })
             }

@@ -3,17 +3,11 @@ import { View, FlatList, Image, Text, Modal, Pressable, Dimensions, TextInput, A
 import { Surface } from 'react-native-paper'
 import { AppColors } from '../../components/constants/AppColor'
 import { AppFontFamily } from '../../components/constants/AppFonts'
-import { AppTexts } from '../../components/constants/AppTexts'
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
-import { connect } from 'react-redux';
-import { getProfileDataRequest } from '../../redux/actions/actions';
-import { Header } from '../../components/commomheader/CommonHeader'
-import ConfettiCannon from 'react-native-confetti-cannon';
-import { ScrollView } from 'react-native-gesture-handler'
 
 export default function Wallet({ isLoading, closePopup, onPaymentPress, loader=false }) {
 
-    const [price, setPrice] = React.useState('')
+    const [price, setPrice] = React.useState('500')
     const [ind, setInd] = React.useState('')
     const data = ['500', '1000', '1500', '2000', '5000']
     const selectedIndex = (ind) => {
@@ -87,7 +81,7 @@ export default function Wallet({ isLoading, closePopup, onPaymentPress, loader=f
                             {/* <Pressable> */}
 
                             <TextInput
-                                style={{ paddingLeft: 10, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBtnDisableColor }}
+                                style={{ paddingLeft: 10, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themePrimaryColor }}
                                 placeholder={'Enter amount'}
                                 placeholderTextColor={AppColors.themeTextGrayColor}
                                 value={price}

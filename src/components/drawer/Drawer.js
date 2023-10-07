@@ -17,23 +17,23 @@ import {connect} from 'react-redux';
 import {getProfileDataRequest} from '../../redux/actions/actions';
 import reducer from '../../redux/reducers/reducers';
 import {ImageLoader} from '../imageloader/ImageLoader';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
   const [menu, setMenu] = React.useState([
-    {screen: 'FindRide', name: 'HOME'},
-    {screen: 'ActiveRideCarpooler', name: 'ACTIVE RIDE'},
-    {screen: 'RideHistory', name: 'RIDE HISTORY'},
-    {screen: 'MessageRoom', name: 'MESSAGES'},
-    {screen: 'PaymentHistory', name: 'PAYMENT'},
-    {screen: 'Support', name: 'SUPPORT'},
-    {screen: 'Signout', name: 'SIGN OUT'},
+    {screen: 'FindRide', name: 'HOME', icon: require('../../assets/home.png')},
+    {screen: 'ActiveRideCarpooler', name: 'ACTIVE RIDE', icon: require('../../assets/active-ride.png')},
+    {screen: 'RideHistory', name: 'RIDE HISTORY', icon: require('../../assets/ridehistory.png')},
+    {screen: 'MessageRoom', name: 'MESSAGES', icon:require('../../assets/messages.png')},
+    {screen: 'PaymentHistory', name: 'PAYMENT', icon: require('../../assets/payment.png')},
+    {screen: 'Support', name: 'SUPPORT', icon: require('../../assets/support.png')},
+    {screen: 'Signout', name: 'SIGN OUT', icon: require('../../assets/logout.png')},
   ]);
   const [ind, setInd] = React.useState(0);
   const handleDrawerItemPress = (screenName, index) => {
     selectedInd(index);
 
-    if (screenName == 'Payment') {
-    } else if (screenName == 'FindRide') {
+    if (screenName == 'FindRide') {
       navigation.navigate(screenName, {from: 'reset'});
     } else if (screenName == 'Signout') {
       LogoutAlert();
@@ -148,10 +148,14 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
               style={{
                 width: '100%',
                 height: 60,
+                flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
               onPress={() => handleDrawerItemPress(item.screen, index)}>
+                 <Image source={item.icon} style={{ marginLeft: 10, width: 25, height: 25, resizeMode: 'contain', tintColor:  index == ind
+                      ? AppColors.themePrimaryColor
+                      : AppColors.themeText2Color }} />
               <Text
                 style={{
                   fontFamily: AppFontFamily.PopinsBold,
@@ -161,6 +165,7 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
                       ? AppColors.themePrimaryColor
                       : AppColors.themeText2Color,
                   fontSize: 14,
+                  marginLeft: 10,
                 }}>
                 {item.name}
               </Text>

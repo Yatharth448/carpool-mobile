@@ -20,12 +20,12 @@ export default function AddGenderMobile({ navigation, route }) {
     const [mobile, setMobile] = React.useState("");
     const [selectedIndex, setIndex] = React.useState(0)
     const [isLoading, setIsLoading] = React.useState(false)
-    const {email, familyName, givenName,id, photo} = route.params;
+    const { email, familyName, givenName, id, photo } = route.params;
 
     useEffect(() => {
 
         BackHandler.addEventListener("hardwareBackPress", backActionHandler);
-
+        setIsLoading(false)
         return () => {
             // clear/remove event listener
             BackHandler.removeEventListener("hardwareBackPress", backActionHandler);
@@ -34,21 +34,24 @@ export default function AddGenderMobile({ navigation, route }) {
     }, [backActionHandler]);
 
     const backActionHandler = (async () => {
-
+        navigation.goBack()
 
     });
 
 
     const userGoogleLogin = async (userInfo) => {
 
-        // const deviceToken = await Storage.getSavedItem('fcmToken')
+        const deviceToken = await Storage.getSavedItem('fcmToken')
+        // console.log(email, familyName, givenName, id, photo, deviceToken, mobile, gender, 'google sign up')
         setIsLoading(true)
 
         if (mobile == '') {
             Toast.showWithGravity('Enter mobile', 2, Toast.TOP);
+            setIsLoading(false)
         }
         else if (gender == '') {
             Toast.showWithGravity('Enter mobile', 2, Toast.TOP);
+            setIsLoading(false)
         }
         else {
 
@@ -62,12 +65,12 @@ export default function AddGenderMobile({ navigation, route }) {
                 navigation.navigate('KycScreen')
             }
             else {
-                console.log(accountRes, 'res')
-                Toast.showWithGravity(accountRes?.message ?? 'Something went wrong', 2, Toast.TOP);
+                console.log(result, 'res')
+                Toast.showWithGravity(result?.message ?? 'Something went wrong', 2, Toast.TOP);
             }
             setIsLoading(false)
 
-            
+
         }
 
 

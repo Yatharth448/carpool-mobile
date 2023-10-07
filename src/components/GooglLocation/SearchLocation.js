@@ -5,6 +5,7 @@ import { AppColors } from '../constants/AppColor';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { AppFontFamily } from '../constants/AppFonts';
 import { Surface } from 'react-native-paper';
+import { getCurrentLocationFromLatLong } from '../location/GetCurrentLocation';
 
 export default function SearchLocation ({ navigation ,route}) {
     const [selectedInput, setSelectedInput] = useState(null);
@@ -14,7 +15,9 @@ export default function SearchLocation ({ navigation ,route}) {
     const [predictions, setPredictions] = useState([]);
     const {headerText, lat, lng } = route.params;
 
-    useEffect(() => {
+    useEffect(async() => {
+
+        setPick(await getCurrentLocationFromLatLong(lat, lng))
        
         return () => {
             setPick('')

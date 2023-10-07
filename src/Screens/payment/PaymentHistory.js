@@ -179,7 +179,7 @@ export default function PaymentHistory({ navigation, route }) {
             <>
                 <HistoryTopView />
                 <FlatList
-                    data={data.length > 0 ? data : ['']}
+                    data={data.length > 0 ? data.reverse() : ['']}
                     // refreshControl={
                     //     <RefreshControl
                     //         onRefresh={() => this.getCartList()}
@@ -204,7 +204,7 @@ export default function PaymentHistory({ navigation, route }) {
 
                                         <View style={{ width: '13%', justifyContent: 'flex-start', alignItems: 'center' }}>
 
-                                            <Image source={require('../../assets/avtar.png')} style={{ width: 40, height: 40, resizeMode: 'contain' }} />
+                                            <Image source={require('../../assets/Wallet.png')} style={{ width: 40, height: 40, resizeMode: 'contain', tintColor: item.type == 'debit' ? AppColors.themeButtonRed : AppColors.themePrimaryColor}} />
 
                                         </View>
 
@@ -261,7 +261,7 @@ export default function PaymentHistory({ navigation, route }) {
 
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
-            <Header close={() => { navigation.navigate('RideDrawer', { screen: 'FindRide', params: { from: 'reset' } }) }} text='Payment History' />
+            <Header close={() => { navigation.goBack()}} text='Payment History' />
 
 
 
