@@ -215,7 +215,7 @@ export default function FindRideList({ navigation, route }) {
 
                                     <View style={{ width: '25%', alignItems: 'flex-end' }}>
                                         <Text style={{ paddingTop: 8, paddingRight: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{AppTexts.Rupee_Symbol + Number(item.request_charge).toFixed(0)}</Text>
-                                        <Text style={{ padding: 10, paddingTop: 5, paddingBottom: 0, fontFamily: AppFontFamily.PopinsRegular, fontSize: 13, color: AppColors.themeBlackColor }}>{item.seat_available + " seats left"}</Text>
+                                        <Text style={{ padding: 10, paddingTop: 5, paddingBottom: 0, fontFamily: AppFontFamily.PopinsRegular, fontSize: 13, color: AppColors.themeBlackColor }}>{item.seat_left + " seats left"}</Text>
 
                                     </View>
                                 </View>

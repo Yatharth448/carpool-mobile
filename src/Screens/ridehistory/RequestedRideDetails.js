@@ -12,6 +12,7 @@ import { hitApiToAcceptOfferedRide, hitApiToAcceptRequestedRide } from './RideHi
 import CommonLoaders from '../../components/loader/Loader';
 import { RideCostView } from './RideHistoryComponent';
 import { CalculateTimeFromMilies } from '../../components/commonfunction/CommonFunctions';
+import { ImageLoader } from '../../components/imageloader/ImageLoader';
 
 export default function RequestedRideDetails({ navigation, route }) {
 
@@ -64,7 +65,7 @@ export default function RequestedRideDetails({ navigation, route }) {
             setUserData(result.data.userData)
             setIsLoading(true)
 
-             console.log(result.data, 'data')
+            console.log(result.data, 'data')
         }
     }
 
@@ -85,14 +86,14 @@ export default function RequestedRideDetails({ navigation, route }) {
 
     const kycAlert = () => {
         Alert.alert(
-          '',
-          'KYC pending! Please complete your KYC',
-          [{text: 'cancel'}, {text: 'OK', onPress: () =>  navigation.navigate('KycScreen')}],
-          {
-            cancelable: false,
-          },
+            '',
+            'KYC pending! Please complete your KYC',
+            [{ text: 'cancel' }, { text: 'OK', onPress: () => navigation.navigate('KycScreen') }],
+            {
+                cancelable: false,
+            },
         );
-      };
+    };
 
 
     const acceptRide = async (ind) => {
@@ -111,9 +112,8 @@ export default function RequestedRideDetails({ navigation, route }) {
 
             // navigation.goBack()
         }
-        else{
-            if (result.message == 'kyc not verified')
-            {
+        else {
+            if (result.message == 'kyc not verified') {
 
                 kycAlert()
             }
@@ -139,9 +139,8 @@ export default function RequestedRideDetails({ navigation, route }) {
 
             // navigation.goBack()
         }
-        else{
-            if (result.message == 'kyc not verified')
-            {
+        else {
+            if (result.message == 'kyc not verified') {
 
                 kycAlert()
             }
@@ -226,9 +225,16 @@ export default function RequestedRideDetails({ navigation, route }) {
                         <View style={{ width: '90%', marginTop: 0, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View> */}
                         <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginLeft: 10, marginTop: 20 }}>
 
-                            <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} />
+                            <ImageLoader
+                                image={item?.profile ? item?.profile : ''}
+                                width={42}
+                                height={42}
+                                borderRadius={21}
+                            />
 
-                            <View style={{ justifyContent: 'center' , width: '65%'}}>
+                            {/* <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} /> */}
+
+                            <View style={{ justifyContent: 'center', width: '65%' }}>
 
                                 <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.name ?? "Sachin Gupta"}</Text>
                                 <View style={{ paddingLeft: 10, flexDirection: 'row', alignItems: 'center' }}>
@@ -290,9 +296,9 @@ export default function RequestedRideDetails({ navigation, route }) {
                             </View>
 
                         </View>
-                       
+
                         {/* <View style={{ justifyContent: 'flex-end', width: '95%', flexDirection: 'row', alignItems: 'center', paddingBottom: 5 }}> */}
-                            {/* <View style={{ justifyContent: 'center', alignItems: 'flex-start', width: '55%' }}>
+                        {/* <View style={{ justifyContent: 'center', alignItems: 'flex-start', width: '55%' }}>
 
                                 <Pressable onPress={() => cancelAlert(item)} style={{ backgroundColor: AppColors.themeButtonRed, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
 
@@ -301,11 +307,11 @@ export default function RequestedRideDetails({ navigation, route }) {
 
 
                             </View> */}
-                            {/* <Pressable onPress={() => Linking.openURL(`tel:${item?.contact}`)} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
+                        {/* <Pressable onPress={() => Linking.openURL(`tel:${item?.contact}`)} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
 
                                 <Image source={require('../../assets/btncall.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
                             </Pressable> */}
-                            {/* <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.user_id, 'id': item._id, 'cotravellerName': item.name })} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
+                        {/* <Pressable onPress={() => navigation.navigate('Chat', { 'coTravellerId': item.user_id, 'id': item._id, 'cotravellerName': item.name })} style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
 
                                 <Image source={require('../../assets/btnchat.png')} style={{ marginLeft: 0, width: 58, height: 58, resizeMode: 'contain' }} />
                             </Pressable> */}

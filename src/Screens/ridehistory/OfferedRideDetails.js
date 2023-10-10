@@ -12,6 +12,7 @@ import { hitApiToAcceptOfferedRide, hitApiToAcceptRequestedRide } from './RideHi
 import CommonLoaders from '../../components/loader/Loader';
 import { RideCostView } from './RideHistoryComponent';
 import { CalculateTimeFromMilies } from '../../components/commonfunction/CommonFunctions';
+import { ImageLoader } from '../../components/imageloader/ImageLoader';
 
 export default function OfferedRideDetails({ navigation, route }) {
 
@@ -109,7 +110,13 @@ export default function OfferedRideDetails({ navigation, route }) {
 
                         <View style={{ width: '90%', marginTop: 10, marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
                         <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginLeft: 10, marginTop: 20 }}>
-                            <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} />
+                        <ImageLoader
+                                image={item?.profile ? item?.profile : ''}
+                                width={42}
+                                height={42}
+                                borderRadius={21}
+                            />
+                            {/* <Image source={{uri: item?.profile}} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} /> */}
                             <View style={{ justifyContent: 'center' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                                     <Text style={{ marginLeft: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 16, color: AppColors.themeText2Color }}>{item.name ?? "Sachin Gupta"}</Text>

@@ -211,8 +211,8 @@ export default function SignupScreen({ navigation }) {
     return (
         <View style={{ flex: 1, backgroundColor: AppColors.themesWhiteColor }}>
             <ScrollView>
-                <View style={{ width: '100%', height: 120 }}>
-                    <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 200, resizeMode: 'contain' }} />
+                <View style={{ width: '100%', height: 80, marginTop: 30 }}>
+                    <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 100, resizeMode: 'contain' }} />
                 </View>
 
                 <Text style={{ marginLeft: 20, fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>

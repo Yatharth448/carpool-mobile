@@ -105,8 +105,8 @@ export default function OTPScreen({ navigation, route }) {
   return (
     <View style={{ flex: 1, backgroundColor: AppColors.themesWhiteColor }}>
 
-      <View style={{ width: '100%', height: '20%' }}>
-        <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 200, resizeMode: 'contain' }} />
+      <View style={{ width: '100%', height: 100, marginTop: 30 }}>
+        <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 80, resizeMode: 'contain' }} />
       </View>
 
 

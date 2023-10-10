@@ -148,6 +148,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                 const params = new FormData();
                 params.append('name', fullName);
                 params.append('contact_number', mobile);
+                console.log(img, 'img')
                if (newImg)
                {
 
@@ -215,7 +216,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
 
                         <View style={{ width: '96%', alignItems: 'center', justifyContent: 'center' }}>
                             <ImageLoader
-                                image={img}
+                                image={newImg ? {uri: img} : img ? img : ''}
                                 width={80}
                                 height={80}
                                 borderRadius={40}

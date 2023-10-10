@@ -402,13 +402,13 @@ export default function UploadDocuments({navigation, route}) {
           backgroundColor: AppColors.themesWhiteColor,
           paddingBottom: 30,
         }}>
-        <View style={{width: '100%', height: '20%'}}>
+        <View style={{width: '100%', height: 80, marginTop: 30}}>
           <Image
             source={require('../../assets/logo.jpg')}
             style={{
               marginLeft: 10,
               width: 200,
-              height: 200,
+              height: 100,
               resizeMode: 'contain',
             }}
           />
