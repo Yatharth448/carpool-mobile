@@ -22,12 +22,36 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
   const [menu, setMenu] = React.useState([
     {screen: 'FindRide', name: 'HOME', icon: require('../../assets/home.png')},
-    {screen: 'ActiveRideCarpooler', name: 'ACTIVE RIDE', icon: require('../../assets/active-ride.png')},
-    {screen: 'RideHistory', name: 'RIDE HISTORY', icon: require('../../assets/ridehistory.png')},
-    {screen: 'MessageRoom', name: 'MESSAGES', icon:require('../../assets/messages.png')},
-    {screen: 'PaymentHistory', name: 'PAYMENT', icon: require('../../assets/payment.png')},
-    {screen: 'Support', name: 'SUPPORT', icon: require('../../assets/support.png')},
-    {screen: 'Signout', name: 'SIGN OUT', icon: require('../../assets/logout.png')},
+    {
+      screen: 'RideCotraveller',
+      name: 'ACTIVE RIDE',
+      icon: require('../../assets/active-ride.png'),
+    },
+    {
+      screen: 'RideHistory',
+      name: 'RIDE HISTORY',
+      icon: require('../../assets/ridehistory.png'),
+    },
+    {
+      screen: 'MessageRoom',
+      name: 'MESSAGES',
+      icon: require('../../assets/messages.png'),
+    },
+    {
+      screen: 'PaymentHistory',
+      name: 'PAYMENT',
+      icon: require('../../assets/payment.png'),
+    },
+    {
+      screen: 'Support',
+      name: 'SUPPORT',
+      icon: require('../../assets/support.png'),
+    },
+    {
+      screen: 'Signout',
+      name: 'SIGN OUT',
+      icon: require('../../assets/logout.png'),
+    },
   ]);
   const [ind, setInd] = React.useState(0);
   const handleDrawerItemPress = (screenName, index) => {
@@ -37,8 +61,8 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
       navigation.navigate(screenName, {from: 'reset'});
     } else if (screenName == 'Signout') {
       LogoutAlert();
-    } else if (screenName == 'ActiveRideCarpooler') {
-      navigation.navigate(screenName, {id: '6516e6d69d0aeef2edcf94e3'});
+    } else if (screenName == 'RideCotraveller') {
+      navigation.navigate(screenName, {id: '6523d8a75b35e2819af14e9b'});
     } else {
       navigation.navigate(screenName);
     }
@@ -94,11 +118,7 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
               width={80}
               height={80}
               borderRadius={40}
-              image={
-                data?.profilePath
-                  ? {uri: data.profilePath}
-                  : ""
-              }
+              image={data?.profilePath ? {uri: data.profilePath} : ''}
               loaderColor={AppColors.themesWhiteColor}
             />
           </View>
@@ -153,9 +173,19 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
                 alignItems: 'center',
               }}
               onPress={() => handleDrawerItemPress(item.screen, index)}>
-                 <Image source={item.icon} style={{ marginLeft: 10, width: 25, height: 25, resizeMode: 'contain', tintColor:  index == ind
+              <Image
+                source={item.icon}
+                style={{
+                  marginLeft: 10,
+                  width: 25,
+                  height: 25,
+                  resizeMode: 'contain',
+                  tintColor:
+                    index == ind
                       ? AppColors.themePrimaryColor
-                      : AppColors.themeText2Color }} />
+                      : AppColors.themeText2Color,
+                }}
+              />
               <Text
                 style={{
                   fontFamily: AppFontFamily.PopinsBold,
