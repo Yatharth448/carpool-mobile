@@ -405,7 +405,7 @@ export default function RideCotravaller({navigation, route}) {
               display: 'flex',
               flexDirection: 'row',
               right: 10,
-              top: 400,
+              top: 300,
               backgroundColor: AppColors.themesWhiteColor,
               padding: 10,
               borderRadius: 5,
@@ -971,6 +971,6 @@ const styles = StyleSheet.create({
   },
   maps: {
     width: Dimensions.get('screen').width,
-    height: Dimensions.get('screen').height / 1.75,
+    height: Dimensions.get('screen').height / 2.2,
   },
 });
