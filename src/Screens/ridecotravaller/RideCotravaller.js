@@ -82,7 +82,7 @@ export default function RideCotravaller({navigation, route}) {
   // openPrice
   const fetchRideDetails = async () => {
     const result = await apigetRideDetails(id);
-    console.log('result ', result);
+    console.log('result ', result, id);
     if (result.status === false) {
       Toast.showWithGravity(
         result.message ?? result.error ?? 'Something went wrong',
@@ -745,16 +745,35 @@ export default function RideCotravaller({navigation, route}) {
                 padding: 5,
                 borderColor: AppColors.themeSeperatorColor,
               }}>
-              <Text
+              <View
                 style={{
-                  fontFamily: 'Poppins-Bold',
+                  width: '60%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
                 }}>
-                <Image
-                  source={require('../../assets/carseat.png')}
-                  style={{height: 28, resizeMode: 'contain'}}
-                />
-                INSIDE THIS RIDE
-              </Text>
+                <View>
+                  <Image
+                    source={require('../../assets/carseat.png')}
+                    style={{height: 28, resizeMode: 'contain'}}
+                  />
+                </View>
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Bold',
+                    }}>
+                    INSIDE THIS RIDE
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 12,
+                    }}>
+                    Use this slider to mark inside ride or raise issue
+                  </Text>
+                </View>
+              </View>
               <Switch
                 barHeight={30}
                 switchWidth={50}

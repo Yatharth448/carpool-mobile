@@ -59,11 +59,13 @@ export default function SearchLocation({navigation, route}) {
 
   const handlePickInputChange = text => {
     setPick(text);
+    setSelectedInput('1');
     // setQuery(text)
     fetchPredictions(text);
   };
   const handleDropInputChange = text => {
     setDrop(text);
+    setSelectedInput('2');
     // setQuery(text)
     fetchPredictions(text);
   };
@@ -112,7 +114,8 @@ export default function SearchLocation({navigation, route}) {
   };
 
   const currentLocationClick = async () => {
-    if (selectedInput === '1') {
+    console.log('select input ', selectedInput);
+    if (selectedInput == '1') {
       let location = await getCurrentLocationFromLatLong(lat, lng);
       setPick(location);
       setPickMain(location);
@@ -125,7 +128,7 @@ export default function SearchLocation({navigation, route}) {
           from: 'search',
         });
       }
-    } else {
+    } else if (selectedInput == '2') {
       let location = await getCurrentLocationFromLatLong(lat, lng);
       setDrop(location);
       setDropMain(location);
@@ -142,7 +145,7 @@ export default function SearchLocation({navigation, route}) {
     }
   };
 
-  const itemHeader = () => {
+  const itemHeader = id => {
     return (
       <>
         <Pressable
@@ -341,7 +344,10 @@ export default function SearchLocation({navigation, route}) {
                     alignItems: 'center',
                   }}>
                   <TextInput
-                    onPressIn={() => handleFocus('2')}
+                    onPressIn={() => {
+                      console.log('set focust ', 2);
+                      handleFocus('2');
+                    }}
                     style={styles.input}
                     value={drop}
                     // onFocus={() => handleFocus('2')}

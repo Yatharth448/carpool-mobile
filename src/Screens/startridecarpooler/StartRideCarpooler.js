@@ -483,7 +483,7 @@ export default function StartRideCarpooler({navigation, route}) {
             alignItems: 'center',
           }}>
           <Pressable
-            onPress={() => Linking.openURL(`tel:${userDetails.contact_number}`)}
+            onPress={() => Linking.openURL(`tel:${item.contact_number}`)}
             style={{
               justifyContent: 'center',
               alignItems: 'center',
