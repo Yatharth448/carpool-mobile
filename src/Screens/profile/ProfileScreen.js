@@ -70,7 +70,7 @@ function ProfileScreen({
               borderRadius={40}
             />
           </View>
-          <Image
+          {/* <Image
             source={require('../../assets/edit.png')}
             style={{
               marginLeft: Dimensions.get('window').width / 2 + 5,
@@ -83,7 +83,7 @@ function ProfileScreen({
               borderWidth: 0.5,
               resizeMode: 'contain',
             }}
-          />
+          /> */}
 
           <View
             style={{

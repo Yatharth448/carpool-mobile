@@ -743,6 +743,7 @@ export default function RideCotravaller({navigation, route}) {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: 5,
+                paddingLeft: 0,
                 borderColor: AppColors.themeSeperatorColor,
               }}>
               <View
@@ -762,6 +763,7 @@ export default function RideCotravaller({navigation, route}) {
                   <Text
                     style={{
                       fontFamily: 'Poppins-Bold',
+                      color: AppColors.textColor
                     }}>
                     INSIDE THIS RIDE
                   </Text>
@@ -769,6 +771,7 @@ export default function RideCotravaller({navigation, route}) {
                     style={{
                       fontFamily: 'Poppins-Medium',
                       fontSize: 12,
+                      color: AppColors.textColor
                     }}>
                     Use this slider to mark inside ride or raise issue
                   </Text>

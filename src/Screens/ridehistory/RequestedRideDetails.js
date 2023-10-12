@@ -13,6 +13,7 @@ import CommonLoaders from '../../components/loader/Loader';
 import { RideCostView } from './RideHistoryComponent';
 import { CalculateTimeFromMilies } from '../../components/commonfunction/CommonFunctions';
 import { ImageLoader } from '../../components/imageloader/ImageLoader';
+import Toast from 'react-native-simple-toast'
 
 export default function RequestedRideDetails({ navigation, route }) {
 
@@ -185,10 +186,12 @@ export default function RequestedRideDetails({ navigation, route }) {
 
     const cancelRide = async (item) => {
         setCancelLoader(true)
-        // console.log(item, 'cancel result')
+        console.log(item, 'item')
         const result = await hitApiToCancelRideForCustomer(item._id)
+        console.log(result, 'cancel result')
 
         if (result.status) {
+            await getRideDetail()
             Alert.alert(
                 '',
                 'Ride cancelled successfully',
@@ -200,7 +203,10 @@ export default function RequestedRideDetails({ navigation, route }) {
                 },
             )
         }
-        await getRideDetail()
+        else{
+            Toast.showWithGravity(result.message ?? result.error ?? "Something went wrong", 2, Toast.TOP);
+        }
+       
         setCancelLoader(false)
 
 

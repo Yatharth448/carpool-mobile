@@ -1,16 +1,13 @@
 import React, { Component } from 'react'
-import { View, Text, RefreshControl, Image, FlatList, Dimensions, TextInput, Pressable, StyleSheet, Linking, BackHandler, KeyboardAvoidingView, Platform } from 'react-native'
+import { View, Text, Image, FlatList, Dimensions, TextInput, Pressable, StyleSheet, Linking } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
-import { Header } from '../../components/commomheader/CommonHeader';
 import moment from 'moment';
 import Toast from 'react-native-simple-toast'
 import messaging from '@react-native-firebase/messaging';
-import PushNotification from 'react-native-push-notification';
 import { hitApiToChackeChatExist, hitApiToMessageForParticularUser, hitApiToSendMessage } from './MessageModal';
 import { Surface } from 'react-native-paper';
 import { AppFontFamily } from '../../components/constants/AppFonts';
 import CommonLoaders from '../../components/loader/Loader';
-import { showNotification } from '../../components/notifications/LocalNotification';
 export default class Chat extends Component {
 
     constructor(props) {
@@ -28,86 +25,18 @@ export default class Chat extends Component {
 
 
     }
-    // const [refreshPage, setRefreshPage] = React.useState(false);
-    // const [message, setMessage] = React.useState([])
-    // const { coTravellerId, cotravellerName, from, phone } = route.params;
-    // let { id } = route.params;
-    // const [text, setText] = React.useState('')
-    // const [fetching, setFetching] = React.useState(false)
-    // const listViewRef = useRef()
-
-
-    // useEffect(() => {
-
-    //     (async () => {
-    //     if (from == 'chat') {
-    //             const result = await hitApiToChackeChatExist(coTravellerId)
-    //             console.log(result)
-    //             if (result?.data) {
-    //                 id = result.data._id
-
-    //                 await getAllMsg('')
-    //             }
-
-    //         }
-    //     })
-
-    // }, [])
-
-
-
-    // useEffect(() => {
-
-    // (async () => {
-
-    //Put your logic here
-
-
-
-    // const unsubscribeOnMessage = messaging().onMessage(async remoteMessage => {
-
-    //     console.log("DEBUG: Received FCM message: " + JSON.stringify(remoteMessage));
-    //     const title = JSON.stringify(remoteMessage.notification.title)
-    //     const body = JSON.stringify(remoteMessage.notification.body)
-    //     const sentTime = JSON.stringify(remoteMessage.sentTime)
-    //     var oldTime;
-
-    // if (sentTime == oldTime)
-    // {
-    //     oldTime  = sentTime
-    // showNotification(
-    //     {
-    //         'title': title,
-    //         'message': body,
-    //     })
-
-    // console.log('jwfdjwgfj')
-    //  getAllMsg('push');
-    // }
-
-
-    // });
-
-    // return  unsubscribeOnMessage
-
-
-
-    // }, []);
-
-
 
     async componentWillUnmount() {
-        // BackHandler.removeEventListener("hardwareBackPress", this.backActionHandler);
         this.messageListener();
     }
     async componentDidMount() {
 
-
+        console.log(this.props.route.params, "data")
         this.setState({ id: this.props.route.params?.id })
 
         if (this.props.route.params?.from == 'chat') {
             const result = await hitApiToChackeChatExist(this.props.route.params?.coTravellerId)
-            console.log(result)
+            console.log(result, 'exist data')
             if (result?.data) {
                 this.setState({ id: result.data._id })
 
@@ -116,8 +45,6 @@ export default class Chat extends Component {
             }
 
         }
-
-
 
         await this.getAllMsg('push');
 
@@ -136,38 +63,15 @@ export default class Chat extends Component {
     }
 
 
+    async getAllMsg() {
 
-
-    // messaging().onMessage(async (remoteMessage) => {
-    //     console.log('Received foreground notification: ', remoteMessage);
-    // });
-
-
-    scrollToBottom(msg) {
-        //OnCLick of down button we scrolled the list to bottom
-        // console.log(msg?.length, 'length')
-        // listViewRef.current.initialScrollIndex = ({ scrollToBottom: 33 })
-        // listViewRef.current.scrollToOffset({ offset: msg?.length * (Dimensions.get('window').height), animated: false });
-        // listViewRef?.current.scrollToOffset({ animated: false, offset:  msg.length + 5});
-    };
-
-
-    async getAllMsg(load) {
-
-        if (load == '') {
-
-            // setFetching(true)
-            // this.setState({ fetching: true })
-        }
 
         const result = await hitApiToMessageForParticularUser(this.state.id);
-        console.log("ride list", result);
+
         if (result.status) {
 
             this.setState({ message: (result.data[0]?.messages.reverse()) ?? [] })
-            // setMessage()
-            // setFetching(false)
-            // scrollToBottom(result.data[0]?.messages)
+
         }
         else {
             console.log(result)
@@ -178,23 +82,16 @@ export default class Chat extends Component {
 
 
 
-
-
-
         if (msg == '') {
             Toast.showWithGravity('Enter message', 2, Toast.TOP);
         }
         else {
 
-            // setFetching(true)
-            // this.setState({ fetching: true })
+
             const result = await hitApiToSendMessage(this.props.route.params?.coTravellerId, msg)
             console.log(result, 'send')
             if (result.status) {
-                // setText('')
-                this.setState({ text: '' })
-                id = result.data
-                // this.setState({ fetching: false })
+                this.setState({ text: '', id: result.data })
                 await this.getAllMsg('')
             }
             else {
@@ -219,10 +116,6 @@ export default class Chat extends Component {
                     <Text style={{ fontFamily: AppFontFamily.PopinsBold, fontSize: 20, color: AppColors.themeBlackColor }}>{this.props?.route?.params?.cotravellerName}</Text>
                 </View>
                 <View onPress={() => Linking.openURL(`tel:${phone}`)} style={{ width: '25%', height: 50, alignItems: 'flex-end', paddingRight: 20, justifyContent: 'center' }}>
-
-                    {/* <View style={{ backgroundColor: AppColors.themesWhiteColor, marginBottom: 0, width: 58, height: 58, justifyContent: 'center', alignItems: 'center' }}>
-                        <Image source={require('../../assets/btncall.png')} style={{ width: 58, height: 58 }} />
-                    </View> */}
                 </View>
 
             </View>
@@ -236,8 +129,7 @@ export default class Chat extends Component {
 
                 <View style={{ maxWidth: '80%', alignItems: 'flex-start', justifyContent: 'center', padding: 10, backgroundColor: AppColors.themesWhiteColor, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, borderTopRightRadius: 10 }}>
                     <View style={{ width: '100%', alignItems: 'flex-start' }}>
-                        {/* {console.log(item)} */}
-                        {/* <Text style={{ width: '100%', fontWeight: '700', fontSize: 16, color: item.right ? AppColors.themesWhiteColor : AppColors.themeBlackColor }}>{(item.from_name)}</Text> */}
+
                         <Text style={{ fontFamily: AppFontFamily.PopinsRegular, marginTop: 0, fontSize: 15, color: AppColors.themeText2Color }}>{(item.message)}</Text>
 
                     </View>
@@ -310,7 +202,6 @@ export default class Chat extends Component {
                         placeholderTextColor={AppColors.themeText2Color}
                         style={{ paddingTop: 0, paddingBottom: 0, color: AppColors.themeBlackColor, paddingLeft: 10, paddingRight: 10, width: '100%', fontSize: 16, textAlign: 'left', height: 40 }}
                     />
-                    {/* </KeyboardAvoidingView> */}
                 </View>
                 <Pressable onPress={() => this.sendMessage(this.state.text)} style={{ width: '15%', height: 60, justifyContent: 'center', alignItems: 'center' }}>
                     <View style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 20, backgroundColor: AppColors.themePrimaryColor }}>
@@ -326,41 +217,26 @@ export default class Chat extends Component {
 
 
         return (
-            // <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={10}>
-                <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
-                    {this.TopHeader()}
+            <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
+                {this.TopHeader()}
 
+                <FlatList
+                    data={this.state.message}
+                    scrollEnabled
+                    style={{ transform: [{ scaleY: -1 }] }}
+                    automaticallyAdjustKeyboardInsets={true}
+                    keyExtractor={(item, index) => index}
+                    renderItem={({ item, index }) => (
+                        <View style={{ width: Dimensions.get('window').width, alignItems: 'center', padding: 10, paddingBottom: 0, transform: [{ scaleY: -1 }] }}>
+                            {item.right ? this.RightBubble(item) : this.LeftBubble(item)}
+                        </View>
+                    )}
 
+                />
+                {this.footerView()}
+                <CommonLoaders.ChatLoader isLoading={this.state.fetching} loaderText={'Loading... messages'} />
 
-                    {/* <View style={{ height: '83%' }}> */}
-                        <FlatList
-                        // contentContainerStyle={{height: '100%'}}
-                            data={this.state.message}
-                            // inverted
-                            scrollEnabled
-                            style={{  transform: [{ scaleY: -1 }] }}
-                            // ListHeaderComponent={this.footerView()}
-                            // keyboardShouldPersistTaps
-                            automaticallyAdjustKeyboardInsets={true}
-                            keyExtractor={(item, index) => index}
-                            // showsVerticalScrollIndicator={false}
-                            renderItem={({ item, index }) => (
-                                <View style={{ width: Dimensions.get('window').width, alignItems: 'center', padding: 10, paddingBottom: 0, transform: [{ scaleY: -1 }] }}>
-                                    {item.right ? this.RightBubble(item) : this.LeftBubble(item)}
-                                </View>
-                            )}
-
-                        />
-                    {/* </View> */}
-                    {this.footerView()}
-                    <CommonLoaders.ChatLoader isLoading={this.state.fetching} loaderText={'Loading... messages'} />
-
-
-
-
-
-                </View>
-            // </KeyboardAvoidingView>
+            </View>
         )
     }
 }
@@ -368,7 +244,6 @@ export default class Chat extends Component {
 const styles = StyleSheet.create({
     rightArrow: {
         position: "absolute",
-        //   backgroundColor: "#0078fe",
         backgroundColor: AppColors.themePrimaryColor,
         width: 25,
         height: 25,
@@ -380,7 +255,6 @@ const styles = StyleSheet.create({
 
     rightArrowOverlap: {
         position: "absolute",
-        //   backgroundColor: "#eeeeee",
         backgroundColor: AppColors.themePickupDropSearchBg,
         width: 20,
         height: 35,
@@ -392,7 +266,6 @@ const styles = StyleSheet.create({
     },
     leftArrow: {
         position: "absolute",
-        //   backgroundColor: "#0078fe",
         backgroundColor: AppColors.themesWhiteColor,
         width: 25,
         height: 25,
@@ -403,7 +276,6 @@ const styles = StyleSheet.create({
 
     leftArrowOverlap: {
         position: "absolute",
-        //   backgroundColor: "#eeeeee",
         backgroundColor: AppColors.themePickupDropSearchBg,
         width: 20,
         height: 35,
