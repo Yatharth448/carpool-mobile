@@ -25,6 +25,7 @@ import {
   hitApiToCheckExistingRide,
   hitApiToGetRecentSearch,
   hitApiToGetRoutes,
+  hitApiToGetUpcomingRide,
   hitApiToGetWalletAndNotification,
 } from './RideModal';
 import {
@@ -62,6 +63,7 @@ class FindRide extends Component {
     this.selectedVehicle = this.selectedVehicle.bind(this);
     this.addCar = this.addCar.bind(this);
     this.recentSearchPress = this.recentSearchPress.bind(this);
+    this.upcomingRidePress = this.upcomingRidePress.bind(this);
     this.okPress = this.okPress.bind(this);
     this.walletClick = this.walletClick.bind(this);
     this.payPressed = this.payPressed.bind(this);
@@ -133,6 +135,7 @@ class FindRide extends Component {
       vehicleArray: [],
       pickMainText: '',
       dropMainText: '',
+      upcomingRideArray: [],
       recentSearchArray: [],
       offerSearchLoader: false,
       kycStatus: 1,
@@ -200,6 +203,7 @@ class FindRide extends Component {
       await this.getRideNotificationData();
       await this.getWalletNotification();
       await this.getRecentSearch();
+      await this.getUpcomingRide();
     });
 
     await this.getSavedVehicles();
@@ -250,6 +254,47 @@ class FindRide extends Component {
     // console.log(result, 'recent')
     if (result.status) {
       this.setState({recentSearchArray: result.data});
+    }
+  }
+
+  async getUpcomingRide() {
+    const result = await hitApiToGetUpcomingRide();
+    // console.log(result, 'recent')
+    if (result.status) {
+      let tempArray = [];
+      if (result.data.myride && result.data.myride.length > 0) {
+        for (let i = 0; i < result.data.myride.length; i++) {
+          let rideDate = new Date(result.data.myride[i].journey_start_at);
+          tempArray.push({
+            origin:
+              result.data.myride[i].pick_main_text ||
+              result.data.myride[i].journey_origin_address,
+            destination:
+              result.data.myride[i].drop_main_text ||
+              result.data.myride[i].journey_destination_address,
+            time: `${rideDate.toLocaleDateString()}`,
+            seat: result.data.myride[i].seat_available,
+            id: result.data.myride[i]._id,
+            type: 'offer',
+          });
+        }
+      }
+
+      if (result.data.requestRide && result.data.requestRide.length > 0) {
+        for (let i = 0; i < result.data.requestRide.length; i++) {
+          let rideDate = new Date(result.data.requestRide[i].journey_start_at);
+          tempArray.push({
+            origin: result.data.requestRide[i].origin_address,
+            destination: result.data.requestRide[i].destination_address,
+            time: `${rideDate.toLocaleDateString()}`,
+            seat: result.data.requestRide[i].seat,
+            pay: price,
+            type: 'request',
+            id: result.data.requestRide[i].ride_id,
+          });
+        }
+      }
+      this.setState({upcomingRideArray: tempArray});
     }
   }
 
@@ -913,6 +958,30 @@ class FindRide extends Component {
                 </View>
               )}
 
+              {this.state.upcomingRideArray.length > 0 ? (
+                <>
+                  <View
+                    style={{
+                      width: '100%',
+                      height: 1,
+                      marginBottom: 20,
+                      backgroundColor: AppColors.themeCardBorderColor,
+                    }}
+                  />
+                  <View
+                    style={{
+                      width: '100%',
+                      alignItems: 'flex-start',
+                      marginBottom: 20,
+                    }}>
+                    <RecentHorizontal
+                      title="Upcoming Rides"
+                      recentArray={this.state.upcomingRideArray}
+                      onPress={this.upcomingRidePress}
+                    />
+                  </View>
+                </>
+              ) : null}
               {this.state.recentSearchArray.length > 0 ? (
                 <>
                   <View
@@ -959,6 +1028,24 @@ class FindRide extends Component {
       });
     } else {
       //offer ride
+    }
+  }
+
+  async upcomingRidePress(item) {
+    // console.log(item, 'recent search pressed')
+    console.log('item ', item);
+    if (item.type == 'offer') {
+      //search ride
+      this.props.navigation.navigate('OfferedRideDetails', {
+        id: item.id,
+        from: 'offered',
+      });
+    } else {
+      //offer ride
+      this.props.navigation.navigate('RequestedRideDetails', {
+        id: item.id,
+        from: 'requested',
+      });
     }
   }
 

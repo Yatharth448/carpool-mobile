@@ -155,6 +155,21 @@ export const hitApiToGetRecentSearch = async () => {
   }
 };
 
+export const hitApiToGetUpcomingRide = async () => {
+  try {
+    const result = await connection.getAPI('/api/recent/search/upcomingride');
+
+    if (result.status) {
+      return result;
+    } else {
+      return result;
+    }
+  } catch (error) {
+    console.error('login modal', error);
+    throw error;
+  }
+};
+
 export const hitApiToGetWalletAndNotification = async () => {
   try {
     const result = await connection.getAPI('api/user/notification');
@@ -169,4 +184,3 @@ export const hitApiToGetWalletAndNotification = async () => {
     throw error;
   }
 };
-
