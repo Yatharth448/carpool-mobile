@@ -18,7 +18,7 @@ export default function AddVehicle({ navigation, route }) {
         const result = await hitApiToAddVehicle(vehicleName, vehicleNumber)
         // console.log(result, 'add vehicle result')
         if (result.status) {
-            Toast.showWithGravity(result.message, 2, Toast.TOP);
+            Toast.show(result.message);
             navigation.navigate('FindRide', {'from': ''})
         }
     }

@@ -204,7 +204,7 @@ export default function RequestedRideDetails({ navigation, route }) {
             )
         }
         else{
-            Toast.showWithGravity(result.message ?? result.error ?? "Something went wrong", 2, Toast.TOP);
+            Toast.show(result.message ?? result.error ?? "Something went wrong");
         }
        
         setCancelLoader(false)

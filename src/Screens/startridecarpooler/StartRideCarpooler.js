@@ -131,10 +131,8 @@ export default function StartRideCarpooler({navigation, route}) {
     const result = await apigetRideDetails(id);
     console.log('result ', result);
     if (result.status === false) {
-      Toast.showWithGravity(
-        result.message ?? result.error ?? 'Something went wrong',
-        2,
-        Toast.TOP,
+      Toast.show(
+        result.message ?? result.error ?? 'Something went wrong'
       );
     } else {
       let path = result.ride.lat_long_points.map(tempItem => {
@@ -323,31 +321,29 @@ export default function StartRideCarpooler({navigation, route}) {
 
   const onIssue = async (user, message) => {
     if (!message) {
-      Toast.showWithGravity(
-        'Please enter information about issue',
-        2,
-        Toast.TOP,
+      Toast.show(
+        'Please enter information about issue'
       );
       return;
     }
     let result = await apiUpdateUserIssue(id, user, message);
     if (result.status) {
-      Toast.showWithGravity('Issue is submitted', 2, Toast.TOP);
+      Toast.show('Issue is submitted');
       setRaiseIssueModa(false);
     } else {
       setRaiseIssueModa(false);
-      Toast.showWithGravity(result.message, 2, Toast.TOP);
+      Toast.show(result.message);
     }
   };
 
   const onResolve = async user => {
     let result = await apiUpdateUserIssue(id, user, null);
     if (result.status) {
-      Toast.showWithGravity('Previous issue has resolved', 2, Toast.TOP);
+      Toast.show('Previous issue has resolved');
       setRaiseIssueModa(false);
     } else {
       setRaiseIssueModa(false);
-      Toast.showWithGravity(result.message, 2, Toast.TOP);
+      Toast.show(result.message);
     }
   };
 
@@ -378,10 +374,8 @@ export default function StartRideCarpooler({navigation, route}) {
       routeData.status &&
       (routeData.status == 'running' || routeData.status == 'completed')
     ) {
-      Toast.showWithGravity(
-        "Ride already started, can't start again",
-        2,
-        Toast.TOP,
+      Toast.show(
+        "Ride already started, can't start again"
       );
       return;
     }
@@ -389,13 +383,11 @@ export default function StartRideCarpooler({navigation, route}) {
     const result = await apiStartRide(id, watchId);
     console.log(result);
     if (result.status) {
-      Toast.showWithGravity('Ride has started', 2, Toast.TOP);
+      Toast.show('Ride has started');
       await fetchRideDetails();
     } else {
-      Toast.showWithGravity(
-        result.message ?? result.error ?? 'Something went wrong',
-        2,
-        Toast.TOP,
+      Toast.show(
+        result.message ?? result.error ?? 'Something went wrong'
       );
     }
   };
@@ -600,13 +592,11 @@ export default function StartRideCarpooler({navigation, route}) {
       Geolocation.clearWatch(routeData.watch_id);
       const result = await apiEndRide(id);
       if (result.status) {
-        Toast.showWithGravity('Ride has ended', 2, Toast.TOP);
+        Toast.show('Ride has ended');
         await fetchRideDetails();
       } else {
-        Toast.showWithGravity(
-          result.message ?? result.error ?? 'Something went wrong',
-          2,
-          Toast.TOP,
+        Toast.show(
+          result.message ?? result.error ?? 'Something went wrong'
         );
       }
     }

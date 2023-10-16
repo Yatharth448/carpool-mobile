@@ -131,15 +131,15 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
 
             if (!fullName) {
                 console.log('2')
-                Toast.showWithGravity('Enter full name', 2, Toast.TOP);
+                Toast.show('Enter full name');
             }
             else if (!mobile) {
                 console.log('2')
-                Toast.showWithGravity('Enter mobile number', 2, Toast.TOP);
+                Toast.show('Enter mobile number');
             }
             else if (!date) {
                 console.log('2')
-                Toast.showWithGravity('Select Date', 2, Toast.TOP);
+                Toast.show('Select Date');
             }
             else {
 
@@ -168,7 +168,7 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                 }
                 else {
                     console.log(accountRes, 'res')
-                    Toast.showWithGravity(accountRes?.message ?? 'Something went wrong', 2, Toast.TOP);
+                    Toast.show(accountRes?.message ?? 'Something went wrong');
                 }
                 setIsLoading(false)
                 //    

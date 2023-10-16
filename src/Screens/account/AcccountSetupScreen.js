@@ -45,15 +45,15 @@ export default function AcccountSetupScreen({ navigation }) {
 
       if (!fullName) {
         console.log('2')
-        Toast.showWithGravity('Enter full name', 2, Toast.TOP);
+        Toast.show('Enter full name');
       }
       else if (!email) {
         console.log('2')
-        Toast.showWithGravity('Enter email', 2, Toast.TOP);
+        Toast.show('Enter email');
       }
       else if (!date) {
         console.log('2')
-        Toast.showWithGravity('Select Date', 2, Toast.TOP);
+        Toast.show('Select Date');
       }
       else {
 
@@ -64,7 +64,7 @@ export default function AcccountSetupScreen({ navigation }) {
           navigation.navigate('KycScreen')
         }
         else {
-          Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
+          Toast.show(loginRes.message);
         }
         //    
       }

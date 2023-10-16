@@ -105,7 +105,7 @@ export default function FindRideList({ navigation, route }) {
         updatedArra.reverse()
         setRideList(updatedArra);
             setStartLoader(false)
-            // Toast.showWithGravity(result.message ?? result.error ?? 'Something went wrong', 2, Toast.TOP);
+            // Toast.show(result.message ?? result.error ?? 'Something went wrong');
             if (result.message == "Please add money to wallet") {
                 // Alert.alert(result.message)
                 setOpenWallet(true)

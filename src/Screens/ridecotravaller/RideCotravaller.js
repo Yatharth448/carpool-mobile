@@ -84,10 +84,8 @@ export default function RideCotravaller({navigation, route}) {
     const result = await apigetRideDetails(id);
     console.log('result ', result, id);
     if (result.status === false) {
-      Toast.showWithGravity(
-        result.message ?? result.error ?? 'Something went wrong',
-        2,
-        Toast.TOP,
+      Toast.show(
+        result.message ?? result.error ?? 'Something went wrong'
       );
     } else {
       let path = result.ride.lat_long_points.map(tempItem => {
@@ -195,43 +193,41 @@ export default function RideCotravaller({navigation, route}) {
       setInsideRide(true);
       let result = await apiUpdateRideRunningStatus(id, true, null);
       if (result.status) {
-        Toast.showWithGravity('You have boarded the ride', 2, Toast.TOP);
+        Toast.show('You have boarded the ride');
       } else {
         setInsideRide(false);
-        Toast.showWithGravity(result.message, 2, Toast.TOP);
+        Toast.show(result.message);
       }
     }
   };
 
   const onIssue = async message => {
     if (!message) {
-      Toast.showWithGravity(
-        'Please enter information about issue',
-        2,
-        Toast.TOP,
+      Toast.show(
+        'Please enter information about issue'
       );
       return;
     }
     let result = await apiUpdateRideRunningStatus(id, false, message);
     if (result.status) {
-      Toast.showWithGravity('Issue is submitted', 2, Toast.TOP);
+      Toast.show('Issue is submitted');
       setInsideRide(false);
       setRaiseIssueModa(false);
     } else {
       setRaiseIssueModa(false);
-      Toast.showWithGravity(result.message, 2, Toast.TOP);
+      Toast.show(result.message);
     }
   };
 
   const onResolve = async () => {
     let result = await apiUpdateRideRunningStatus(id, true, null);
     if (result.status) {
-      Toast.showWithGravity('Issue has resolved', 2, Toast.TOP);
+      Toast.show('Issue has resolved');
       setInsideRide(true);
       setRaiseIssueModa(false);
     } else {
       setRaiseIssueModa(false);
-      Toast.showWithGravity(result.message, 2, Toast.TOP);
+      Toast.show(result.message);
     }
   };
 

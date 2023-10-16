@@ -83,7 +83,7 @@ export default class Chat extends Component {
 
 
         if (msg == '') {
-            Toast.showWithGravity('Enter message', 2, Toast.TOP);
+            Toast.show('Enter message');
         }
         else {
 

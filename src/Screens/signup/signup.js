@@ -123,7 +123,7 @@ export default function SignupScreen({ navigation }) {
         }
         else {
 
-            Toast.showWithGravity(result.message, 2, Toast.TOP);
+            Toast.show(result.message);
         }
         setIsLoadingGoogle(false)
 
@@ -134,19 +134,19 @@ export default function SignupScreen({ navigation }) {
         console.log('1')
          if (!fullName) {
             setIsLoading(false)
-            Toast.showWithGravity('Enter name', 2, Toast.TOP);
+            Toast.show('Enter name');
         }
         if (!email) {
             setIsLoading(false)
-            Toast.showWithGravity('Enter email', 2, Toast.TOP);
+            Toast.show('Enter email');
         }
         else  if (!mobile) {
             setIsLoading(false)
-            Toast.showWithGravity('Enter mobile number', 2, Toast.TOP);
+            Toast.show('Enter mobile number');
         }
         else  if (!password) {
             setIsLoading(false)
-            Toast.showWithGravity('Enter password', 2, Toast.TOP);
+            Toast.show('Enter password');
         }
         else {
 
@@ -158,7 +158,7 @@ export default function SignupScreen({ navigation }) {
                 navigation.navigate('OTPScreen', { email: email, secret: loginRes.secret })
             }
             else {
-                Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
+                Toast.show(loginRes.message);
             }
             setIsLoading(false)
             //    

@@ -46,11 +46,11 @@ export default function AddGenderMobile({ navigation, route }) {
         setIsLoading(true)
 
         if (mobile == '') {
-            Toast.showWithGravity('Enter mobile', 2, Toast.TOP);
+            Toast.show('Enter mobile');
             setIsLoading(false)
         }
         else if (gender == '') {
-            Toast.showWithGravity('Enter mobile', 2, Toast.TOP);
+            Toast.show('Enter mobile');
             setIsLoading(false)
         }
         else {
@@ -66,7 +66,7 @@ export default function AddGenderMobile({ navigation, route }) {
             }
             else {
                 console.log(result, 'res')
-                Toast.showWithGravity(result?.message ?? 'Something went wrong', 2, Toast.TOP);
+                Toast.show(result?.message ?? 'Something went wrong');
             }
             setIsLoading(false)
 

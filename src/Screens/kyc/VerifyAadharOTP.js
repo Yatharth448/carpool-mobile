@@ -68,7 +68,7 @@ export default function VerifyAadharOTP({ navigation, route }) {
         // }
       } else {
         setIsLoading(false);
-        Toast.showWithGravity('Invalid otp', 2, Toast.TOP);
+        Toast.show('Invalid otp');
         // Toast.show(themes.appCustomTexts.InvalidOTPText);
       }
     }
@@ -82,10 +82,8 @@ export default function VerifyAadharOTP({ navigation, route }) {
       setIsTimerRunning(true);
       if (result.status) {
         clientId = result.clientId;
-        Toast.showWithGravity(
-          'OTP successfully sent to the number associated with your aadhar card',
-          2,
-          Toast.TOP,
+        Toast.show(
+          'OTP successfully sent to the number associated with your aadhar card'
         );
         console.log(result, 'result');
       }

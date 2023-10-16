@@ -102,10 +102,8 @@ export default function MapRoutes({ navigation, route }) {
 
       navigation.navigate('Success', { item: itemData });
     } else {
-      Toast.showWithGravity(
-        result.message ?? result.error ?? 'Something went wrong',
-        2,
-        Toast.TOP,
+      Toast.show(
+        result.message ?? result.error ?? 'Something went wrong'
       );
     }
     setIsLoading(false)
@@ -130,14 +128,14 @@ export default function MapRoutes({ navigation, route }) {
 
   //     }
   //     else {
-  //         Toast.showWithGravity(result.message ?? result.error ?? 'Something went wrong', 2, Toast.TOP);
+  //         Toast.show(result.message ?? result.error ?? 'Something went wrong');
   //     }
 
   // }
 
   const save = val => {
     if (!val) {
-      Toast.showWithGravity('Please enter estimated price', 2, Toast.TOP);
+      Toast.show('Please enter estimated price');
     } else {
       updateEstimatedRide(val);
     }

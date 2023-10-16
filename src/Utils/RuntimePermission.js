@@ -48,7 +48,7 @@ export const cameraPermission = async () => {
 
 }
 
-export const puchNotificationPermission = async () => {
+export const pushNotificationPermission = async () => {
 
 
 

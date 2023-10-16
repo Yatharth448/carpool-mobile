@@ -70,7 +70,7 @@ export default function OTPScreen({ navigation, route }) {
       }
       else {
 
-        Toast.showWithGravity('Invalid otp', 2, Toast.TOP);
+        Toast.show('Invalid otp');
         // Toast.show(themes.appCustomTexts.InvalidOTPText);
       }
       setIsLoading(false)

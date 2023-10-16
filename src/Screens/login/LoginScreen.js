@@ -90,7 +90,7 @@ export default function LoginScreen({ navigation }) {
             }
             else {
 
-                Toast.showWithGravity(result.message, 2, Toast.TOP);
+                Toast.show(result.message ?? "");
             }
         }
         setIsLoadingGoogle(false)
@@ -113,7 +113,7 @@ export default function LoginScreen({ navigation }) {
         }
         else {
 
-            Toast.showWithGravity(result.message, 2, Toast.TOP);
+            Toast.show(result.message ?? "");
         }
         setIsLoadingGoogle(false)
 
@@ -125,11 +125,11 @@ export default function LoginScreen({ navigation }) {
         if (!email) {
             setIsLoading(false)
             // console.log('2')
-            Toast.showWithGravity('Enter email id', 2, Toast.TOP);
+            Toast.show('Enter email id');
         }
         else if (!password) {
             setIsLoading(false)
-            Toast.showWithGravity('Enter password', 2, Toast.TOP);
+            Toast.show('Enter password');
         }
         else {
 
@@ -161,7 +161,7 @@ export default function LoginScreen({ navigation }) {
             }
             else {
 
-                Toast.showWithGravity(loginRes.message, 2, Toast.TOP);
+                Toast.show(loginRes.message ?? loginRes.error ?? "Something went wrong");
             }
             // 
             setIsLoading(false)
