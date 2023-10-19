@@ -2,6 +2,7 @@ import {Alert, Linking, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import {AppKeys} from '../constants/AppKeys';
+import Storage from '../localStorage/storage';
 
 export const GetCurrentLocation = async () => {
   return new Promise((resolve, reject) => {
@@ -42,6 +43,7 @@ export const checkLocationPermission = async () => {
     );
 
     if (granted === 'granted') {
+      Storage.saveItem(AppKeys.LOCATION_PERMISSION_KEY, 'yes')
       console.log('Location permission granted');
       return true;
     } else {

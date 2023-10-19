@@ -28,12 +28,18 @@ export async function request_storage_runtime_permission() {
 
 export const galleryPermission = async () => {
 
-  const permission = await request(Platform.OS == 'ios' ? PERMISSIONS.IOS.PHOTO_LIBRARY : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE)
+  // const permission = await request(Platform.OS == 'ios' ? PERMISSIONS.IOS.PHOTO_LIBRARY : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE)
+  const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES)
+
   console.log(permission, 'gal permission')
-  if (permission == 'blocked' || permission == 'unavailable' || permission == 'denied') {
-    return false
+  if (permission === PermissionsAndroid.RESULTS.GRANTED) {
+    return true
+  } else {
+    console.log('Camera permission denied');
+    return true
   }
-  else return true
+
+
 
 }
 

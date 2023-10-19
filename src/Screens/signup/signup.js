@@ -215,9 +215,9 @@ export default function SignupScreen({ navigation }) {
                     <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 100, resizeMode: 'contain' }} />
                 </View>
 
-                <Text style={{ marginLeft: 20, fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
+                {/* <Text style={{ marginLeft: 20, fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
                     {'Sign up'}
-                </Text>
+                </Text> */}
 
 
 

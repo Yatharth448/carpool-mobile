@@ -195,11 +195,11 @@ export default function LoginScreen({ navigation }) {
                 <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 100, resizeMode: 'contain' }} />
             </View>
 
-            <View style={{ width: '90%', justifyContent: 'center' }}>
+            {/* <View style={{ width: '90%', justifyContent: 'center' }}>
                 <Text style={{ marginLeft: 20, fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
                     {'Login'}
                 </Text>
-            </View>
+            </View> */}
 
             <View style={{ width: '100%', alignItems: 'center' }}>
 

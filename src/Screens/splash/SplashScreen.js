@@ -48,15 +48,19 @@ export default class SplashScreen extends Component {
 
 	}
 	getSavedToken = async () => {
+		let locationPermission
+		locationPermission = await Storage.getSavedItem(AppKeys.LOCATION_PERMISSION_KEY)
 		getToken()
 		configureNotification()
 
 		// PushNotification.checkPermissions(function(permissions) {  console.log(permissions, 'noti'); });
 		// PushNotification.requestPermissions()
 		// console.log(permission, 'noti')
+		
 		await pushNotificationPermission()
 		await CreateNotificationChannel()
-		if (! await checkLocationPermission())
+		console.log(locationPermission, 'location permission')
+		if (locationPermission === null || locationPermission === undefined)
 		{
 			this.getLocationPermissionPopup()
 		}

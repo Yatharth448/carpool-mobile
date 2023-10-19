@@ -122,20 +122,6 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
               loaderColor={AppColors.themesWhiteColor}
             />
           </View>
-          <Image
-            source={require('../../assets/edit.png')}
-            style={{
-              marginLeft: 60,
-              position: 'absolute',
-              width: 20,
-              height: 20,
-              borderRadius: 40,
-              borderRadius: 40,
-              borderColor: AppColors.themesWhiteColor,
-              borderWidth: 0.5,
-              resizeMode: 'contain',
-            }}
-          />
           <Text
             style={{
               fontSize: 20,

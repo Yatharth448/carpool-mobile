@@ -233,12 +233,13 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                             placeholder={'Enter fullname'}
                             placeholderTextColor={AppColors.themeTextGrayColor}
                             value={fullName}
+                            autoFocus
                             onChangeText={(text) => onChangeFullName(text)}
 
                         />
-                        <View style={{ width: '5%', justifyContent: 'center' }}>
+                        {/* <View style={{ width: '5%', justifyContent: 'center' }}>
                             <Image source={require('../../assets/edit.png')} style={{ width: 15, height: 15, resizeMode: 'contain' }} />
-                        </View>
+                        </View> */}
 
 
                     </View>
@@ -262,11 +263,14 @@ function UpdateProfile({ data, loading, error, getProfileDataRequest, navigation
                                 placeholderTextColor={AppColors.themeTextGrayColor}
                                 value={mobile}
                                 onChangeText={(text) => onChangeMobile(text)}
+                                keyboardType={
+                                    Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                                  }
                             />
                         </View>
-                        <View style={{ width: '5%', justifyContent: 'center' }}>
+                        {/* <View style={{ width: '5%', justifyContent: 'center' }}>
                             <Image source={require('../../assets/edit.png')} style={{ width: 15, height: 15, resizeMode: 'contain' }} />
-                        </View>
+                        </View> */}
 
 
                     </View>
