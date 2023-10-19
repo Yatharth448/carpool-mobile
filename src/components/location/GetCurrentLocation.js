@@ -46,16 +46,18 @@ export const checkLocationPermission = async () => {
       return true;
     } else {
       console.log('Location permission denied');
+      return false;
     }
   } catch (error) {
     console.error('Error requesting location permission:', error);
+    return false;
   }
 };
 
-export function locationAlert() {
+export const locationAlert = async () => {
   Alert.alert(
     'Location Permission',
-    'ShareWheelz app collects location data to track carpooler location even when the app is closed or not in use, to help better route allocation for nearby pickup points. ',
+    'ShareWheelz app collects location data to track carpooler location even when the app is closed or not in use, to help better route allocation for nearby pickup points.',
     [
       // { text: 'DENY', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
       {

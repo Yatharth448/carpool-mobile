@@ -19,7 +19,7 @@ export default function AddVehicle({ navigation, route }) {
         // console.log(result, 'add vehicle result')
         if (result.status) {
             Toast.show(result.message);
-            navigation.navigate('FindRide', {'from': ''})
+            navigation.navigate('FindRide', {'from': 'vehicle'})
         }
     }
 
