@@ -312,7 +312,7 @@ export default function SearchLocation({navigation, route}) {
                     // onFocus={() => handleFocus('1')}
                     // onBlur={handleBlur}
                     onChangeText={handlePickInputChange}
-                    placeholder="Enter Pickup Location"
+                    placeholder="Enter Source Location"
                     placeholderTextColor={AppColors.themeTextGrayColor}
                   />
                   <TouchableOpacity
@@ -353,7 +353,7 @@ export default function SearchLocation({navigation, route}) {
                     // onFocus={() => handleFocus('2')}
                     // onBlur={handleBlur}
                     onChangeText={handleDropInputChange}
-                    placeholder="Enter Drop Location"
+                    placeholder="Enter Destination Location"
                     placeholderTextColor={AppColors.themeTextGrayColor}
                   />
                   <TouchableOpacity
