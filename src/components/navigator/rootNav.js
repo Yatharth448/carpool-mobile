@@ -37,6 +37,7 @@ import AddGenderMobile from '../genderMobile/AddGenderMobile';
 import Wallet from '../../Screens/wallet/Wallet';
 import RideCotravaller from '../../Screens/ridecotravaller/RideCotravaller';
 import PaymentHistory from '../../Screens/payment/PaymentHistory';
+import SendFeedback from '../../Screens/feeddback/SendFeedback';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -126,6 +127,7 @@ export default function RootNav() {
         <Stack.Screen name="SearchLocation" component={SearchLocation} />
         <Stack.Screen name="AddGenderMobile" component={AddGenderMobile} />
         <Stack.Screen name="Notification" component={Notification} />
+        <Stack.Screen name="SendFeedback" component={SendFeedback} />
 
         <Stack.Screen
           name="RideDrawer"
