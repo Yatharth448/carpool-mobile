@@ -18,15 +18,12 @@ import {getProfileDataRequest} from '../../redux/actions/actions';
 import reducer from '../../redux/reducers/reducers';
 import {ImageLoader} from '../imageloader/ImageLoader';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Storage from '../localStorage/storage';
+import { AppKeys } from '../constants/AppKeys';
 
 const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
   const [menu, setMenu] = React.useState([
     {screen: 'FindRide', name: 'HOME', icon: require('../../assets/home.png')},
-    {
-      screen: 'RideCotraveller',
-      name: 'ACTIVE RIDE',
-      icon: require('../../assets/active-ride.png'),
-    },
     {
       screen: 'RideHistory',
       name: 'RIDE HISTORY',
@@ -61,8 +58,6 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
       navigation.navigate(screenName, {from: 'reset'});
     } else if (screenName == 'Signout') {
       LogoutAlert();
-    } else if (screenName == 'RideCotraveller') {
-      navigation.navigate(screenName, {id: '6523d8a75b35e2819af14e9b'});
     } else {
       navigation.navigate(screenName);
     }
@@ -82,10 +77,13 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
 
       .then(keys => AsyncStorage.multiRemove(keys))
       .then(() =>
+      {
+        Storage.saveItem(AppKeys.LOCATION_PERMISSION_KEY, 'yes')
         nav.reset({
           index: 0,
           routes: [{name: 'SplashScreen'}],
-        }),
+        })
+      }
       );
   };
 

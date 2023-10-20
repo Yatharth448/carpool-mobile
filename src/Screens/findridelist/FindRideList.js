@@ -78,7 +78,9 @@ export default function FindRideList({ navigation, route }) {
             item.intresected_source_lat,
             item.intresected_source_long,
             item.intresected_destination_lat,
-            item.intresected_destination_long
+            item.intresected_destination_long,
+            item.request_charge
+
         )
         console.log(result, 'request ride response')
         if (result.status) {

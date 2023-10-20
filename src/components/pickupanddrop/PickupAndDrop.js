@@ -42,14 +42,14 @@ export function PickupAndDrop(pickupText, dropText, pickupClicked, dropClick) {
                 <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row' }}>
 
                     <TouchableOpacity style={{ width: '98%', height: 50, justifyContent: 'center' }} onPress={pickupClicked}>
-                        <Text numberOfLines={1} style={{ width: '100%', color: pickupText ? AppColors.themeBlackColor :  AppColors.themeTextGrayColor, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular }}>{pickupText ? pickupText : 'Pick up location'}</Text>
+                        <Text numberOfLines={1} style={{ width: '100%', color: pickupText ? AppColors.themeBlackColor :  AppColors.themeTextGrayColor, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular }}>{pickupText ? pickupText : 'Source'}</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginLeft: 0, width: '100%', height: 1, backgroundColor: AppColors.themeTextGrayColor }}></View>
                 <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row' }}>
 
                     <TouchableOpacity style={{ width: '98%', height: 50, justifyContent: 'center' }} onPress={dropClick}>
-                        <Text numberOfLines={1} style={{ width: '100%', color: dropText ? AppColors.themeBlackColor :  AppColors.themeTextGrayColor, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular }}>{dropText ? dropText : 'Drop location'}</Text>
+                        <Text numberOfLines={1} style={{ width: '100%', color: dropText ? AppColors.themeBlackColor :  AppColors.themeTextGrayColor, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular }}>{dropText ? dropText : 'Destination'}</Text>
                     </TouchableOpacity>
                 </View>
 

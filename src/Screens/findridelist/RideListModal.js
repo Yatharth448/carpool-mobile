@@ -20,10 +20,10 @@ export const hitApiToGetRideList = async (pickUp, drop, date, seat, pickMainText
 
 }
 
-export const hitApiToRequestARide = async (rideId, seat, sourceLat, sourceLong, destinationLat, destinationlong) => {
+export const hitApiToRequestARide = async (rideId, seat, sourceLat, sourceLong, destinationLat, destinationlong, price) => {
 
     try {
-        const result = await connection.postAPI('/api/ride/request', { 'ride_id': rideId, 'seat': seat, 'sourcelat': sourceLat, 'sourcelong': sourceLong, 'destinationlat': destinationLat, 'destinationlong': destinationlong})
+        const result = await connection.postAPI('/api/ride/request', { 'ride_id': rideId, 'seat': seat, 'sourcelat': sourceLat, 'sourcelong': sourceLong, 'destinationlat': destinationLat, 'destinationlong': destinationlong, 'price': price})
 
         if (result.success) {
             return result
