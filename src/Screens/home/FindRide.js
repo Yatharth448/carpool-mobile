@@ -1217,8 +1217,8 @@ class FindRide extends Component {
             close={() => this.menuBtnClick()}
             isRight={true}
             right={require('../../assets/notification.png')}
-            // rightClick={() => this.notiClick(count)}
-            rightClick={() => this.props.navigation.navigate('SendFeedback')}
+            rightClick={() => this.notiClick(count)}
+            // rightClick={() => this.props.navigation.navigate('SendFeedback')}
             count={count}
             walletAmount={walletAmount}
             walletClick={this.walletClick}
