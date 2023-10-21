@@ -1218,7 +1218,13 @@ class FindRide extends Component {
             isRight={true}
             right={require('../../assets/notification.png')}
             rightClick={() => this.notiClick(count)}
-            // rightClick={() => this.props.navigation.navigate('SendFeedback')}
+            // rightClick={() =>
+            //   this.props.navigation.navigate('SendFeedback', {
+            //     userId: 4,
+            //     userName: 'Sarthak Jonathan',
+            //     userImage: '',
+            //   })
+            // }
             count={count}
             walletAmount={walletAmount}
             walletClick={this.walletClick}

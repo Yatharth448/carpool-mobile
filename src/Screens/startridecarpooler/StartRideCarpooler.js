@@ -131,9 +131,7 @@ export default function StartRideCarpooler({navigation, route}) {
     const result = await apigetRideDetails(id);
     console.log('result ', result);
     if (result.status === false) {
-      Toast.show(
-        result.message ?? result.error ?? 'Something went wrong'
-      );
+      Toast.show(result.message ?? result.error ?? 'Something went wrong');
     } else {
       let path = result.ride.lat_long_points.map(tempItem => {
         return {
@@ -321,9 +319,7 @@ export default function StartRideCarpooler({navigation, route}) {
 
   const onIssue = async (user, message) => {
     if (!message) {
-      Toast.show(
-        'Please enter information about issue'
-      );
+      Toast.show('Please enter information about issue');
       return;
     }
     let result = await apiUpdateUserIssue(id, user, message);
@@ -374,9 +370,7 @@ export default function StartRideCarpooler({navigation, route}) {
       routeData.status &&
       (routeData.status == 'running' || routeData.status == 'completed')
     ) {
-      Toast.show(
-        "Ride already started, can't start again"
-      );
+      Toast.show("Ride already started, can't start again");
       return;
     }
     let watchId = startLocationWatch();
@@ -386,9 +380,7 @@ export default function StartRideCarpooler({navigation, route}) {
       Toast.show('Ride has started');
       await fetchRideDetails();
     } else {
-      Toast.show(
-        result.message ?? result.error ?? 'Something went wrong'
-      );
+      Toast.show(result.message ?? result.error ?? 'Something went wrong');
     }
   };
 
@@ -446,24 +438,52 @@ export default function StartRideCarpooler({navigation, route}) {
               }}>
               {item.name}
             </Text>
-            {item.inside_ride ? (
-              <Text
-                style={{
-                  fontFamily: AppFontFamily.PopinsSemiBold,
-                  fontSize: 13,
-                  color: AppColors.themeGreenColor,
-                }}>
-                In-Ride
-              </Text>
+            {routeData && routeData.status != 'completed' ? (
+              <>
+                {item.inside_ride ? (
+                  <Text
+                    style={{
+                      fontFamily: AppFontFamily.PopinsSemiBold,
+                      fontSize: 13,
+                      color: AppColors.themeGreenColor,
+                    }}>
+                    In-Ride
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      fontFamily: AppFontFamily.PopinsSemiBold,
+                      fontSize: 13,
+                      color: AppColors.themeSecondaryColor,
+                    }}>
+                    Out of ride
+                  </Text>
+                )}
+              </>
             ) : (
-              <Text
+              <Pressable
+                onPress={() => {
+                  // code for issue modal
+
+                  navigation.navigate('SendFeedback', {
+                    userId: item._id,
+                    userName: item.name,
+                    userImage: item.profile,
+                  });
+                }}
                 style={{
-                  fontFamily: AppFontFamily.PopinsSemiBold,
-                  fontSize: 13,
-                  color: AppColors.themeSecondaryColor,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}>
-                Out of ride
-              </Text>
+                <Text
+                  style={{
+                    fontFamily: AppFontFamily.PopinsSemiBold,
+                    fontSize: 13,
+                    color: AppColors.themePrimaryColor,
+                  }}>
+                  Leave a review
+                </Text>
+              </Pressable>
             )}
           </View>
         </View>
@@ -537,38 +557,76 @@ export default function StartRideCarpooler({navigation, route}) {
             </Surface>
           </Pressable>
 
-          <Pressable
-            onPress={() => {
-              // code for issue modal
-              setRaiseIssueModa({
-                id: item._id,
-              });
-            }}
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Surface
+          {routeData && routeData.status == 'completed' ? (
+            <Pressable
+              onPress={() => {
+                // code for issue modal
+
+                navigation.navigate('SendFeedback', {
+                  userId: item._id,
+                  userName: item.name,
+                  userImage: item.profile,
+                });
+              }}
               style={{
-                padding: 8,
-                height: 40,
-                width: 40,
-                borderRadius: 50,
-                alignItems: 'center',
                 justifyContent: 'center',
-                elevation: 4,
+                alignItems: 'center',
               }}>
-              <Image
-                source={require('../../assets/issue.png')}
+              <Surface
                 style={{
-                  marginLeft: 0,
-                  width: 20,
-                  height: 20,
-                  resizeMode: 'contain',
-                }}
-              />
-            </Surface>
-          </Pressable>
+                  padding: 8,
+                  height: 40,
+                  width: 40,
+                  borderRadius: 50,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  elevation: 4,
+                }}>
+                <Image
+                  source={require('../../assets/feedback.png')}
+                  style={{
+                    marginLeft: 0,
+                    width: 20,
+                    height: 20,
+                    resizeMode: 'contain',
+                  }}
+                />
+              </Surface>
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => {
+                // code for issue modal
+                setRaiseIssueModa({
+                  id: item._id,
+                });
+              }}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Surface
+                style={{
+                  padding: 8,
+                  height: 40,
+                  width: 40,
+                  borderRadius: 50,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  elevation: 4,
+                }}>
+                <Image
+                  source={require('../../assets/issue.png')}
+                  style={{
+                    marginLeft: 0,
+                    width: 20,
+                    height: 20,
+                    resizeMode: 'contain',
+                  }}
+                />
+              </Surface>
+            </Pressable>
+          )}
         </View>
       </View>
     );
@@ -595,9 +653,7 @@ export default function StartRideCarpooler({navigation, route}) {
         Toast.show('Ride has ended');
         await fetchRideDetails();
       } else {
-        Toast.show(
-          result.message ?? result.error ?? 'Something went wrong'
-        );
+        Toast.show(result.message ?? result.error ?? 'Something went wrong');
       }
     }
   };
