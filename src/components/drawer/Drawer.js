@@ -19,7 +19,7 @@ import reducer from '../../redux/reducers/reducers';
 import {ImageLoader} from '../imageloader/ImageLoader';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Storage from '../localStorage/storage';
-import { AppKeys } from '../constants/AppKeys';
+import {AppKeys} from '../constants/AppKeys';
 
 const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
   const [menu, setMenu] = React.useState([
@@ -76,15 +76,13 @@ const DrawerScreen = ({data, getProfileDataRequest, navigation}) => {
     AsyncStorage.getAllKeys()
 
       .then(keys => AsyncStorage.multiRemove(keys))
-      .then(() =>
-      {
-        Storage.saveItem(AppKeys.LOCATION_PERMISSION_KEY, 'yes')
+      .then(() => {
+        Storage.saveItem(AppKeys.LOCATION_PERMISSION_KEY, 'yes');
         nav.reset({
           index: 0,
           routes: [{name: 'SplashScreen'}],
-        })
-      }
-      );
+        });
+      });
   };
 
   const LogoutAlert = () => {

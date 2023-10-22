@@ -29,6 +29,7 @@ import MapComponent from '../../components/map/MapComponent';
 import {Surface} from 'react-native-paper';
 import Switch from '../../Utils/Switch';
 import {RaiseIssueModal} from '../../components/popupComponents/RaiseIssueModal';
+import {useFocusEffect} from '@react-navigation/native';
 
 const latitudeArrays = [
   [29.87149, 77.866261],
@@ -82,11 +83,9 @@ export default function RideCotravaller({navigation, route}) {
   // openPrice
   const fetchRideDetails = async () => {
     const result = await apigetRideDetails(id);
-    console.log('result ', result, id);
+
     if (result.status === false) {
-      Toast.show(
-        result.message ?? result.error ?? 'Something went wrong'
-      );
+      Toast.show(result.message ?? result.error ?? 'Something went wrong');
     } else {
       let path = result.ride.lat_long_points.map(tempItem => {
         return {
@@ -203,9 +202,7 @@ export default function RideCotravaller({navigation, route}) {
 
   const onIssue = async message => {
     if (!message) {
-      Toast.show(
-        'Please enter information about issue'
-      );
+      Toast.show('Please enter information about issue');
       return;
     }
     let result = await apiUpdateRideRunningStatus(id, false, message);
@@ -256,7 +253,6 @@ export default function RideCotravaller({navigation, route}) {
 
   const listenToMessage = () => {
     messaging().onMessage(async remoteMessage => {
-      console.log('location received ', remoteMessage);
       if (remoteMessage.data && remoteMessage.data.type == 'location') {
         const {lat, long} = remoteMessage.data;
         setNewLocation({
@@ -273,7 +269,6 @@ export default function RideCotravaller({navigation, route}) {
   };
   useEffect(() => {
     (async () => {
-      await fetchRideDetails();
       listenToMessage();
     })();
 
@@ -281,6 +276,11 @@ export default function RideCotravaller({navigation, route}) {
       // clear/remove event listener
     };
   }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchRideDetails();
+    }, []),
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -407,7 +407,6 @@ export default function RideCotravaller({navigation, route}) {
               borderRadius: 5,
             }}
             onPress={() => {
-              console.log('pressed');
               onCenter();
             }}>
             <View>
@@ -759,7 +758,7 @@ export default function RideCotravaller({navigation, route}) {
                   <Text
                     style={{
                       fontFamily: 'Poppins-Bold',
-                      color: AppColors.textColor
+                      color: AppColors.textColor,
                     }}>
                     INSIDE THIS RIDE
                   </Text>
@@ -767,7 +766,7 @@ export default function RideCotravaller({navigation, route}) {
                     style={{
                       fontFamily: 'Poppins-Medium',
                       fontSize: 12,
-                      color: AppColors.textColor
+                      color: AppColors.textColor,
                     }}>
                     Use this slider to mark inside ride or raise issue
                   </Text>
@@ -935,10 +934,19 @@ export default function RideCotravaller({navigation, route}) {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <View
+              <Pressable
+                onPress={() => {
+                  // code for issue modal
+
+                  navigation.navigate('SendFeedback', {
+                    userId: userDetails._id,
+                    userName: userDetails.name,
+                    userImage: userDetails.profile,
+                  });
+                }}
                 style={{
                   width: '90%',
-                  backgroundColor: AppColors.themeGreenColor,
+                  backgroundColor: AppColors.themePrimaryColor,
                   height: 47,
                   display: 'flex',
                   alignItems: 'center',
@@ -947,9 +955,9 @@ export default function RideCotravaller({navigation, route}) {
                   justifyContent: 'center',
                 }}>
                 <Text style={{color: AppColors.themesWhiteColor}}>
-                  Ride Completed
+                  Write a Review
                 </Text>
-              </View>
+              </Pressable>
             </View>
           ) : (
             ''
