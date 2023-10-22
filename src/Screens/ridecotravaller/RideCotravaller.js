@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
   Linking,
+  FlatList,
 } from 'react-native';
 import {AppColors} from '../../components/constants/AppColor';
 import moment from 'moment';
@@ -30,6 +31,7 @@ import {Surface} from 'react-native-paper';
 import Switch from '../../Utils/Switch';
 import {RaiseIssueModal} from '../../components/popupComponents/RaiseIssueModal';
 import {useFocusEffect} from '@react-navigation/native';
+import {ImageLoader} from '../../components/imageloader/ImageLoader';
 
 const latitudeArrays = [
   [29.87149, 77.866261],
@@ -56,6 +58,7 @@ export default function RideCotravaller({navigation, route}) {
   const [routeData, setRouteData] = useState(null);
   const [insideRide, setInsideRide] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [chatId, setChatId] = useState(null);
   let {width, height} = Dimensions.get('window');
   let totalHeight = height / 1.75;
@@ -281,6 +284,125 @@ export default function RideCotravaller({navigation, route}) {
       fetchRideDetails();
     }, []),
   );
+
+  const renderItem = ({item, index}) => {
+    // setActiveCard(index, 'current index')
+    console.log('item ', item);
+    return (
+      <View
+        style={{
+          width: Dimensions.get('screen').width,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingTop: 5,
+          paddingBottom: 5,
+        }}>
+        {/* <ImageBackground source={require('../../assets/paymentcardbg.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover', alignItems: 'center' }}> */}
+        <Surface
+          elevation={4}
+          style={{
+            padding: 10,
+            width: '90%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <View
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              marginBottom: 10,
+            }}>
+            <Text
+              style={{
+                width: '100%',
+                padding: 10,
+                paddingTop: 0,
+                paddingBottom: 0,
+                fontFamily: AppFontFamily.PopinsSemiBold,
+                fontSize: 16,
+                color: AppColors.themeBlackColor,
+              }}>
+              {item.message}
+            </Text>
+          </View>
+
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              height: 70,
+              alignItems: 'center',
+              marginTop: 0,
+              justifyContent: 'space-around',
+            }}>
+            <View
+              style={{
+                width: '90%',
+                alignItems: 'center',
+                flexDirection: 'row',
+                marginBottom: 10,
+                marginLeft: 10,
+              }}>
+              <ImageLoader
+                width={40}
+                height={40}
+                borderRadius={20}
+                image={item.user.profile ? {uri: item.user.profile} : ''}
+              />
+
+              <View style={{justifyContent: 'center'}}>
+                <Text
+                  style={{
+                    width: '100%',
+                    padding: 10,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    fontFamily: AppFontFamily.PopinsSemiBold,
+                    fontSize: 16,
+                    color: AppColors.themeText2Color,
+                  }}>
+                  {item?.user.name}
+                </Text>
+                <View
+                  style={{
+                    paddingLeft: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={require('../../assets/Star.png')}
+                    style={{
+                      marginRight: 5,
+                      width: 12,
+                      height: 12,
+                      marginBottom: 3,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: AppFontFamily.PopinsRegular,
+                      fontSize: 12,
+                      color: AppColors.themeText2Color,
+                    }}>
+                    {item.rating + ' rating'}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </Surface>
+
+        {/* </ImageBackground> */}
+      </View>
+    );
+  };
+
+  const handlePageChange = event => {
+    const {contentOffset} = event.nativeEvent;
+    const index = Math.round(contentOffset.x / Dimensions.get('window').width);
+    setCurrentIndex(index);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -962,7 +1084,7 @@ export default function RideCotravaller({navigation, route}) {
           ) : (
             ''
           )}
-          {/* <View
+          <View
             style={{
               paddingLeft: 20,
               width: '88%',
@@ -979,7 +1101,28 @@ export default function RideCotravaller({navigation, route}) {
               }}>
               Reviews
             </Text>
-          </View> */}
+          </View>
+          <View>
+            <FlatList
+              data={userDetails?.rating || []}
+              renderItem={renderItem}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onMomentumScrollEnd={handlePageChange}
+            />
+          </View>
+          <View style={styles.paginationContainer}>
+            {userDetails?.rating.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.paginationDot,
+                  index === currentIndex && styles.activePaginationDot,
+                ]}
+              />
+            ))}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -998,5 +1141,23 @@ const styles = StyleSheet.create({
   maps: {
     width: Dimensions.get('screen').width,
     height: Dimensions.get('screen').height / 2.2,
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'green',
+    marginTop: 10,
+  },
+  paginationDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'gray',
+    marginHorizontal: 5,
+  },
+  activePaginationDot: {
+    backgroundColor: AppColors.themePrimaryColor,
+    width: 20,
   },
 });
