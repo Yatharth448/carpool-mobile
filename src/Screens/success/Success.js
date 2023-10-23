@@ -82,7 +82,7 @@ function Success({ data, loading, error, getProfileDataRequest, navigation, rout
                                     <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 14, color: AppColors.themeText2Color }}>{data.name ?? "Sachin Gupta"}</Text>
                                     <View style={{ paddingLeft: 10, flexDirection: 'row', alignItems: 'center' }}>
                                         <Image source={require('../../assets/Star.png')} style={{ marginRight: 5, width: 12, height: 12, marginBottom: 3, resizeMode: 'contain' }} />
-                                        <Text style={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{'4.5 rating'}</Text>
+                                        <Text style={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{item?.rating +' rating'}</Text>
                                     </View>
                                 </View>
                             </View>

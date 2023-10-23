@@ -241,7 +241,7 @@ export default function FindRideList({ navigation, route }) {
                                             <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 14, color: AppColors.themeText2Color }}>{item.user_name ?? "Sachin Gupta"}</Text>
                                             <View style={{ paddingLeft: 10, flexDirection: 'row', alignItems: 'center' }}>
                                                 <Image source={require('../../assets/Star.png')} style={{ marginRight: 5, width: 12, height: 12, marginBottom: 3, resizeMode: 'contain' }} />
-                                                <Text style={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{item.rating + ' rating'}</Text>
+                                                <Text style={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{item?.rating + ' rating'}</Text>
                                             </View>
                                         </View>
 

@@ -231,7 +231,7 @@ export default function OfferedRideDetails({navigation, route}) {
                       fontSize: 12,
                       color: AppColors.themeText2Color,
                     }}>
-                    {'4.5 rating'}
+                    {item?.rating + ' rating'}
                   </Text>
                 </View>
               </View>

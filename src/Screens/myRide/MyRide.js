@@ -102,7 +102,7 @@ export default function MyRide({ navigation, route }) {
                                 <View style={{ justifyContent: 'center' }}>
 
                                     <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontWeight: '700', fontSize: 16, color: AppColors.themeText2Color }}>{item.user_name ?? "Sachin Gupta"}</Text>
-                                    <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontWeight: '700', fontSize: 16, color: AppColors.themeText2Color }}>{item.rating + " stars"}</Text>
+                                    <Text style={{ width: '100%', padding: 10, paddingTop: 0, paddingBottom: 0, fontWeight: '700', fontSize: 16, color: AppColors.themeText2Color }}>{item?.rating + " stars"}</Text>
                                 </View>
                             </View>
 

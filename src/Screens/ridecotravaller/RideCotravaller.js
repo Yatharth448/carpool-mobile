@@ -385,7 +385,7 @@ export default function RideCotravaller({navigation, route}) {
                       fontSize: 12,
                       color: AppColors.themeText2Color,
                     }}>
-                    {item.rating + ' rating'}
+                    {item?.rating + ' rating'}
                   </Text>
                 </View>
               </View>

@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -17,24 +17,24 @@ import {
   hitApiToGetRequestedRideDetails,
   hitApiToRejectRequestedRide,
 } from './RideHistoryModal';
-import {Header} from '../../components/commomheader/CommonHeader';
-import {Surface} from 'react-native-paper';
+import { Header } from '../../components/commomheader/CommonHeader';
+import { Surface } from 'react-native-paper';
 import moment from 'moment';
-import {AppColors} from '../../components/constants/AppColor';
-import {AppFontFamily} from '../../components/constants/AppFonts';
-import {AppTexts} from '../../components/constants/AppTexts';
-import {ButtonPrimary} from '../../components/button/buttonPrimary';
+import { AppColors } from '../../components/constants/AppColor';
+import { AppFontFamily } from '../../components/constants/AppFonts';
+import { AppTexts } from '../../components/constants/AppTexts';
+import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import {
   hitApiToAcceptOfferedRide,
   hitApiToAcceptRequestedRide,
 } from './RideHistoryModal';
 import CommonLoaders from '../../components/loader/Loader';
-import {RideCostView} from './RideHistoryComponent';
-import {CalculateTimeFromMilies} from '../../components/commonfunction/CommonFunctions';
-import {ImageLoader} from '../../components/imageloader/ImageLoader';
+import { RideCostView } from './RideHistoryComponent';
+import { CalculateTimeFromMilies } from '../../components/commonfunction/CommonFunctions';
+import { ImageLoader } from '../../components/imageloader/ImageLoader';
 import Toast from 'react-native-simple-toast';
 
-export default function RequestedRideDetails({navigation, route}) {
+export default function RequestedRideDetails({ navigation, route }) {
   const flatListRef = useRef(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [acceptLoader, setAcceptLoader] = React.useState(false);
@@ -44,7 +44,7 @@ export default function RequestedRideDetails({navigation, route}) {
   const [cotravellerArray, setCotravellerArray] = React.useState([]);
   const [rideData, setRideData] = React.useState('');
   const [isCancel, setIsCancel] = React.useState('');
-  const {id, from} = route.params;
+  const { id, from } = route.params;
 
   useEffect(() => {
     (async () => {
@@ -77,10 +77,10 @@ export default function RequestedRideDetails({navigation, route}) {
     }
   };
 
-  const CustomerInfoView = ({item}) => {
+  const CustomerInfoView = ({ item }) => {
     return (
       // <View style={{ width: Dimensions.get('screen').width, alignItems: 'center', justifyContent: 'center', paddingBottom: 10 }}>
-      <View style={{width: '90%', marginTop: 10}}>
+      <View style={{ width: '90%', marginTop: 10 }}>
         <Text
           style={{
             marginTop: 10,
@@ -100,8 +100,8 @@ export default function RequestedRideDetails({navigation, route}) {
       '',
       'KYC pending! Please complete your KYC',
       [
-        {text: 'cancel'},
-        {text: 'OK', onPress: () => navigation.navigate('KycScreen')},
+        { text: 'cancel' },
+        { text: 'OK', onPress: () => navigation.navigate('KycScreen') },
       ],
       {
         cancelable: false,
@@ -120,7 +120,7 @@ export default function RequestedRideDetails({navigation, route}) {
     // console.log(result, 'vvv')
     if (result.status) {
       const updatedArray = userData.map((obj, index) =>
-        index === 0 ? {...obj, status: 'accepted'} : obj,
+        index === 0 ? { ...obj, status: 'accepted' } : obj,
       );
 
       // console.log(updatedArray, 'arr')
@@ -148,7 +148,7 @@ export default function RequestedRideDetails({navigation, route}) {
     // console.log(result, 'vvv')
     if (result.status) {
       const updatedArray = userData.map((obj, index) =>
-        index === 0 ? {...obj, status: 'rejected'} : obj,
+        index === 0 ? { ...obj, status: 'rejected' } : obj,
       );
 
       // console.log(updatedArray, 'arr')
@@ -166,7 +166,7 @@ export default function RequestedRideDetails({navigation, route}) {
     // getRideDetail()
   };
 
-  const ViewRideRequestBtn = ({}) => {
+  const ViewRideRequestBtn = ({ }) => {
     return (
       <View
         style={{
@@ -193,7 +193,7 @@ export default function RequestedRideDetails({navigation, route}) {
     Alert.alert(
       '',
       'Are you sure you want to cancel this ride ?',
-      [{text: 'no'}, {text: 'yes', onPress: () => cancelRide(item)}],
+      [{ text: 'no' }, { text: 'yes', onPress: () => cancelRide(item) }],
       {
         cancelable: false,
       },
@@ -211,7 +211,7 @@ export default function RequestedRideDetails({navigation, route}) {
       Alert.alert(
         '',
         'Ride cancelled successfully',
-        [{text: 'ok', onPress: () => navigation.goBack()}],
+        [{ text: 'ok', onPress: () => navigation.goBack() }],
         {
           cancelable: false,
         },
@@ -223,7 +223,7 @@ export default function RequestedRideDetails({navigation, route}) {
     setCancelLoader(false);
   };
 
-  const AcceptedRideView = ({item, index}) => {
+  const AcceptedRideView = ({ item, index }) => {
     // setActiveCard(index, 'current index')
     // console.log(item, 'item')
 
@@ -264,7 +264,7 @@ export default function RequestedRideDetails({navigation, route}) {
                 marginTop: 20,
               }}>
               <ImageLoader
-                image={item.profile ? {url: item.profile} : ''}
+                image={item.profile ? { url: item.profile } : ''}
                 width={42}
                 height={42}
                 borderRadius={21}
@@ -272,7 +272,7 @@ export default function RequestedRideDetails({navigation, route}) {
 
               {/* <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} /> */}
 
-              <View style={{justifyContent: 'center', width: '65%'}}>
+              <View style={{ justifyContent: 'center', width: '65%' }}>
                 <Text
                   style={{
                     width: '100%',
@@ -307,7 +307,7 @@ export default function RequestedRideDetails({navigation, route}) {
                       fontSize: 12,
                       color: AppColors.themeText2Color,
                     }}>
-                    {'4.5 rating'}
+                    {item.rating + ' rating'}
                   </Text>
                 </View>
               </View>
@@ -451,7 +451,7 @@ export default function RequestedRideDetails({navigation, route}) {
                     </View>
                   </View>
                   <View
-                    style={{marginLeft: 0, width: '100%', height: 0}}></View>
+                    style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
                   <View
                     style={{
                       width: '100%',
@@ -509,7 +509,7 @@ export default function RequestedRideDetails({navigation, route}) {
     );
   };
 
-  const CotravellerList = ({cotravellrArray}) => {
+  const CotravellerList = ({ cotravellrArray }) => {
     // console.log(cotravellrArray.length, 'len')
     return (
       <>
@@ -528,7 +528,7 @@ export default function RequestedRideDetails({navigation, route}) {
             // horizontal
             // pagingEnabled
             showsHorizontalScrollIndicator={false}
-            // onMomentumScrollEnd={handlePageChange}
+          // onMomentumScrollEnd={handlePageChange}
           />
         </View>
         {/* {cotravellerArray.length > 0 ? null : CommonLoaders.NoDataInList('No co-traveller found', { height: '25%' })} */}
@@ -537,7 +537,7 @@ export default function RequestedRideDetails({navigation, route}) {
   };
 
   const noData = () => {
-    return CommonLoaders.NoDataInList('No co-traveller found', {height: 100});
+    return CommonLoaders.NoDataInList('No co-traveller found', { height: 100 });
   };
 
   const RideDetailView = () => {
@@ -566,7 +566,7 @@ export default function RequestedRideDetails({navigation, route}) {
                 marginTop: 10,
                 marginLeft: 10,
               }}>
-              <View style={{justifyContent: 'center'}}>
+              <View style={{ justifyContent: 'center' }}>
                 <Text
                   style={{
                     width: '100%',
@@ -617,7 +617,7 @@ export default function RequestedRideDetails({navigation, route}) {
                     }}>
                     <Image
                       source={require('../../assets/dotone.png')}
-                      style={{width: 10, height: 10, resizeMode: 'contain'}}
+                      style={{ width: 10, height: 10, resizeMode: 'contain' }}
                     />
                   </View>
                   <View
@@ -689,7 +689,7 @@ export default function RequestedRideDetails({navigation, route}) {
                     </View>
                   </View>
                   <View
-                    style={{marginLeft: 0, width: '100%', height: 0}}></View>
+                    style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
                   <View
                     style={{
                       width: '100%',
@@ -721,59 +721,78 @@ export default function RequestedRideDetails({navigation, route}) {
               </View>
             </View>
 
-            <View
-              style={{
-                width: '90%',
-                alignItems: 'center',
-                flexDirection: 'row',
-                marginLeft: 10,
-                marginTop: 10,
-              }}>
-              <ImageLoader
-                width={42}
-                height={42}
-                borderRadius={20}
-                image={rideData[0].profile ? {uri: rideData[0].profile} : ''}
-              />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-              <View style={{justifyContent: 'center'}}>
+              <View
+                style={{
+                  width: '65%',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  marginLeft: 10,
+                  marginTop: 10,
+                }}>
+                <ImageLoader
+                  width={42}
+                  height={42}
+                  borderRadius={20}
+                  image={rideData[0].profile ? { uri: rideData[0].profile } : ''}
+                />
+
+                <View style={{ justifyContent: 'center' }}>
+                  <Text
+                    style={{
+                      width: '100%',
+                      padding: 10,
+                      paddingTop: 0,
+                      paddingBottom: 0,
+                      fontFamily: AppFontFamily.PopinsBold,
+                      fontSize: 16,
+                      color: AppColors.themeText2Color,
+                    }}>
+                    {rideData[0].name ?? 'Sachin Gupta'}
+                  </Text>
+                  <View
+                    style={{
+                      paddingLeft: 10,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Image
+                      source={require('../../assets/Star.png')}
+                      style={{
+                        marginRight: 5,
+                        width: 12,
+                        height: 12,
+                        marginBottom: 3,
+                        resizeMode: 'contain',
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: AppFontFamily.PopinsRegular,
+                        fontSize: 12,
+                        color: AppColors.themeText2Color,
+                      }}>
+                      {rideData[0]?.rating + ' rating'}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={{ width: '30%' , justifyContent: 'center', alignItems: 'flex-end'}}>
                 <Text
                   style={{
                     width: '100%',
                     padding: 10,
                     paddingTop: 0,
                     paddingBottom: 0,
-                    fontFamily: AppFontFamily.PopinsBold,
-                    fontSize: 16,
+                    textAlign: 'center',
+                    fontFamily: AppFontFamily.PopinsRegular,
+                    fontSize: 12,
                     color: AppColors.themeText2Color,
                   }}>
-                  {rideData[0].name ?? 'Sachin Gupta'}
+                  {`Seats \n ${rideData[0].seat}`}
                 </Text>
-                <View
-                  style={{
-                    paddingLeft: 10,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={require('../../assets/Star.png')}
-                    style={{
-                      marginRight: 5,
-                      width: 12,
-                      height: 12,
-                      marginBottom: 3,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: AppFontFamily.PopinsRegular,
-                      fontSize: 12,
-                      color: AppColors.themeText2Color,
-                    }}>
-                    {'4.5 rating'}
-                  </Text>
-                </View>
               </View>
             </View>
 
@@ -793,7 +812,7 @@ export default function RequestedRideDetails({navigation, route}) {
                 marginBottom: 10,
                 marginLeft: 10,
               }}>
-              <View style={{justifyContent: 'flex-start', width: '55%'}}>
+              <View style={{ justifyContent: 'flex-start', width: '55%' }}>
                 <RideCostView amount={rideData[0].price} />
 
                 <Text
@@ -928,7 +947,7 @@ export default function RequestedRideDetails({navigation, route}) {
                       height: 30,
                       backgroundColor: AppColors.themesWhiteColor,
                     }}
-                    textStyle={{color: AppColors.themeButtonRed}}
+                    textStyle={{ color: AppColors.themeButtonRed }}
                     text={'Cancel your ride'}
                     onPress={() =>
                       cancelLoader
