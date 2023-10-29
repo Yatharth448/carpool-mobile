@@ -1,19 +1,14 @@
 import React, { useEffect } from 'react'
-import { Text, View, Image, TouchableOpacity, TextInput, Pressable, Dimensions, BackHandler } from 'react-native'
+import { Text, View, Image, TouchableOpacity, Pressable, BackHandler } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
-// import { TextInput } from 'react-native-paper'
 import Toast from 'react-native-simple-toast'
-// import Icon from 'react-native-vector-icons/MaterialIcons'
 import { hitApiForGoogleLogin, hitApiForLogin } from './loginModal'
 import Storage from '../../components/localStorage/storage'
 import { AppKeys } from '../../components/constants/AppKeys'
-import { Checkbox, Button, Surface } from 'react-native-paper';
 import { InputView } from '../../components/Input/InputView'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from '../../components/constants/AppFonts'
-import auth from '@react-native-firebase/auth';
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
-import { CommonActions } from '@react-navigation/native';
 import CommonLoaders from '../../components/loader/Loader'
 import { GoogleLogin } from '../../components/googlelogin/GoogleLogin'
 
@@ -27,7 +22,6 @@ export default function LoginScreen({ navigation }) {
     const [showPassword, setShowPassword] = React.useState(true);
     const [isLoading, setIsLoading] = React.useState(false);
     const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
-    const countryCode = '+91';
 
 
     useEffect(() => {
@@ -100,9 +94,7 @@ export default function LoginScreen({ navigation }) {
     const userGoogleSignup = async (userInfo) => {
 
         if (userInfo) {
-            // const { email, familyName, givenName, id, photo } = route.params;
-
-            // console.log(userInfo, userInfo?.email,  userInfo?.familyName, userInfo?.givenName,  userInfo?.id,  userInfo?.photo )
+          
             if (!userInfo?.gender || !userInfo?.mobile) {
                 navigation.navigate('AddGenderMobile', { "email": userInfo?.email, 'familyName': userInfo?.familyName, 'givenName': userInfo?.givenName, 'id': userInfo?.id, 'photo': userInfo?.photo })
             }
@@ -151,13 +143,6 @@ export default function LoginScreen({ navigation }) {
 
                 }
 
-                // navigation.dispatch(
-                //     CommonActions.reset({
-                //         index: 0,
-                //         routes: [{ name: 'RideDrawer' }],
-                //     })
-                // );
-
             }
             else {
 
@@ -169,12 +154,7 @@ export default function LoginScreen({ navigation }) {
 
         }
 
-
     }
-
-
-
-
 
     const onChangeEmail = (e) => {
         setEmail(e)
@@ -195,15 +175,9 @@ export default function LoginScreen({ navigation }) {
                 <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 100, resizeMode: 'contain' }} />
             </View>
 
-            {/* <View style={{ width: '90%', justifyContent: 'center' }}>
-                <Text style={{ marginLeft: 20, fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
-                    {'Login'}
-                </Text>
-            </View> */}
-
             <View style={{ width: '100%', alignItems: 'center' }}>
 
-                <GoogleLogin userData={googleData} startLoader={startLoader}/>
+                <GoogleLogin userData={googleData} startLoader={startLoader} isLogin={true}/>
 
                 <View style={{ width: '100%', marginTop: 40 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
@@ -216,9 +190,6 @@ export default function LoginScreen({ navigation }) {
                 </View>
 
                 <View style={{ width: '90%', justifyContent: 'center' }}>
-
-
-
 
                     <InputView left={require('../../assets/sms.png')} headText={'Email Id'} placeHolder={'Enter email id'} val={email} onChange={onChangeEmail} />
                     <InputView headText={'Password'} placeHolder={'Enter Password'} val={password} onChange={onChangePassword} right={showPassword ? 'eye-off-outline' : 'eye-outline'} rightClick={rightClick} secureText={showPassword} />
@@ -239,9 +210,6 @@ export default function LoginScreen({ navigation }) {
                     </View>
                 </View>
             </View>
-
-
-
 
             <View style={{ width: '100%', alignItems: 'center', height: 50 }}>
                 <TouchableOpacity onPress={() => navigation.navigate('SignupScreen')} style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>

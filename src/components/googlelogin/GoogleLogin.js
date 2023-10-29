@@ -8,7 +8,7 @@ import { Surface } from 'react-native-paper';
 import { AppColors } from '../constants/AppColor';
 import { AppFontFamily } from '../constants/AppFonts';
 
-export function GoogleLogin({ userData, startLoader }) {
+export function GoogleLogin({ userData, startLoader, isLogin }) {
 
     useEffect(() => {
         // Configure Google Sign-In
@@ -79,7 +79,7 @@ export function GoogleLogin({ userData, startLoader }) {
                     <Image source={require('../../assets/googlelogo.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
                 </View>
                 <View style={{ width: '60%', justifyContent: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: AppColors.themeBlackColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Sign in with Google'}</Text>
+                    <Text style={{ color: AppColors.themeBlackColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{isLogin ? 'Sign in with Google' : 'Sign up with Google'}</Text>
                 </View>
 
             </Surface>

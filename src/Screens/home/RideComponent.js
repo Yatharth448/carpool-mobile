@@ -8,13 +8,13 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import {AppColors} from '../../components/constants/AppColor';
+import { AppColors } from '../../components/constants/AppColor';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {AppFontFamily} from '../../components/constants/AppFonts';
-import {ButtonPrimary} from '../../components/button/buttonPrimary';
+import { AppFontFamily } from '../../components/constants/AppFonts';
+import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import CommonLoaders from '../../components/loader/Loader';
-import {ImageLoader} from '../../components/imageloader/ImageLoader';
-export const AvtarView = ({image, name, type}) => {
+import { ImageLoader } from '../../components/imageloader/ImageLoader';
+export const AvtarView = ({ image, name, type }) => {
   const [loading, setLoading] = React.useState(false);
   // console.log(image, 'image')
 
@@ -68,7 +68,7 @@ export const AvtarView = ({image, name, type}) => {
   );
 };
 
-export const SeatsView = ({data, selectedIndex, setSelectedIndex}) => {
+export const SeatsView = ({ data, selectedIndex, setSelectedIndex }) => {
   return (
     <View
       style={{
@@ -86,7 +86,7 @@ export const SeatsView = ({data, selectedIndex, setSelectedIndex}) => {
         }}>
         <Image
           source={require('../../assets/carseat.png')}
-          style={{width: 20, height: 20, resizeMode: 'contain'}}
+          style={{ width: 20, height: 20, resizeMode: 'contain' }}
         />
         <Text
           style={{
@@ -99,16 +99,16 @@ export const SeatsView = ({data, selectedIndex, setSelectedIndex}) => {
         </Text>
       </View>
 
-      <View style={{width: '55%', alignItems: 'flex-end'}}>
+      <View style={{ width: '55%', alignItems: 'flex-end' }}>
         <FlatList
           data={data}
-          columnWrapperStyle={{flexWrap: 'wrap'}}
+          columnWrapperStyle={{ flexWrap: 'wrap' }}
           numColumns={5}
           keyExtractor={(item, index) => index}
           showsVerticalScrollIndicator={false}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <>
-              <View style={{padding: 0}}>
+              <View style={{ padding: 0 }}>
                 <Pressable
                   onPress={() => setSelectedIndex(index)}
                   style={{
@@ -150,7 +150,7 @@ export const SeatsView = ({data, selectedIndex, setSelectedIndex}) => {
   );
 };
 
-export const CotravellerView = ({onCheck, image}) => {
+export const CotravellerView = ({ onCheck, image }) => {
   return (
     <View
       style={{
@@ -159,10 +159,10 @@ export const CotravellerView = ({onCheck, image}) => {
         justifyContent: 'center',
         marginTop: 20,
       }}>
-      <View style={{width: '68%', flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{ width: '68%', flexDirection: 'row', alignItems: 'center' }}>
         <Image
           source={require('../../assets/cotraveller.png')}
-          style={{width: 18, resizeMode: 'contain'}}
+          style={{ width: 18, resizeMode: 'contain' }}
         />
         <Text
           style={{
@@ -189,7 +189,7 @@ export const CotravellerView = ({onCheck, image}) => {
   );
 };
 
-export const PendingKYC = ({message, onOkPress}) => {
+export const PendingKYC = ({ message, onOkPress }) => {
   return (
     <View
       style={{
@@ -226,14 +226,14 @@ export const PendingKYC = ({message, onOkPress}) => {
         }}>
         <Image
           source={require('../../assets/close.png')}
-          style={{marginRight: 10, width: 10, resizeMode: 'contain'}}
+          style={{ marginRight: 10, width: 10, resizeMode: 'contain' }}
         />
       </Pressable>
     </View>
   );
 };
 
-export const NoRideFound = ({chooseAnother}) => {
+export const NoRideFound = ({ chooseAnother }) => {
   return (
     <View
       style={{
@@ -247,9 +247,9 @@ export const NoRideFound = ({chooseAnother}) => {
         justifyContent: 'center',
       }}>
       <View
-        style={{width: '95%', justifyContent: 'center', alignItems: 'center'}}
+        style={{ width: '95%', justifyContent: 'center', alignItems: 'center' }}
         elevation={4}>
-        <View style={{width: '100%', alignItems: 'center'}}>
+        <View style={{ width: '100%', alignItems: 'center' }}>
           <Image
             source={require('../../assets/avtar.png')}
             style={{
@@ -287,7 +287,7 @@ export const NoRideFound = ({chooseAnother}) => {
         </View>
       </View>
 
-      <View style={{width: '95%', alignItems: 'center', marginTop: 20}}>
+      <View style={{ width: '95%', alignItems: 'center', marginTop: 20 }}>
         <ButtonPrimary
           text={'Choose another location'}
           onPress={() => chooseAnother()}
@@ -312,6 +312,80 @@ export const SearchLoaderScreen = () => {
         justifyContent: 'center',
       }}>
       <CommonLoaders.SearchRide />
+    </View>
+  );
+};
+
+export const HomeFooterScreen = () => {
+  return (
+    <View
+      style={{
+        alignItems: 'center',
+        backgroundColor: AppColors.themesWhiteColor,
+        marginTop: -2,
+        width: '100%',
+        justifyContent: 'center',
+        paddingTop: 0
+      }}>
+      <View>
+       
+        <View style={{ width: Dimensions.get('screen').width, alignItems: 'flex-start' }}>
+
+          <Text style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeBlackColor, marginLeft: 20 }}>
+            {'For latest updates, follow us'}
+          </Text>
+          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start' }}>
+
+            <Pressable style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', marginLeft: 15 }}>
+              <Image
+                source={require('../../assets/fbfooter.png')}
+                style={{
+                  width: 32,
+                  height: 32,
+                  resizeMode: 'contain',
+                }}
+              />
+            </Pressable>
+
+            <Pressable style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+              <Image
+                source={require('../../assets/twitter.png')}
+                style={{
+                  width: 32,
+                  height: 32,
+                  resizeMode: 'contain',
+                }}
+              />
+            </Pressable>
+
+            <Pressable style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+              <Image
+                source={require('../../assets/linkedin.png')}
+                style={{
+                  width: 32,
+                  height: 32,
+                  resizeMode: 'contain',
+                }}
+              />
+            </Pressable>
+
+            <Pressable style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+              <Image
+                source={require('../../assets/instagram.png')}
+                style={{
+                  width: 32,
+                  height: 32,
+                  resizeMode: 'contain',
+                }}
+              />
+            </Pressable>
+
+          </View>
+
+        </View>
+
+      </View>
+      <View style={{ width: Dimensions.get('screen').width - 30, marginBottom: 50, marginTop: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
     </View>
   );
 };

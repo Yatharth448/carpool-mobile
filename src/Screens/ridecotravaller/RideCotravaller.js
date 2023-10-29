@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -11,27 +11,27 @@ import {
   Linking,
   FlatList,
 } from 'react-native';
-import {AppColors} from '../../components/constants/AppColor';
+import { AppColors } from '../../components/constants/AppColor';
 import moment from 'moment';
-import {Header} from '../../components/commomheader/CommonHeader';
+import { Header } from '../../components/commomheader/CommonHeader';
 import messaging from '@react-native-firebase/messaging';
 import KeepAwake from 'react-native-keep-awake';
 
 import Toast from 'react-native-simple-toast';
-import MapView, {Polyline, Marker} from 'react-native-maps';
-import {PriceSelection} from '../../components/priceselection/PriceSelection';
-import {AppFontFamily} from '../../components/constants/AppFonts';
+import MapView, { Polyline, Marker } from 'react-native-maps';
+import { PriceSelection } from '../../components/priceselection/PriceSelection';
+import { AppFontFamily } from '../../components/constants/AppFonts';
 import {
   apiUpdateRideRunningStatus,
   apigetRideDetails,
 } from './RideCotravallerModel';
-import {ButtonPrimary} from '../../components/button/buttonPrimary';
+import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import MapComponent from '../../components/map/MapComponent';
-import {Surface} from 'react-native-paper';
+import { Surface } from 'react-native-paper';
 import Switch from '../../Utils/Switch';
-import {RaiseIssueModal} from '../../components/popupComponents/RaiseIssueModal';
-import {useFocusEffect} from '@react-navigation/native';
-import {ImageLoader} from '../../components/imageloader/ImageLoader';
+import { RaiseIssueModal } from '../../components/popupComponents/RaiseIssueModal';
+import { useFocusEffect } from '@react-navigation/native';
+import { ImageLoader } from '../../components/imageloader/ImageLoader';
 
 const latitudeArrays = [
   [29.87149, 77.866261],
@@ -49,18 +49,18 @@ const latitudeArrays = [
   [29.870355, 77.868219],
 ];
 
-export default function RideCotravaller({navigation, route}) {
+export default function RideCotravaller({ navigation, route }) {
   // let  path1 = [];
   const mapRef = React.useRef(null);
   const markerRef = useRef(null);
-  const {id} = route.params;
+  const { id } = route.params;
   const [raiseIssueModal, setRaiseIssueModa] = useState(null);
   const [routeData, setRouteData] = useState(null);
   const [insideRide, setInsideRide] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [chatId, setChatId] = useState(null);
-  let {width, height} = Dimensions.get('window');
+  let { width, height } = Dimensions.get('window');
   let totalHeight = height / 1.75;
   const ASPECT_RATIO = width / totalHeight;
   const LATITUDE_DELTA = 0.003;
@@ -165,7 +165,7 @@ export default function RideCotravaller({navigation, route}) {
   };
 
   const updateMap = async () => {
-    const {curLoc, prevLoc, curAng, nextLoc} = state;
+    const { curLoc, prevLoc, curAng, nextLoc } = state;
     let curRot;
     if (
       (!prevLoc ||
@@ -257,7 +257,7 @@ export default function RideCotravaller({navigation, route}) {
   const listenToMessage = () => {
     messaging().onMessage(async remoteMessage => {
       if (remoteMessage.data && remoteMessage.data.type == 'location') {
-        const {lat, long} = remoteMessage.data;
+        const { lat, long } = remoteMessage.data;
         setNewLocation({
           latitude: parseFloat(lat),
           longitude: parseFloat(long),
@@ -285,7 +285,7 @@ export default function RideCotravaller({navigation, route}) {
     }, []),
   );
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     // setActiveCard(index, 'current index')
     console.log('item ', item);
     return (
@@ -347,10 +347,10 @@ export default function RideCotravaller({navigation, route}) {
                 width={40}
                 height={40}
                 borderRadius={20}
-                image={item.user.profile ? {uri: item.user.profile} : ''}
+                image={item.user.profile ? { uri: item.user.profile } : ''}
               />
 
-              <View style={{justifyContent: 'center'}}>
+              <View style={{ justifyContent: 'center' }}>
                 <Text
                   style={{
                     width: '100%',
@@ -363,31 +363,33 @@ export default function RideCotravaller({navigation, route}) {
                   }}>
                   {item?.user.name}
                 </Text>
-                <View
-                  style={{
-                    paddingLeft: 10,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={require('../../assets/Star.png')}
+                {item?.rating ?
+                  <View
                     style={{
-                      marginRight: 5,
-                      width: 12,
-                      height: 12,
-                      marginBottom: 3,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: AppFontFamily.PopinsRegular,
-                      fontSize: 12,
-                      color: AppColors.themeText2Color,
+                      paddingLeft: 10,
+                      flexDirection: 'row',
+                      alignItems: 'center',
                     }}>
-                    {item?.rating + ' rating'}
-                  </Text>
-                </View>
+                    <Image
+                      source={require('../../assets/Star.png')}
+                      style={{
+                        marginRight: 5,
+                        width: 12,
+                        height: 12,
+                        marginBottom: 3,
+                        resizeMode: 'contain',
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: AppFontFamily.PopinsRegular,
+                        fontSize: 12,
+                        color: AppColors.themeText2Color,
+                      }}>
+                      {item?.rating + ' rating'}
+                    </Text>
+                  </View>
+                  : null}
               </View>
             </View>
           </View>
@@ -399,7 +401,7 @@ export default function RideCotravaller({navigation, route}) {
   };
 
   const handlePageChange = event => {
-    const {contentOffset} = event.nativeEvent;
+    const { contentOffset } = event.nativeEvent;
     const index = Math.round(contentOffset.x / Dimensions.get('window').width);
     setCurrentIndex(index);
   };
@@ -408,11 +410,11 @@ export default function RideCotravaller({navigation, route}) {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         {routeData &&
-        routeData.paths &&
-        routeData.paths.length > 0 &&
-        state.curLoc &&
-        state.curLoc.latitude &&
-        state.curLoc.longitude ? (
+          routeData.paths &&
+          routeData.paths.length > 0 &&
+          state.curLoc &&
+          state.curLoc.latitude &&
+          state.curLoc.longitude ? (
           <MapView
             minZoomLevel={4}
             maxZoomLevel={32}
@@ -448,12 +450,12 @@ export default function RideCotravaller({navigation, route}) {
                   borderRadius: 1,
                   elevation: 1,
                 }}
-                anchor={{x: 0.5, y: 0.5}}
+                anchor={{ x: 0.5, y: 0.5 }}
                 ref={markerRef}
                 coordinate={state.curLoc}>
                 <Image
                   source={require('../../assets/car_top.png')}
-                  style={{width: 30, height: 33}}
+                  style={{ width: 30, height: 33 }}
                   resizeMode="contain"
                 />
               </Marker>
@@ -472,7 +474,7 @@ export default function RideCotravaller({navigation, route}) {
                 latitudeDelta: 0.922,
                 longitudeDelta: 0.0421,
               }}
-              markers={{latitude: 28.6539952, longitude: 76.973255}}
+              markers={{ latitude: 28.6539952, longitude: 76.973255 }}
               loading={false}
               customMapStyle={[
                 {
@@ -507,7 +509,7 @@ export default function RideCotravaller({navigation, route}) {
           </View>
         )}
 
-        <View style={{position: 'absolute', top: 0}}>
+        <View style={{ position: 'absolute', top: 0 }}>
           <Header
             isBack={false}
             close={() => {
@@ -542,7 +544,7 @@ export default function RideCotravaller({navigation, route}) {
                 }}
               />
             </View>
-            <Text style={{marginLeft: 5, fontWeight: 600, color: '#3bbdff'}}>
+            <Text style={{ marginLeft: 5, fontWeight: 600, color: '#3bbdff' }}>
               RECENTRE
             </Text>
           </Pressable>
@@ -669,7 +671,7 @@ export default function RideCotravaller({navigation, route}) {
                   </Text>
                 </View>
 
-                <View style={{width: 'auto'}}>
+                <View style={{ width: 'auto' }}>
                   <Text
                     style={{
                       width: '100%',
@@ -814,7 +816,7 @@ export default function RideCotravaller({navigation, route}) {
                     </Text>
                   </View>
                 </View>
-                <View style={{marginLeft: 0, width: '100%', height: 0}}></View>
+                <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
                 <View
                   style={{
                     width: '100%',
@@ -873,7 +875,7 @@ export default function RideCotravaller({navigation, route}) {
                 <View>
                   <Image
                     source={require('../../assets/carseat.png')}
-                    style={{height: 28, resizeMode: 'contain'}}
+                    style={{ height: 28, resizeMode: 'contain' }}
                   />
                 </View>
                 <View>
@@ -1076,7 +1078,7 @@ export default function RideCotravaller({navigation, route}) {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <Text style={{color: AppColors.themesWhiteColor}}>
+                <Text style={{ color: AppColors.themesWhiteColor }}>
                   Write a Review
                 </Text>
               </Pressable>

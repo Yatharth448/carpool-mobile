@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -16,30 +16,30 @@ import {
   hitApiToGetOfferedRideDetails,
   hitApiToGetRequestedRideDetails,
 } from './RideHistoryModal';
-import {Header} from '../../components/commomheader/CommonHeader';
-import {Surface} from 'react-native-paper';
+import { Header } from '../../components/commomheader/CommonHeader';
+import { Surface } from 'react-native-paper';
 import moment from 'moment';
-import {AppColors} from '../../components/constants/AppColor';
-import {AppFontFamily} from '../../components/constants/AppFonts';
-import {AppTexts} from '../../components/constants/AppTexts';
-import {ButtonPrimary} from '../../components/button/buttonPrimary';
+import { AppColors } from '../../components/constants/AppColor';
+import { AppFontFamily } from '../../components/constants/AppFonts';
+import { AppTexts } from '../../components/constants/AppTexts';
+import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import {
   hitApiToAcceptOfferedRide,
   hitApiToAcceptRequestedRide,
 } from './RideHistoryModal';
 import CommonLoaders from '../../components/loader/Loader';
-import {RideCostView} from './RideHistoryComponent';
-import {CalculateTimeFromMilies} from '../../components/commonfunction/CommonFunctions';
-import {ImageLoader} from '../../components/imageloader/ImageLoader';
+import { RideCostView } from './RideHistoryComponent';
+import { CalculateTimeFromMilies } from '../../components/commonfunction/CommonFunctions';
+import { ImageLoader } from '../../components/imageloader/ImageLoader';
 
-export default function OfferedRideDetails({navigation, route}) {
+export default function OfferedRideDetails({ navigation, route }) {
   const flatListRef = useRef(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [acceptedData, setAcceptedData] = React.useState([]);
   const [cotravellerArray, setCotravellerArray] = React.useState([]);
   const [rideData, setRideData] = React.useState('');
   const [cotraveller, setCotraveller] = React.useState('');
-  const {id, from} = route.params;
+  const { id, from } = route.params;
 
   useEffect(() => {
     (async () => {
@@ -56,7 +56,7 @@ export default function OfferedRideDetails({navigation, route}) {
     };
   }, []);
   const handlePageChange = event => {
-    const {contentOffset} = event.nativeEvent;
+    const { contentOffset } = event.nativeEvent;
     const index = Math.round(contentOffset.x / Dimensions.get('window').width);
     setCurrentIndex(index);
   };
@@ -69,20 +69,20 @@ export default function OfferedRideDetails({navigation, route}) {
       setCotravellerArray(result.data?.cotravellerData);
       setAcceptedData(result.data?.acceptedCotravellerData);
       setIsLoading(true);
-      console.log(
-        result.data.acceptedCotravellerData,
-        '\naccepted cotraveller \n',
-        result.data?.cotravellerData,
-        '\ncotraveller data \n',
-        result.data.rideData,
-        '\nride data',
-      );
+      // console.log(
+      //   result.data.acceptedCotravellerData,
+      //   '\naccepted cotraveller \n',
+      //   result.data?.cotravellerData,
+      //   '\ncotraveller data \n',
+      //   result.data.rideData,
+      //   '\nride data',
+      // );
     }
   };
 
-  const CustomerInfoView = ({item}) => {
+  const CustomerInfoView = ({ item }) => {
     return (
-      <View style={{width: '90%', marginTop: 5}}>
+      <View style={{ width: '90%', marginTop: 5 }}>
         <Text
           style={{
             marginTop: 10,
@@ -109,7 +109,7 @@ export default function OfferedRideDetails({navigation, route}) {
     );
   };
 
-  const ViewRideRequestBtn = ({}) => {
+  const ViewRideRequestBtn = ({ }) => {
     return (
       <View
         style={{
@@ -119,10 +119,10 @@ export default function OfferedRideDetails({navigation, route}) {
           justifyContent: 'center',
         }}>
         <ButtonPrimary
-          style={{width: '90%'}}
+          style={{ width: '90%' }}
           text={'View ride requests'}
           onPress={() =>
-            navigation.navigate('Cotravellers', {data: cotravellerArray})
+            navigation.navigate('Cotravellers', { data: cotravellerArray })
           }
           loader={false}
         />
@@ -130,7 +130,7 @@ export default function OfferedRideDetails({navigation, route}) {
     );
   };
 
-  const AcceptedRideView = ({item, index}) => {
+  const AcceptedRideView = ({ item, index }) => {
     // setActiveCard(index, 'current index')
     // console.log(item, 'item')
 
@@ -157,7 +157,7 @@ export default function OfferedRideDetails({navigation, route}) {
               borderRadius: 10,
               alignItems: 'center',
             }}>
-            <View style={{width: '95%', marginTop: 20}}>
+            <View style={{ width: '95%', marginTop: 20 }}>
               <Text
                 style={{
                   height: 20,
@@ -190,14 +190,14 @@ export default function OfferedRideDetails({navigation, route}) {
                 marginTop: 20,
               }}>
               <ImageLoader
-                image={item.profile ? {uri: item.profile} : ''}
+                image={item.profile ? { uri: item.profile } : ''}
                 width={42}
                 height={42}
                 borderRadius={21}
               />
               {/* <Image source={{uri: item?.profile}} style={{ marginRight: 5, width: 42, height: 42, borderRadius: 20, resizeMode: 'contain' }} /> */}
-              <View style={{justifyContent: 'center'}}>
-                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+              <View style={{ justifyContent: 'center' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                   <Text
                     style={{
                       marginLeft: 10,
@@ -208,32 +208,33 @@ export default function OfferedRideDetails({navigation, route}) {
                     {item.name ?? 'Sachin Gupta'}
                   </Text>
                 </View>
-
-                <View
-                  style={{
-                    paddingLeft: 10,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={require('../../assets/Star.png')}
+                {item.rating ?
+                  <View
                     style={{
-                      marginRight: 5,
-                      width: 12,
-                      height: 12,
-                      marginBottom: 3,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: AppFontFamily.PopinsRegular,
-                      fontSize: 12,
-                      color: AppColors.themeText2Color,
+                      paddingLeft: 10,
+                      flexDirection: 'row',
+                      alignItems: 'center',
                     }}>
-                    {item?.rating + ' rating'}
-                  </Text>
-                </View>
+                    <Image
+                      source={require('../../assets/Star.png')}
+                      style={{
+                        marginRight: 5,
+                        width: 12,
+                        height: 12,
+                        marginBottom: 3,
+                        resizeMode: 'contain',
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: AppFontFamily.PopinsRegular,
+                        fontSize: 12,
+                        color: AppColors.themeText2Color,
+                      }}>
+                      {item?.rating + ' rating'}
+                    </Text>
+                  </View>
+                  : null}
               </View>
             </View>
 
@@ -342,7 +343,7 @@ export default function OfferedRideDetails({navigation, route}) {
                     </View>
                   </View>
                   <View
-                    style={{marginLeft: 0, width: '100%', height: 0}}></View>
+                    style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
                   <View
                     style={{
                       width: '100%',
@@ -390,13 +391,13 @@ export default function OfferedRideDetails({navigation, route}) {
                 paddingBottom: 10,
                 paddingTop: 10,
               }}>
-              <View style={{width: '60%', justifyContent: 'center'}}>
+              <View style={{ width: '60%', justifyContent: 'center' }}>
                 <RideCostView amount={Number(item.price).toFixed(0)} />
               </View>
               {rideData[0].status == 'active' ||
-              rideData[0].status == 'running' ? (
+                rideData[0].status == 'running' ? 
                 <>
-                  {' '}
+              
                   <Pressable
                     onPress={() => Linking.openURL(`tel:${item?.phoneNumber}`)}
                     style={{
@@ -432,9 +433,9 @@ export default function OfferedRideDetails({navigation, route}) {
                     />
                   </Pressable>
                 </>
-              ) : (
-                ''
-              )}
+               : 
+                null
+              }
               {rideData[0].status == 'completed' ? (
                 <Pressable
                   onPress={() => {
@@ -510,7 +511,7 @@ export default function OfferedRideDetails({navigation, route}) {
     // console.log(result, 'vvv')
     if (result.status) {
       const updatedArray = data.map((obj, index) =>
-        index === ind ? {...obj, status: 'accepted'} : obj,
+        index === ind ? { ...obj, status: 'accepted' } : obj,
       );
 
       // console.log(updatedArray, 'arr')
@@ -529,7 +530,7 @@ export default function OfferedRideDetails({navigation, route}) {
     // console.log(result, 'vvv')
     if (result.status) {
       const updatedArray = data.map((obj, index) =>
-        index === ind ? {...obj, status: 'accepted'} : obj,
+        index === ind ? { ...obj, status: 'accepted' } : obj,
       );
 
       // console.log(updatedArray, 'arr')
@@ -548,7 +549,7 @@ export default function OfferedRideDetails({navigation, route}) {
     // console.log(result, 'vvv')
     if (result.status) {
       const updatedArray = data.map((obj, index) =>
-        index === ind ? {...obj, status: 'accepted'} : obj,
+        index === ind ? { ...obj, status: 'accepted' } : obj,
       );
 
       // console.log(updatedArray, 'arr')
@@ -562,7 +563,7 @@ export default function OfferedRideDetails({navigation, route}) {
     if (from === 'offered') {
       return item.status === 'pending' ? (
         <ButtonPrimary
-          style={{width: '48%', backgroundColor: 'green'}}
+          style={{ width: '48%', backgroundColor: 'green' }}
           text={'Accept Ride'}
           onPress={() => _acceptOfferedRide(item, index)}
           loader={false}
@@ -571,7 +572,7 @@ export default function OfferedRideDetails({navigation, route}) {
     } else if (from === 'requested') {
       return item.status === 'confirmed' ? (
         <ButtonPrimary
-          style={{width: '48%', backgroundColor: 'green'}}
+          style={{ width: '48%', backgroundColor: 'green' }}
           text={'Accept Ride'}
           onPress={() => _acceptRequestRide(item, index)}
           loader={false}
@@ -580,7 +581,7 @@ export default function OfferedRideDetails({navigation, route}) {
     } else {
       return (
         <ButtonPrimary
-          style={{width: '48%', backgroundColor: 'green'}}
+          style={{ width: '48%', backgroundColor: 'green' }}
           text={'Accept Ride'}
           onPress={() => _acceptRequestRide1(item, index)}
           loader={false}
@@ -589,7 +590,7 @@ export default function OfferedRideDetails({navigation, route}) {
     }
   };
 
-  const CotravellerList = ({cotravllerArray}) => {
+  const CotravellerList = ({ cotravllerArray }) => {
     // console.log(cotravllerArray, 'len')
     return (
       <>
@@ -612,14 +613,14 @@ export default function OfferedRideDetails({navigation, route}) {
   };
 
   const noData = () => {
-    return CommonLoaders.NoDataInList('No co-traveller found', {height: 100});
+    return CommonLoaders.NoDataInList('No co-traveller found', { height: 100 });
   };
 
   const cancelAlert = item => {
     Alert.alert(
       '',
       'Are you sure you want to cancel this ride ?',
-      [{text: 'no'}, {text: 'yes', onPress: () => cancelRide(item)}],
+      [{ text: 'no' }, { text: 'yes', onPress: () => cancelRide(item) }],
       {
         cancelable: false,
       },
@@ -733,7 +734,7 @@ export default function OfferedRideDetails({navigation, route}) {
                   }}>
                   <Image
                     source={require('../../assets/dotone.png')}
-                    style={{width: 10, height: 10, resizeMode: 'contain'}}
+                    style={{ width: 10, height: 10, resizeMode: 'contain' }}
                   />
                 </View>
                 <View
@@ -804,7 +805,7 @@ export default function OfferedRideDetails({navigation, route}) {
                     </Text>
                   </View>
                 </View>
-                <View style={{marginLeft: 0, width: '100%', height: 0}}></View>
+                <View style={{ marginLeft: 0, width: '100%', height: 0 }}></View>
                 <View
                   style={{
                     width: '100%',
@@ -850,7 +851,7 @@ export default function OfferedRideDetails({navigation, route}) {
               marginBottom: 10,
               marginLeft: 10,
             }}>
-            <View style={{justifyContent: 'flex-start', width: '50%'}}>
+            <View style={{ justifyContent: 'flex-start', width: '50%' }}>
               <RideCostView
                 amount={rideData[0].journey_expected_price_per_seat}
               />
@@ -882,7 +883,7 @@ export default function OfferedRideDetails({navigation, route}) {
                   fontSize: 12,
                   color: AppColors.themeText2Color,
                 }}>
-                {rideData[0].seat_left + ' Seats left'}
+                {/* {rideData[0].seat_left + ' Seats left'} */}
               </Text>
             </View>
           </View>

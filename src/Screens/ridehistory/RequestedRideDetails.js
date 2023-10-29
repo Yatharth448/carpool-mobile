@@ -285,31 +285,33 @@ export default function RequestedRideDetails({ navigation, route }) {
                   }}>
                   {item.name ?? 'Sachin Gupta'}
                 </Text>
-                <View
-                  style={{
-                    paddingLeft: 10,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={require('../../assets/Star.png')}
+                {item?.rating ?
+                  <View
                     style={{
-                      marginRight: 5,
-                      width: 12,
-                      height: 12,
-                      marginBottom: 3,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: AppFontFamily.PopinsRegular,
-                      fontSize: 12,
-                      color: AppColors.themeText2Color,
+                      paddingLeft: 10,
+                      flexDirection: 'row',
+                      alignItems: 'center',
                     }}>
-                    {item.rating + ' rating'}
-                  </Text>
-                </View>
+                    <Image
+                      source={require('../../assets/Star.png')}
+                      style={{
+                        marginRight: 5,
+                        width: 12,
+                        height: 12,
+                        marginBottom: 3,
+                        resizeMode: 'contain',
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: AppFontFamily.PopinsRegular,
+                        fontSize: 12,
+                        color: AppColors.themeText2Color,
+                      }}>
+                      {item.rating + ' rating'}
+                    </Text>
+                  </View>
+                  : null}
               </View>
 
               <Pressable
@@ -560,13 +562,13 @@ export default function RequestedRideDetails({ navigation, route }) {
             }}>
             <View
               style={{
-                width: '90%',
+                width: '95%',
                 alignItems: 'center',
                 flexDirection: 'row',
                 marginTop: 10,
                 marginLeft: 10,
               }}>
-              <View style={{ justifyContent: 'center' }}>
+              <View style={{ width: '70%', justifyContent: 'center' }}>
                 <Text
                   style={{
                     width: '100%',
@@ -580,6 +582,22 @@ export default function RequestedRideDetails({ navigation, route }) {
                   )}
                 </Text>
               </View>
+
+              <View style={{ width: '30%', justifyContent: 'center', alignItems: 'flex-end' }}>
+                <Text
+                  style={{
+                    paddingRight: 10,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    textAlign: 'right',
+                    fontFamily: AppFontFamily.PopinsBold,
+                    fontSize: 12,
+                    color: AppColors.themePrimaryColor,
+                  }}>
+                  {`${rideData[0].seat}`} <Text style={{ color: AppColors.themeText2Color }}>{rideData[0].seat == 1 ? `seat \n requested` : `seats \n requested`}</Text>
+                </Text>
+              </View>
+
             </View>
             <View
               style={{
@@ -751,49 +769,37 @@ export default function RequestedRideDetails({ navigation, route }) {
                     }}>
                     {rideData[0].name ?? 'Sachin Gupta'}
                   </Text>
-                  <View
-                    style={{
-                      paddingLeft: 10,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image
-                      source={require('../../assets/Star.png')}
+                  {rideData[0]?.rating ?
+                    <View
                       style={{
-                        marginRight: 5,
-                        width: 12,
-                        height: 12,
-                        marginBottom: 3,
-                        resizeMode: 'contain',
-                      }}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: AppFontFamily.PopinsRegular,
-                        fontSize: 12,
-                        color: AppColors.themeText2Color,
+                        paddingLeft: 10,
+                        flexDirection: 'row',
+                        alignItems: 'center',
                       }}>
-                      {rideData[0]?.rating + ' rating'}
-                    </Text>
-                  </View>
+                      <Image
+                        source={require('../../assets/Star.png')}
+                        style={{
+                          marginRight: 5,
+                          width: 12,
+                          height: 12,
+                          marginBottom: 3,
+                          resizeMode: 'contain',
+                        }}
+                      />
+                      <Text
+                        style={{
+                          fontFamily: AppFontFamily.PopinsRegular,
+                          fontSize: 12,
+                          color: AppColors.themeText2Color,
+                        }}>
+                        {rideData[0]?.rating + ' rating'}
+                      </Text>
+                    </View>
+                    : null}
                 </View>
               </View>
 
-              <View style={{ width: '30%' , justifyContent: 'center', alignItems: 'flex-end'}}>
-                <Text
-                  style={{
-                    width: '100%',
-                    padding: 10,
-                    paddingTop: 0,
-                    paddingBottom: 0,
-                    textAlign: 'center',
-                    fontFamily: AppFontFamily.PopinsRegular,
-                    fontSize: 12,
-                    color: AppColors.themeText2Color,
-                  }}>
-                  {`Seats \n ${rideData[0].seat}`}
-                </Text>
-              </View>
+
             </View>
 
             <View

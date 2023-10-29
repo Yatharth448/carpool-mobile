@@ -8,6 +8,7 @@ import moment from 'moment'
 import { hitApiToGetRequestedRide } from './RideHistoryModal'
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import CommonLoaders from '../../components/loader/Loader'
+import { calculatedJourneyEndTime } from '../../components/commonfunction/CommonFunctions'
 
 export default function RequestedRides({ selectedRequest }) {
 
@@ -96,7 +97,7 @@ export default function RequestedRides({ selectedRequest }) {
                                             {/* <Image source={require('../../assets/dotline.png')} style={{ marginLeft: 0, width: 5, height: 50, resizeMode: 'contain' }} /> */}
                                         </View>
                                         <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 13 }}>{moment(item.date).format('HH:mm') + '   '}</Text>
+                                            <Text style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 13 }}>{calculatedJourneyEndTime(item.journey_start_at, item.approx_time) + '   '}</Text>
                                             <Image source={require('../../assets/triangle.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
                                         </View>
 

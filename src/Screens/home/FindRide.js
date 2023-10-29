@@ -36,6 +36,7 @@ import {
 import {
   AvtarView,
   CotravellerView,
+  HomeFooterScreen,
   NoRideFound,
   PendingKYC,
   SearchLoaderScreen,
@@ -293,7 +294,7 @@ class FindRide extends Component {
             destination: result.data.requestRide[i].destination_address,
             time: `${rideDate.toLocaleDateString()}`,
             seat: result.data.requestRide[i].seat,
-            pay: price,
+            // pay: price,
             type: 'request',
             id: result.data.requestRide[i].ride_id,
           });
@@ -424,6 +425,8 @@ class FindRide extends Component {
       this.props.navigation.navigate('FindRideList', {
         data: result.data,
         seat: this.state.passengerValue,
+        pick,
+        drop
       });
     } else {
       // console.log(result)
@@ -1006,10 +1009,10 @@ class FindRide extends Component {
                 <>
                   <View
                     style={{
-                      width: '100%',
-                      height: 1,
+                      width: '98%',
+                      height: 2,
                       marginBottom: 20,
-                      backgroundColor: AppColors.themeCardBorderColor,
+                      backgroundColor: AppColors.themePickupDropSearchBg,
                     }}
                   />
                   <View
@@ -1030,10 +1033,10 @@ class FindRide extends Component {
                 <>
                   <View
                     style={{
-                      width: '100%',
-                      height: 1,
+                      width: '98%',
+                      height: 2,
                       marginBottom: 20,
-                      backgroundColor: AppColors.themeCardBorderColor,
+                      backgroundColor: AppColors.themePickupDropSearchBg,
                     }}
                   />
                   <View
@@ -1238,6 +1241,7 @@ class FindRide extends Component {
         ) : (
           <NoRideFound chooseAnother={this.chooseAnother} />
         )}
+        <HomeFooterScreen/>
       </>
     );
   };

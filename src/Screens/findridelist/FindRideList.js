@@ -5,7 +5,7 @@ import { hitApiToGetRideList, hitApiToRequestARide } from './RideListModal';
 import { Header } from '../../components/commomheader/CommonHeader';
 import moment from 'moment';
 import { AppTexts } from '../../components/constants/AppTexts';
-import { convertToKms } from '../../components/commonfunction/CommonFunctions';
+import { CalculateTimeFromMilies, calculatedJourneyDuration, calculatedJourneyEndTime, convertToKms } from '../../components/commonfunction/CommonFunctions';
 import { AppFontFamily } from '../../components/constants/AppFonts';
 import { FindRideFilterView } from './FindRideComp';
 import { Surface } from 'react-native-paper';
@@ -21,7 +21,7 @@ export default function FindRideList({ navigation, route }) {
 
 
     const [rideList, setRideList] = React.useState([])
-    const { data, seat } = route.params;
+    const { data, seat, pick, drop } = route.params;
     const [selectedIndex, setIndex] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(false)
     const [startLoader, setStartLoader] = React.useState(false)
@@ -37,8 +37,8 @@ export default function FindRideList({ navigation, route }) {
             // const result = await hitApiToGetRideList(pick, drop, date, seat);
             // console.log("ride list", result);
             // if (result.status) {
-               
-            
+
+
             const updatedArray = data.map(obj => { return { ...obj, loader: false } })
 
             setRideList(updatedArray ?? [])
@@ -67,10 +67,10 @@ export default function FindRideList({ navigation, route }) {
     const requestRide = async (item, itemIndex) => {
         // setStartLoader(true)
         const updatedArray = rideList.map((obj, index) =>
-        index === itemIndex ? { ...obj, loader: true } : obj
-    );
-    updatedArray.reverse()
-    setRideList(updatedArray);
+            index === itemIndex ? { ...obj, loader: true } : obj
+        );
+        updatedArray.reverse()
+        setRideList(updatedArray);
 
         const result = await hitApiToRequestARide(
             item._id,
@@ -102,10 +102,10 @@ export default function FindRideList({ navigation, route }) {
         else {
 
             const updatedArra = rideList.map((obj, index) =>
-            index === itemIndex ? { ...obj, alreadyRequest: false, loader: false } : obj
-        );
-        updatedArra.reverse()
-        setRideList(updatedArra);
+                index === itemIndex ? { ...obj, alreadyRequest: false, loader: false } : obj
+            );
+            updatedArra.reverse()
+            setRideList(updatedArra);
             setStartLoader(false)
             // Toast.show(result.message ?? result.error ?? 'Something went wrong');
             if (result.message == "Please add money to wallet") {
@@ -174,10 +174,28 @@ export default function FindRideList({ navigation, route }) {
                         <View style={{ width: Dimensions.get('window').width, alignItems: 'center', marginTop: 10, marginBottom: 10 }}>
                             <Surface elevation={4} style={{ width: '95%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10 }}>
 
-                                <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
-                                    <View style={{ justifyContent: 'center' }}>
+                                <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginTop: 10 }}>
 
-                                        <Text style={{ width: '100%', padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themePrimaryColor }}>{moment(item.journey_start_at).format('DD MMM YYYY, HH:mm')}</Text>
+                                    <View style={{ width: '60%', flexDirection: 'row', paddingLeft: 10 }}>
+
+                                        <View style={{ width: '22%' }}>
+                                            <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 40, height: 40, borderRadius: 20, resizeMode: 'contain' }} />
+                                        </View>
+                                        <View style={{ justifyContent: 'center', width: '78%' }}>
+
+                                            <Text style={{ paddingLeft: 0, padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 14, color: AppColors.themeText2Color }}>{item.user_name ?? "Sachin Gupta"}</Text>
+                                            {item?.rating ?
+                                                <View style={{ paddingLeft: 0, flexDirection: 'row', alignItems: 'center' }}>
+                                                    <Image source={require('../../assets/Star.png')} style={{ marginRight: 5, width: 12, height: 12, marginBottom: 3, resizeMode: 'contain' }} />
+                                                    <Text style={{ paddingTop: 0, fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{item?.rating + ' rating'}</Text>
+                                                </View> : null}
+                                        </View>
+
+                                    </View>
+
+                                    <View style={{ width: '40%', justifyContent: 'center', alignItems: 'flex-end' }}>
+
+                                        <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themePrimaryColor }}>{moment(item.journey_start_at).format('DD MMM YYYY, HH:mm')}</Text>
 
                                     </View>
                                 </View>
@@ -187,15 +205,27 @@ export default function FindRideList({ navigation, route }) {
 
                                     <View style={{ width: '75%', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
 
-                                        <View style={{ width: '15%', alignItems: 'center' }}>
+                                        <View style={{ width: '25%', alignItems: 'center' }}>
+                                            <View style={{ width: '100%', alignItems: 'center' }}>
+                                                <Text style={{ textAlign: 'center', fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{moment(item.journey_start_at).format('HH:mm') + '   '}</Text>
+                                            </View>
+                                            <View style={{ width: '100%', alignItems: 'center', }}>
+                                                <Text style={{ textAlign: 'center', fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 10 }}>{calculatedJourneyDuration(item.journey_approx_time) + '   '}</Text>
+                                            </View>
+                                            <View style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
+                                                <Text style={{ textAlign: 'center', fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeTextPrimaryColor, fontSize: 12 }}>{calculatedJourneyEndTime(item.journey_start_at, item.journey_approx_time) + '   '}</Text>
+                                            </View>
+                                        </View>
+
+                                        <View style={{ width: '10%', }}>
 
                                             <Image source={require('../../assets/dotone.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
-                                            <Image source={require('../../assets/dotline.png')} style={{ marginLeft: 0, width: 5, height: 40, resizeMode: 'contain' }} />
+                                            <Image source={require('../../assets/dotline.png')} style={{ marginLeft: 2, width: 5, height: 40, resizeMode: 'contain' }} />
                                             <Image source={require('../../assets/triangle.png')} style={{ marginLeft: 0, width: 10, height: 10, resizeMode: 'contain' }} />
 
                                         </View>
 
-                                        <View style={{ width: '85%', justifyContent: 'center', alignItems: 'center' }}>
+                                        <View style={{ width: '65%', justifyContent: 'center', alignItems: 'center' }}>
 
                                             <View style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
 
@@ -223,31 +253,20 @@ export default function FindRideList({ navigation, route }) {
                                 </View>
 
 
-                                <Pressable onPress={() => openNavigation(item)} style={{ width: '100%',  alignItems: 'center' }}>
-                                    <View style={{ width: '95%' }}>
-                                        <Text style={{ padding: 10, fontFamily: AppFontFamily.PopinsBoldItalics, fontSize: 12, color: AppColors.themePrimaryColor }}>{"Click here, to get direction to your nearest pickup point"}</Text>
-                                    </View>
-                                </Pressable>
+
 
                                 <View style={{ width: '100%', marginBottom: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
-                                <View style={{ width: '95%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, marginLeft: 10 }}>
-                                    <View style={{ width: '50%', flexDirection: 'row' }}>
+                                <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', marginBottom: 10, justifyContent: 'center' }}>
 
-                                        <View style={{ width: '25%' }}>
-                                            <Image source={require('../../assets/avtar.png')} style={{ marginRight: 5, width: 40, height: 40, borderRadius: 20, resizeMode: 'contain' }} />
+                                    <Pressable onPress={() => openNavigation(item)} style={{ width: '40%', alignItems: 'center' }}>
+                                        <View style={{ width: '100%', flexDirection: 'row', backgroundColor: AppColors.themePickupDropSearchBg, borderRadius: 5, alignItems: 'center', justifyContent: 'space-evenly', borderColor: AppColors.themePrimaryColor, borderWidth: 1, height: 35 }}>
+                                            <Image source={require('../../assets/direction.png')} style={{ marginLeft: 0, width: 24, height: 24, resizeMode: 'contain', tintColor: AppColors.themePrimaryColor }} />
+                                            <Text style={{ fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themePrimaryColor }}>{"Nearest pickup"}</Text>
                                         </View>
-                                        <View style={{ justifyContent: 'center', width: '75%' }}>
+                                    </Pressable>
 
-                                            <Text style={{ padding: 10, paddingTop: 0, paddingBottom: 0, fontFamily: AppFontFamily.PopinsBold, fontSize: 14, color: AppColors.themeText2Color }}>{item.user_name ?? "Sachin Gupta"}</Text>
-                                            <View style={{ paddingLeft: 10, flexDirection: 'row', alignItems: 'center' }}>
-                                                <Image source={require('../../assets/Star.png')} style={{ marginRight: 5, width: 12, height: 12, marginBottom: 3, resizeMode: 'contain' }} />
-                                                <Text style={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12, color: AppColors.themeText2Color }}>{item?.rating + ' rating'}</Text>
-                                            </View>
-                                        </View>
 
-                                    </View>
-
-                                    <View style={{ width: '50%', alignItems: 'flex-end' }}>
+                                    <View style={{ width: '55%', alignItems: 'flex-end' }}>
                                         {item?.alreadyRequest ?
 
                                             <View style={{ width: '70%' }}>
@@ -305,7 +324,9 @@ export default function FindRideList({ navigation, route }) {
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
             <Header close={() => { navigation.navigate('RideDrawer', { screen: 'FindRide', params: { from: 'reset' } }) }} text='Ride options' />
-
+            <View style={{width: '100%', alignItems: 'center'}}>
+            <Text style={{ width: '94%', fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themePrimaryColor }}>{`${pick}  ->  ${drop}`}</Text>
+            </View>
 
 
 

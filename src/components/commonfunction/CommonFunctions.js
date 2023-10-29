@@ -17,6 +17,20 @@ export const calculatedJourneyEndTime = (startTime, approxTime) => {
 
 }
 
+
+export const calculatedJourneyDuration = ( approxTime) => {
+
+ // Calculate hours and remaining seconds
+ const hours = Math.floor(approxTime / 3600);
+ const remainingSeconds = approxTime % 3600;
+
+ // Calculate minutes from the remaining seconds
+ const minutes = Math.floor(remainingSeconds / 60);
+ return (`${hours}h${minutes}m`)
+
+
+}
+
 export const alertWithNav = (title = '', message, okPress) => {
   //function to make three option alert
   Alert.alert(

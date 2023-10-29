@@ -14,7 +14,8 @@ function Support({ data, loading, error, getProfileDataRequest, navigation, rout
         identifier_hash: '',
     };
     //   const customAttributes = { accountId: 1, pricingPlan: 'paid', status: 'active' };
-    const websiteToken = '7PNrR9Khwuhx2M2kUtrkknWS';
+    // h1fEsVV8Wd6WWkGAdpJgKHwj
+    const websiteToken = '31pC9PpKSbk4aEeV9z8wtYBi';
     const baseUrl = 'https://app.chatwoot.com';
     const locale = 'en';
 

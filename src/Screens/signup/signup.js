@@ -1,111 +1,53 @@
-import React, { useEffect } from 'react'
-import { Text, View, Image, TouchableOpacity, TextInput, Pressable, Dimensions } from 'react-native'
+import React from 'react'
+import { Text, View, Image, TouchableOpacity } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
-// import { TextInput } from 'react-native-paper'
 import Toast from 'react-native-simple-toast'
-// import Icon from 'react-native-vector-icons/MaterialIcons'
-import { hitApiForLogin } from './loginModal'
-import Storage from '../../components/localStorage/storage'
-import { AppKeys } from '../../components/constants/AppKeys'
-import { Checkbox, Button, Surface } from 'react-native-paper';
 import { InputView } from '../../components/Input/InputView'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from '../../components/constants/AppFonts'
-import {
-    GoogleSignin,
-    statusCodes,
-} from '@react-native-google-signin/google-signin';
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { ScrollView } from 'react-native-gesture-handler'
-import { hitApiForGoogleSignUp, hitApiForSignUp } from './SignupModal'
+import { hitApiForSignUp } from './SignupModal'
 import { FindRideFilterView } from '../findridelist/FindRideComp'
-import { CommonActions } from '@react-navigation/native'
 import CommonLoaders from '../../components/loader/Loader'
-// import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GoogleLogin } from '../../components/googlelogin/GoogleLogin'
 
-// Configure Google Sign-In
-GoogleSignin.configure({
-    // webClientId is only required for Android
-    webClientId: '275128898778-i0e4ir4972quag1n2r32ut3iasr8fu0k.apps.googleusercontent.com',
-    offlineAccess: true, // if you want to access Google API on behalf of the user
-});
+
 export default function SignupScreen({ navigation }) {
 
     const [fullName, setFullName] = React.useState("");
     const [mobile, setMobile] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [checked, setChecked] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(true);
     const [selectedIndex, setIndex] = React.useState(0)
     const [gender, setGender] = React.useState('m')
     const [isLoading, setIsLoading] = React.useState(false);
     const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
-    const countryCode = '+91';
 
 
 
-    useEffect(() => {
-        // Configure Google Sign-In
-        GoogleSignin.configure({
-            scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
-            webClientId:
-                '330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-            offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-        });
-    }, []);
+    const startLoader = (start) => {
+        setIsLoadingGoogle(start)
+    }
 
-    _signIn = async () => {
-        try {
-            setIsLoadingGoogle(true)
-            await signOut()
-            await GoogleSignin.hasPlayServices();
-            console.log('success 1')
-            // const { accessToken, idToken } = await GoogleSignin.signIn();
-            const userInfo = await GoogleSignin.signIn();
-            if (userInfo?.user) {
+    const googleData = (userInfo) => {
+        console.log(userInfo, 'google')
+        setIsLoadingGoogle(true)
+        if (userInfo?.user) {
+            userGoogleSignup(userInfo)
 
-                await userGoogleSignup(userInfo.user)
-            }
-            console.log(userInfo, 'success')
-            setloggedIn(true);
-        } catch (error) {
-
-            setIsLoadingGoogle(false)
-            console.log(error, 'error')
-
-            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                // user cancelled the login flow
-                // alert('Cancel');
-            } else if (error.code === statusCodes.IN_PROGRESS) {
-                // alert('Signin in progress');
-                // operation (f.e. sign in) is in progress already
-            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                // alert('PLAY_SERVICES_NOT_AVAILABLE');
-                // play services not available or outdated
-            } else {
-                // some other error happened
-            }
         }
-    };
-
-    signOut = async () => {
-        try {
-            await GoogleSignin.revokeAccess();
-            await GoogleSignin.signOut();
-            //   setloggedIn(false);
-            //   setuserInfo([]);
-        } catch (error) {
-            console.error(error);
+        else {
+            console.log(userInfo, 'google error')
         }
-    };
+        setIsLoadingGoogle(false)
+    }
 
 
     const userGoogleSignup = async (userInfo) => {
 
         if (userInfo) {
-            
-            // navigation.navigate('OTPScreen', { email: email, secret: result.secret })
+
             if (!userInfo?.gender || !userInfo?.mobile) {
                 navigation.navigate('AddGenderMobile', { "email": userInfo?.email, 'familyName': userInfo?.familyName, 'givenName': userInfo?.givenName, 'id': userInfo?.id, 'photo': userInfo?.photo })
             }
@@ -113,12 +55,7 @@ export default function SignupScreen({ navigation }) {
 
                 navigation.navigate('KycScreen')
             }
-            // navigation.dispatch(
-            //     CommonActions.reset({
-            //         index: 0,
-            //         routes: [{ name: 'RideDrawer' }],
-            //     })
-            // );
+
 
         }
         else {
@@ -132,7 +69,7 @@ export default function SignupScreen({ navigation }) {
     const userLogin = async () => {
         setIsLoading(true)
         console.log('1')
-         if (!fullName) {
+        if (!fullName) {
             setIsLoading(false)
             Toast.show('Enter name');
         }
@@ -140,11 +77,11 @@ export default function SignupScreen({ navigation }) {
             setIsLoading(false)
             Toast.show('Enter email');
         }
-        else  if (!mobile) {
+        else if (!mobile) {
             setIsLoading(false)
             Toast.show('Enter mobile number');
         }
-        else  if (!password) {
+        else if (!password) {
             setIsLoading(false)
             Toast.show('Enter password');
         }
@@ -152,9 +89,7 @@ export default function SignupScreen({ navigation }) {
 
             const loginRes = await hitApiForSignUp(fullName, email, password, mobile, gender)
 
-            // navigation.navigate('OTPScreen', { email: email, secret: '' })
             if (loginRes.status) {
-                // Storage.saveItem(AppKeys.SECRET_KEY, loginRes.secret)
                 navigation.navigate('OTPScreen', { email: email, secret: loginRes.secret })
             }
             else {
@@ -215,26 +150,7 @@ export default function SignupScreen({ navigation }) {
                     <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 100, resizeMode: 'contain' }} />
                 </View>
 
-                {/* <Text style={{ marginLeft: 20, fontSize: 28, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
-                    {'Sign up'}
-                </Text> */}
-
-
-
-                <Pressable onPress={() => _signIn()} style={{ width: '100%', marginTop: 20, alignItems: 'center' }}>
-
-                    <Surface style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 47, borderRadius: 5 }} elevation={4}>
-
-                        <View style={{ width: '30%', justifyContent: 'center', alignItems: 'center' }}>
-                            <Image source={require('../../assets/googlelogo.png')} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
-                        </View>
-                        <View style={{ width: '60%', justifyContent: 'center', justifyContent: 'center' }}>
-                            <Text style={{ color: AppColors.themeBlackColor, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium }}>{'Sign up using Google'}</Text>
-                        </View>
-
-                    </Surface>
-
-                </Pressable>
+                <GoogleLogin userData={googleData} startLoader={startLoader} isLogin={false} />
 
                 <View style={{ width: '100%', marginTop: 20 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>

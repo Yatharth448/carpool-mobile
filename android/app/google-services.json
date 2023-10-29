@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "330513389777-8ufkb806prq1lmd9o0ba43t07up7fmmr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.sharewheel",
+            "certificate_hash": "ce653684bb8007e570540494610d42aa8ec44f96"
+          }
+        },
+        {
           "client_id": "330513389777-il2nfvvds1kcb7vlk03po6m4j2r9rci5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
