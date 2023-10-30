@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StatusBar, View, Image, BlurView, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -38,6 +38,10 @@ import Wallet from '../../Screens/wallet/Wallet';
 import RideCotravaller from '../../Screens/ridecotravaller/RideCotravaller';
 import PaymentHistory from '../../Screens/payment/PaymentHistory';
 import SendFeedback from '../../Screens/feeddback/SendFeedback';
+import {getToken, configureNotification} from '../../Utils/PushNotification';
+import {pushNotificationPermission} from '../../Utils/RuntimePermission';
+import PushNotification from 'react-native-push-notification';
+import {CreateNotificationChannel} from '../../components/notifications/LocalNotification';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -54,15 +58,14 @@ function RideDrawer() {
         component={FindRide}
         options={{swipeEnabled: false}}
       />
-     
+
       <Drawer.Screen
         name="ActiveRideCarpooler"
         component={StartRideCarpooler}
       />
       <Drawer.Screen name="RideCotraveller" component={RideCotravaller} />
       <Drawer.Screen name="Payment" component={Payment} />
-      
-     
+
       {/* <Drawer.Screen name='MapRoutes' component={MapRoutes} />
                 <Drawer.Screen name='ProfileScreen' component={ProfileScreen} /> */}
       {/* <Drawer.Screen name='FindRideList' component={FindRideList} /> */}
@@ -74,6 +77,17 @@ function RideDrawer() {
 }
 
 export default function RootNav() {
+  useEffect(() => {
+    getToken();
+    let tempVar = configureNotification();
+
+    pushNotificationPermission();
+    CreateNotificationChannel();
+    console.log('listn variable ', tempVar, typeof tempVar);
+    return () => {
+      tempVar();
+    };
+  }, []);
   return (
     <NavigationContainer>
       <StatusBar

@@ -6,8 +6,8 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AppKeys } from '../components/constants/AppKeys';
-import { showNotification } from '../components/notifications/LocalNotification';
+import {AppKeys} from '../components/constants/AppKeys';
+import {showNotification} from '../components/notifications/LocalNotification';
 
 // Must be outside of any component LifeCycle (such as `componentDidMount`).
 
@@ -30,7 +30,7 @@ export const requestUserPermission = async () => {
   }
 };
 
-export const configureNotification = async () => {
+export const configureNotification = () => {
   PushNotification.configure({
     onRegister: function (token) {
       messaging().subscribeToTopic('all');
@@ -92,8 +92,7 @@ export const configureNotification = async () => {
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     // console.log('Message handled in the background!', remoteMessage);
   });
-
-  messaging().onMessage(async remoteMessage => {
+  let listenerVariable = messaging().onMessage(async remoteMessage => {
     // console.log('ios', remoteMessage);
     if (!remoteMessage.notification) {
       return;
@@ -105,18 +104,18 @@ export const configureNotification = async () => {
     //       title: remoteMessage.notification.title,
     //       userInfo: remoteMessage.data,
     //     })
-    //   : 
-      // PushNotification.createChannel(
-      //     {
-      //       channelId: AppKeys.LOCAL_NOTIFICATION_CHANNEL_ID, // (required)
-      //       channelName: AppKeys.LOCAL_NOTIFICATION_CHANNEL_NAME, // (required)
-      //       playSound: true, // (optional) default: true
-      //       soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-      //       importance: 4, // (optional) default: 4. Int value of the Android notification importance
-      //       vibrate: true,
-      //     },
-      //     created => console.log(`createChannel returned '${created}'`),
-      //   );
+    //   :
+    // PushNotification.createChannel(
+    //     {
+    //       channelId: AppKeys.LOCAL_NOTIFICATION_CHANNEL_ID, // (required)
+    //       channelName: AppKeys.LOCAL_NOTIFICATION_CHANNEL_NAME, // (required)
+    //       playSound: true, // (optional) default: true
+    //       soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+    //       importance: 4, // (optional) default: 4. Int value of the Android notification importance
+    //       vibrate: true,
+    //     },
+    //     created => console.log(`createChannel returned '${created}'`),
+    //   );
     // const dat = {
     //   channelId: AppKeys.LOCAL_NOTIFICATION_CHANNEL_ID, // Replace with your channel ID
     //   channelName: AppKeys.LOCAL_NOTIFICATION_CHANNEL_NAME, // Replace with your channel name
@@ -124,12 +123,13 @@ export const configureNotification = async () => {
     //   title: remoteMessage.notification.title,
     // };
     console.log('Received foreground notification: ', remoteMessage);
-    showNotification(
-      {
-          'title': remoteMessage.notification.title,
-          'message': remoteMessage.notification.body,
-      })
+    showNotification({
+      title: remoteMessage.notification.title,
+      message: remoteMessage.notification.body,
+    });
     // console.log('dat', dat);
     // PushNotification.localNotification(dat);
   });
+  console.log('listne variabl ', listenerVariable, typeof listenerVariable);
+  return listenerVariable;
 };

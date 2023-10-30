@@ -289,7 +289,7 @@ export default function StartRideCarpooler({navigation, route}) {
   const listenToMessage = () => {
     messaging().onMessage(async remoteMessage => {
       console.log('location received ', remoteMessage);
-      if (remoteMessage.data) {
+      if (remoteMessage.data && remoteMessage.data.lat) {
         const {lat, long, type, id, status} = remoteMessage.data;
         if (type == 'ride_status') {
           setcotravellerStatusUpdate({
