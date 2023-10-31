@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, {Component, useState} from 'react';
 import {
   Text,
   View,
@@ -14,12 +14,13 @@ import {
   Alert,
   TouchableHighlight,
 } from 'react-native';
-import { AppColors } from '../../components/constants/AppColor';
-import { FindAndOfferRide } from '../../components/findandoffer/FindAndOfferRide';
-import { PickupAndDrop } from '../../components/pickupanddrop/PickupAndDrop';
+import {AppColors} from '../../components/constants/AppColor';
+import {FindAndOfferRide} from '../../components/findandoffer/FindAndOfferRide';
+import {PickupAndDrop} from '../../components/pickupanddrop/PickupAndDrop';
 import moment from 'moment';
 import DateTimeView from '../../components/datetimeview/DateTimeView';
 import Toast from 'react-native-simple-toast';
+import messaging from '@react-native-firebase/messaging';
 import {
   hitApiToAllGetVehicle,
   hitApiToCheckExistingRide,
@@ -42,21 +43,21 @@ import {
   SearchLoaderScreen,
   SeatsView,
 } from './RideComponent';
-import { ButtonPrimary } from '../../components/button/buttonPrimary';
-import { RecentHorizontal } from '../../components/RecentSearch/RecentHorizontal';
+import {ButtonPrimary} from '../../components/button/buttonPrimary';
+import {RecentHorizontal} from '../../components/RecentSearch/RecentHorizontal';
 import MapComponent from '../../components/map/MapComponent';
-import { hitApiToGetRideList } from '../findridelist/RideListModal';
-import { connect } from 'react-redux';
-import { getProfileDataRequest } from '../../redux/actions/actions';
-import { AppFontFamily } from '../../components/constants/AppFonts';
-import { AddVehiclePopup } from '../../components/popupComponents/AddVehiclePopup';
-import { decode } from '@mapbox/polyline';
-import { hitApiToSetSeenNotifications } from '../notification/NotificationModal';
-import { HomeHeader } from '../../components/commomheader/HomeHeader';
+import {hitApiToGetRideList} from '../findridelist/RideListModal';
+import {connect} from 'react-redux';
+import {getProfileDataRequest} from '../../redux/actions/actions';
+import {AppFontFamily} from '../../components/constants/AppFonts';
+import {AddVehiclePopup} from '../../components/popupComponents/AddVehiclePopup';
+import {decode} from '@mapbox/polyline';
+import {hitApiToSetSeenNotifications} from '../notification/NotificationModal';
+import {HomeHeader} from '../../components/commomheader/HomeHeader';
 import Wallet from '../wallet/Wallet';
-import { hitApiToAddMoneyToWallet } from '../payment/PaymentModal';
-import { showNotification } from '../../components/notifications/LocalNotification';
-import { Surface } from 'react-native-paper';
+import {hitApiToAddMoneyToWallet} from '../payment/PaymentModal';
+import {showNotification} from '../../components/notifications/LocalNotification';
+import {Surface} from 'react-native-paper';
 class FindRide extends Component {
   constructor(props) {
     super(props);
@@ -152,7 +153,7 @@ class FindRide extends Component {
     this.setState(!isSwitchOn);
   };
 
-  backActionHandler() { }
+  backActionHandler() {}
 
   componentWillUnmount() {
     BackHandler.removeEventListener(
@@ -160,8 +161,14 @@ class FindRide extends Component {
       this.backActionHandler,
     );
     this._unsubscribe();
+    if (this.message_listener) {
+      this.message_listener();
+    }
   }
   async componentDidMount() {
+    this.message_listener = messaging().onMessage(async remoteMessage => {
+      await this.getRideNotificationData();
+    });
     this._unsubscribe = this.props.navigation.addListener('focus', async () => {
       BackHandler.addEventListener('hardwareBackPress', this.backActionHandler);
 
@@ -241,7 +248,7 @@ class FindRide extends Component {
       }
 
       // const updatedArray = vehData.map((obj) =>  ...obj, obj.vehicle_name = 'vehicle_name');
-      this.setState({ vehicleArray: vehData });
+      this.setState({vehicleArray: vehData});
 
       if (this.state.vehicleArray.length > 0) {
         this.setState({
@@ -259,7 +266,7 @@ class FindRide extends Component {
     const result = await hitApiToGetRecentSearch();
     // console.log(result, 'recent')
     if (result.status) {
-      this.setState({ recentSearchArray: result.data });
+      this.setState({recentSearchArray: result.data});
     }
   }
 
@@ -300,7 +307,7 @@ class FindRide extends Component {
           });
         }
       }
-      this.setState({ upcomingRideArray: tempArray });
+      this.setState({upcomingRideArray: tempArray});
     }
   }
 
@@ -308,7 +315,7 @@ class FindRide extends Component {
     const result = await hitApiToCheckExistingRide();
     console.log(result, 'data');
     this.reloadMap();
-    this.setState({ existingData: result.notification });
+    this.setState({existingData: result.notification});
   }
 
   reloadMap = async () => {
@@ -321,7 +328,7 @@ class FindRide extends Component {
       if (loc) {
         // setLocation(loc)
         this.setState({
-          location: { latitude: loc.latitude, longitude: loc.longitude },
+          location: {latitude: loc.latitude, longitude: loc.longitude},
         });
         // console.log('relod 2', this.state.initialRegion, this.state.markers)
 
@@ -336,7 +343,7 @@ class FindRide extends Component {
 
         this.setState({
           markers: {
-            coordinate: { latitude: loc.latitude, longitude: loc.longitude },
+            coordinate: {latitude: loc.latitude, longitude: loc.longitude},
           },
           permission: true,
         });
@@ -347,11 +354,11 @@ class FindRide extends Component {
   };
 
   findRide = () => {
-    this.setState({ find: true, selectedDate: 'Date and time of departure' });
+    this.setState({find: true, selectedDate: 'Date and time of departure'});
   };
 
   offerRide = () => {
-    this.setState({ find: false, selectedDate: 'Date and time of departure' });
+    this.setState({find: false, selectedDate: 'Date and time of departure'});
   };
 
   pickUp = () => {
@@ -399,17 +406,17 @@ class FindRide extends Component {
   };
 
   onDateCancel = () => {
-    this.setState({ openDate: false });
+    this.setState({openDate: false});
   };
 
   openDatePicker = () => {
-    this.setState({ openDate: true });
+    this.setState({openDate: true});
   };
 
   getSearchData = async (pick, drop, date, seat) => {
     // if (this.props?.data?.kyc_status == 1) {
 
-    this.setState({ isSearch: 'start', loading: true });
+    this.setState({isSearch: 'start', loading: true});
     const result = await hitApiToGetRideList(
       pick,
       drop,
@@ -419,19 +426,19 @@ class FindRide extends Component {
       this.state.dropMainText,
     );
 
-    this.setState({ loading: false });
+    this.setState({loading: false});
     if (result.status) {
-      this.setState({ isSearch: 'cancel' });
+      this.setState({isSearch: 'cancel'});
       this.props.navigation.navigate('FindRideList', {
         data: result.data,
         seat: this.state.passengerValue,
         pick,
-        drop
+        drop,
       });
     } else {
       // console.log(result)
       if (result.message == 'No ride found') {
-        this.setState({ isSearch: 'notfound' });
+        this.setState({isSearch: 'notfound'});
       }
     }
     // }
@@ -474,7 +481,7 @@ class FindRide extends Component {
   };
 
   chooseAnother = () => {
-    this.setState({ openSearch: 'pick', isSearch: 'cancel' });
+    this.setState({openSearch: 'pick', isSearch: 'cancel'});
   };
 
   procced = async () => {
@@ -490,13 +497,13 @@ class FindRide extends Component {
       Toast.showWithGravity('Select no of seats available', 2, Toast.TOP);
     } else {
       // if (this.props?.data?.kyc_status == 1) {
-      this.setState({ offerSearchLoader: true });
+      this.setState({offerSearchLoader: true});
       const routeData = await this.getPolylineCoordinats(
         this.state.pickupLocation,
         this.state.dropLocation,
       );
 
-      this.setState({ offerSearchLoader: false });
+      this.setState({offerSearchLoader: false});
       this.props.navigation.navigate('MapRoutes', {
         pick: this.state.pickupLocation,
         pickMainText: this.state.pickMainText,
@@ -578,16 +585,16 @@ class FindRide extends Component {
   };
 
   setSelectedIndex = i => {
-    this.setState({ selectedIndex: i, passengerValue: i + 1 });
+    this.setState({selectedIndex: i, passengerValue: i + 1});
   };
   onCheck = () => {
-    this.setState({ cotraveller: !this.state.cotraveller });
+    this.setState({cotraveller: !this.state.cotraveller});
   };
 
   onViewClick(item) {
     if (item?.multi) {
       const from = item?.from;
-      this.props.navigation.navigate('RideHistory', { from: from });
+      this.props.navigation.navigate('RideHistory', {from: from});
     } else {
       const from = item?.from;
       this.props.navigation.navigate(item?.screenname, {
@@ -598,8 +605,8 @@ class FindRide extends Component {
   }
 
   onTextLayout = e => {
-    const { height } = e.nativeEvent.layout;
-    this.setState({ textHeight: height });
+    const {height} = e.nativeEvent.layout;
+    this.setState({textHeight: height});
   };
 
   checkExistingRequest() {
@@ -639,9 +646,9 @@ class FindRide extends Component {
             </Text>
           </View>
           <View
-            style={{ width: 53, justifyContent: 'center', alignItems: 'center' }}>
+            style={{width: 53, justifyContent: 'center', alignItems: 'center'}}>
             <ButtonPrimary
-              style={{ height: 22 }}
+              style={{height: 22}}
               textStyle={{
                 fontFamily: AppFontFamily.PopinsRegular,
                 fontSize: 12,
@@ -657,7 +664,7 @@ class FindRide extends Component {
   }
 
   handlePageChange = event => {
-    const { contentOffset } = event.nativeEvent;
+    const {contentOffset} = event.nativeEvent;
     const index = Math.round(contentOffset.x / Dimensions.get('window').width);
     this.setState({
       currentIndex: index,
@@ -672,8 +679,8 @@ class FindRide extends Component {
           kycStatus == 0
             ? 'Your kyc is pending, Please update your kyc'
             : kycStatus == 2
-              ? 'Your kyc document is under review, Please wait for the approval'
-              : '',
+            ? 'Your kyc document is under review, Please wait for the approval'
+            : '',
         screenname: kycStatus == 0 ? 'KycScreen' : '',
       });
     }
@@ -691,7 +698,7 @@ class FindRide extends Component {
         }}>
         <FlatList
           data={itemArray}
-          renderItem={({ item, index, separators }) => (
+          renderItem={({item, index, separators}) => (
             <View
               style={{
                 width: Dimensions.get('screen').width,
@@ -738,7 +745,7 @@ class FindRide extends Component {
                         alignItems: 'center',
                       }}>
                       <ButtonPrimary
-                        style={{ height: 22 }}
+                        style={{height: 22}}
                         textStyle={{
                           fontFamily: AppFontFamily.PopinsRegular,
                           fontSize: 12,
@@ -761,8 +768,8 @@ class FindRide extends Component {
           onMomentumScrollEnd={this.handlePageChange}
         />
         {(this.state.existingData && this.state.existingData.length) ||
-          kycStatus == 0 ||
-          kycStatus == 2 ? (
+        kycStatus == 0 ||
+        kycStatus == 2 ? (
           <View
             style={{
               flexDirection: 'row',
@@ -779,7 +786,7 @@ class FindRide extends Component {
                     style={[
                       styles.paginationDot,
                       index === this.state.currentIndex &&
-                      styles.activePaginationDot,
+                        styles.activePaginationDot,
                     ]}
                   />
                 ))}
@@ -792,7 +799,7 @@ class FindRide extends Component {
                     style={[
                       styles.paginationDot,
                       index === this.state.currentIndex &&
-                      styles.activePaginationDot,
+                        styles.activePaginationDot,
                     ]}
                   />
                 ))}
@@ -842,8 +849,8 @@ class FindRide extends Component {
               {kycStatus == 0
                 ? 'Your kyc is pending, Please update your kyc'
                 : kycStatus == 2
-                  ? 'Your kyc document is under review'
-                  : ''}
+                ? 'Your kyc document is under review'
+                : ''}
             </Text>
           </View>
           {kycStatus == 0 ? (
@@ -854,7 +861,7 @@ class FindRide extends Component {
                 alignItems: 'center',
               }}>
               <ButtonPrimary
-                style={{ height: 22 }}
+                style={{height: 22}}
                 textStyle={{
                   fontFamily: AppFontFamily.PopinsRegular,
                   fontSize: 12,
@@ -890,11 +897,11 @@ class FindRide extends Component {
             borderColor: AppColors.themeCardBorderColor,
             borderWidth: 1,
           }}>
-          <View style={{ alignItems: 'center', width: '96%', marginTop: 0 }}>
+          <View style={{alignItems: 'center', width: '96%', marginTop: 0}}>
             {FindAndOfferRide(this.findRide, this.offerRide, this.state.find)}
 
             <AvtarView
-              image={image ? { uri: image } : ''}
+              image={image ? {uri: image} : ''}
               name={name}
               type={this.state.find}
             />
@@ -1097,11 +1104,11 @@ class FindRide extends Component {
   }
 
   selectedVehicle(val) {
-    this.setState({ addVehicle: val.label, rideVehicle: val, openAddVeh: false });
+    this.setState({addVehicle: val.label, rideVehicle: val, openAddVeh: false});
   }
 
   closeVehPopUp() {
-    this.setState({ openAddVeh: false });
+    this.setState({openAddVeh: false});
   }
   addCar() {
     this.closeVehPopUp();
@@ -1109,7 +1116,7 @@ class FindRide extends Component {
   }
   offerRideView = () => {
     return (
-      <View style={{ width: '100%' }}>
+      <View style={{width: '100%'}}>
         <View
           style={{
             flexDirection: 'row',
@@ -1119,7 +1126,7 @@ class FindRide extends Component {
             marginBottom: 10,
           }}>
           <Pressable
-            onPress={() => this.setState({ openAddVeh: true })}
+            onPress={() => this.setState({openAddVeh: true})}
             style={{
               paddingLeft: 10,
               justifyContent: 'center',
@@ -1156,7 +1163,7 @@ class FindRide extends Component {
               borderRadius: 10,
             }}>
             <TextInput
-              onChangeText={text => this.setState({ avilSeat: text })}
+              onChangeText={text => this.setState({avilSeat: text})}
               value={this.state.avilSeat}
               placeholder={'Available seats'}
               placeholderTextColor={AppColors.themeTextGrayColor}
@@ -1184,11 +1191,11 @@ class FindRide extends Component {
     } else if (this.state.isSearch == 'start') {
       this.props.navigation.openDrawer();
     } else {
-      this.setState({ isSearch: 'cancel' });
+      this.setState({isSearch: 'cancel'});
     }
   }
 
-  HeaderView = ({ name, gender, count, image, kycStatus, walletAmount }) => {
+  HeaderView = ({name, gender, count, image, kycStatus, walletAmount}) => {
     return (
       <>
         <View
@@ -1241,7 +1248,7 @@ class FindRide extends Component {
         ) : (
           <NoRideFound chooseAnother={this.chooseAnother} />
         )}
-        <HomeFooterScreen/>
+        <HomeFooterScreen />
       </>
     );
   };
@@ -1255,7 +1262,7 @@ class FindRide extends Component {
   }
 
   async walletClick() {
-    this.setState({ openWallet: true });
+    this.setState({openWallet: true});
     // this.props.navigation.navigate('Notification')
   }
 
@@ -1263,26 +1270,26 @@ class FindRide extends Component {
     if (amount == '') {
       Alert.alert('enter amount');
     } else {
-      this.setState({ walletLoader: true });
+      this.setState({walletLoader: true});
       const result = await hitApiToAddMoneyToWallet(amount);
       if (result.status) {
         this.getWalletNotification();
-        this.setState({ openWallet: false });
+        this.setState({openWallet: false});
         showNotification({
           title: 'Wallet recharge successful',
           message: 'Your wallet has been recharged successfully',
         });
       }
-      this.setState({ walletLoader: false });
+      this.setState({walletLoader: false});
       console.log(result);
     }
   }
 
   render() {
-    const { data } = this.props;
+    const {data} = this.props;
 
     return (
-      <View style={{ flex: 1, alignItems: 'center' }}>
+      <View style={{flex: 1, alignItems: 'center'}}>
         {/* {
                     this.state.kycStatus == 0 ?
                         <PendingKYC message={'Your kyc is pending, Please update your kyc'} onOkPress={this.onOkPress} />
@@ -1294,7 +1301,7 @@ class FindRide extends Component {
 
         <FlatList
           data={['1']}
-          contentContainerStyle={{ width: Dimensions.get('window').width }}
+          contentContainerStyle={{width: Dimensions.get('window').width}}
           ListHeaderComponent={
             <this.HeaderView
               name={data?.name ?? ''}
@@ -1307,16 +1314,16 @@ class FindRide extends Component {
           }
           keyExtractor={(item, index) => index}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item, index }) => (
+          renderItem={({item, index}) => (
             <>
-              <View style={{ padding: 0 }}></View>
+              <View style={{padding: 0}}></View>
             </>
           )}
         />
 
         <Wallet
           isLoading={this.state.openWallet}
-          closePopup={() => this.setState({ openWallet: false })}
+          closePopup={() => this.setState({openWallet: false})}
           onPaymentPress={this.payPressed}
           loader={this.state.walletLoader}
         />
