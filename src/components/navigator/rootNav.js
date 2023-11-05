@@ -42,6 +42,7 @@ import {getToken, configureNotification} from '../../Utils/PushNotification';
 import {pushNotificationPermission} from '../../Utils/RuntimePermission';
 import PushNotification from 'react-native-push-notification';
 import {CreateNotificationChannel} from '../../components/notifications/LocalNotification';
+import PayGateway from '../payment/PayGateway';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -142,6 +143,7 @@ export default function RootNav() {
         <Stack.Screen name="AddGenderMobile" component={AddGenderMobile} />
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="SendFeedback" component={SendFeedback} />
+        <Stack.Screen name="PayGateway" component={PayGateway} />
 
         <Stack.Screen
           name="RideDrawer"

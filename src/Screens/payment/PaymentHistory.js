@@ -127,8 +127,8 @@ export default function PaymentHistory({ navigation, route }) {
 
                     </View>
 
-                    <Pressable onPress={() => setOpenWallet(true)} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
-
+                    {/* <Pressable onPress={() => setOpenWallet(true)} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}> */}
+                    <Pressable onPress={() => navigation.navigate('PayGateway')} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
                         <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                             <Text style={{ paddingTop: 5, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themesWhiteColor }}>{"Top Up The Balance"}</Text>
                         </View>
