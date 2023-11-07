@@ -7,6 +7,7 @@ import {
   Pressable,
   Dimensions,
   TouchableOpacity,
+  Linking,
 } from 'react-native';
 import { AppColors } from '../../components/constants/AppColor';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -336,7 +337,7 @@ export const HomeFooterScreen = () => {
           </Text>
           <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start' }}>
 
-            <Pressable style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', marginLeft: 15 }}>
+            <Pressable onPress={()=> Linking.openURL('https://www.facebook.com/people/Sharewheelzin/61552082821657/')} style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', marginLeft: 15 }}>
               <Image
                 source={require('../../assets/fbfooter.png')}
                 style={{
@@ -347,7 +348,7 @@ export const HomeFooterScreen = () => {
               />
             </Pressable>
 
-            <Pressable style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+            {/* <Pressable onPress={()=> Linking.openURL('fb://page/PAGE_ID')} style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
               <Image
                 source={require('../../assets/twitter.png')}
                 style={{
@@ -356,9 +357,9 @@ export const HomeFooterScreen = () => {
                   resizeMode: 'contain',
                 }}
               />
-            </Pressable>
+            </Pressable> */}
 
-            <Pressable style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+            <Pressable onPress={()=> Linking.openURL('https://www.linkedin.com/company/sharewheelzz/')} style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
               <Image
                 source={require('../../assets/linkedin.png')}
                 style={{
@@ -369,7 +370,7 @@ export const HomeFooterScreen = () => {
               />
             </Pressable>
 
-            <Pressable style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+            <Pressable onPress={()=> Linking.openURL('https://www.instagram.com/sharewheelzin')} style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
               <Image
                 source={require('../../assets/instagram.png')}
                 style={{
