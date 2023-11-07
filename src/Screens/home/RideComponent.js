@@ -381,11 +381,21 @@ export const HomeFooterScreen = () => {
             </Pressable>
 
           </View>
+          <View style={{ width: '100%' }}>
+          <Image
+                source={require('../../assets/footer.png')}
+                style={{
+                  width: Dimensions.get('screen').width,
+                  height: 200,
+                  resizeMode: 'contain',
+                }}
+              />
+          </View>
 
         </View>
 
       </View>
-      <View style={{ width: Dimensions.get('screen').width - 30, marginBottom: 50, marginTop: 10, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
+      <View style={{ width: Dimensions.get('screen').width - 30, marginBottom: 5, height: 0, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
     </View>
   );
 };
