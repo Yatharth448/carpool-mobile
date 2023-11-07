@@ -13,7 +13,7 @@ import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import CommonLoaders from '../../components/loader/Loader';
 import { showNotification } from '../../components/notifications/LocalNotification';
 import { hitApiToGetNotifications } from './NotificationModal';
-import { hitApiToAddMoneyToWallet, hitApiToGetPaymentHistory } from './PaymentModal';
+import { hitApiToAddMoneyToWallet, hitApiToGetPaymentHistory, hitApiToGetPaymentURL } from './PaymentModal';
 import Wallet from '../wallet/Wallet';
 export default function PaymentHistory({ navigation, route }) {
 
@@ -103,6 +103,8 @@ export default function PaymentHistory({ navigation, route }) {
 
     // }
 
+   
+
     const HistoryTopView = () => {
         return (
             <View style={{ width: '100%', alignItems: 'center' }}>
@@ -127,8 +129,8 @@ export default function PaymentHistory({ navigation, route }) {
 
                     </View>
 
-                    {/* <Pressable onPress={() => setOpenWallet(true)} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}> */}
-                    <Pressable onPress={() => navigation.navigate('PayGateway')} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
+                    <Pressable onPress={() => setOpenWallet(true)} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
+                    {/* <Pressable onPress={getPaymentUrl()} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}> */}
                         <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                             <Text style={{ paddingTop: 5, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themesWhiteColor }}>{"Top Up The Balance"}</Text>
                         </View>
@@ -204,7 +206,7 @@ export default function PaymentHistory({ navigation, route }) {
 
                                         <View style={{ width: '13%', justifyContent: 'flex-start', alignItems: 'center' }}>
 
-                                            <Image source={require('../../assets/Wallet.png')} style={{ width: 40, height: 40, resizeMode: 'contain', tintColor: item.type == 'debit' ? AppColors.themeButtonRed : AppColors.themePrimaryColor}} />
+                                            <Image source={require('../../assets/Wallet.png')} style={{ width: 40, height: 40, resizeMode: 'contain', tintColor: item.type == 'debit' ? AppColors.themeButtonRed : AppColors.themePrimaryColor }} />
 
                                         </View>
 
@@ -234,7 +236,7 @@ export default function PaymentHistory({ navigation, route }) {
                                 </Surface>
                             </View>
                             :
-                            CommonLoaders.NoDataInList('No transaction yet', {height: 300})
+                            CommonLoaders.NoDataInList('No transaction yet', { height: 300 })
                     )}
                 />
 
@@ -248,20 +250,37 @@ export default function PaymentHistory({ navigation, route }) {
 
         }
         else {
-            const result = await hitApiToAddMoneyToWallet(amount)
-            if (result.status) {
-                await getPaymentHistory()
-                setOpenWallet(false)
-                Alert.alert('amount added successfully')
-            }
-            console.log(result)
+            // const result = await hitApiToAddMoneyToWallet(amount)
+            // if (result.status) {
+            //     await getPaymentHistory()
+            //     setOpenWallet(false)
+            //     Alert.alert('amount added successfully')
+            // }
+            // console.log(result)
+           
+           getPaymentUrl(amount)
+
+        }
+
+    }
+
+    const getPaymentUrl = async (amount) => {
+       
+        const result = await hitApiToGetPaymentURL(amount)
+        console.log(result)
+        if (result.status) {
+            console.log(result.data.payLink)
+            navigation.navigate('PayGateway',{ payURL: result.data.payLink})
+        }
+        else {
+
         }
 
     }
 
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
-            <Header close={() => { navigation.goBack()}} text='Payment History' />
+            <Header close={() => { navigation.goBack() }} text='Payment History' />
 
 
 

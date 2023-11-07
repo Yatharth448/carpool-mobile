@@ -1,51 +1,47 @@
-import React, {useState, useEffect} from 'react';
-import {View, Alert} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import React, { useState, useEffect } from 'react';
+import { View, Alert, Dimensions } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
+import { WebView } from 'react-native-webview';
+import { Header } from '../commomheader/CommonHeader';
 
-const PayGateway = () => {
-  const [jsonData, setJsonData] = useState([]);
-  const [selectedCardName, setSelectedCardName] = useState('');
+const PayGateway = ({ navigation, route }) => {
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          'https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction?command=getJsonData&access_code=AVFT28KK38AF01TFFA',
-        );
-        console.log(response, 'ccAvenue response');
-        // setJsonData(response.data);
-      } catch (error) {
-        console.error('An error occurred!', error);
-        Alert.alert('An error occurred! Please try again later.');
-      }
-    };
+    const { payURL } = route.params;
+    const devWidth = Dimensions.get('screen').width
+    const devHeight = Dimensions.get('screen').height
+    const webView = React.useRef(null);
 
-    fetchData();
-  }, []);
+    useEffect(() => {
 
-  const handleCardNameChange = cardName => {
-    setSelectedCardName(cardName);
-    // Perform further actions based on the selected card name
-    // For example: set some state variables or make additional API calls
-  };
+        console.log(payURL, 'gateway')
+        // fetchData();
+    }, []);
 
-  return (
-    <View>
-      <Picker
-        selectedValue={selectedCardName}
-        onValueChange={itemValue => handleCardNameChange(itemValue)}>
-        <Picker.Item label="Select" value="" />
-        {jsonData.map((value, index) => (
-          <Picker.Item
-            key={index}
-            label={value.cardName}
-            value={value.cardName}
-          />
-        ))}
-      </Picker>
-    </View>
-  );
+    // webView ={
+    //     canGoBack: false,
+    //     injectedJavaScript: false,
+    //     ref: null
+    // }
+
+
+    const onBack = () => {
+        console.log(webView, 'gateway')
+        navigation.goBack()
+    }
+
+    return (
+        <>
+            <Header isBack={true} close={() => onBack()} />
+            <WebView
+                source={{ uri: payURL }}
+                ref={webView}
+                onLoadProgress={(event)=> console.log('event data', event.nativeEvent)}
+                onMessage={(event) => console.log("On Message", event)}
+                style={{ width: devWidth, height: devHeight }}
+            />
+        </>
+    );
 };
 
 export default PayGateway;

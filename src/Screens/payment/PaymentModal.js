@@ -40,3 +40,23 @@ export const hitApiToAddMoneyToWallet = async (amount) => {
     }
 
 }
+
+export const hitApiToGetPaymentURL = async (amount) => {
+
+    try {
+        const otpData = await connection.postAPI('/api/user/startpayment', {"amount": amount})
+
+        if (otpData.success) {
+            return otpData
+        }
+        else {
+            return otpData
+        }
+
+    } catch (error) {
+
+        console.error('otp modal', error);
+        throw error
+    }
+
+}

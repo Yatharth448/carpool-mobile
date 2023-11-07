@@ -888,7 +888,7 @@ export default function OfferedRideDetails({ navigation, route }) {
             </View>
           </View>
 
-          {rideData[0].status == 'active' ? CancelView() : null}
+          {rideData[0].status == 'active' && rideData[0].showAcceptRejectButton ? CancelView() : null}
         </Surface>
 
         {cotravellerArray.length ? <ViewRideRequestBtn /> : null}

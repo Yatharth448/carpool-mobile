@@ -929,7 +929,7 @@ export default function RequestedRideDetails({ navigation, route }) {
               </View>
             </View>
 
-            {isCancel == 'confirmed' ? (
+            {isCancel == 'confirmed' && rideData[0].showAcceptRejectButton ? (
               <>
                 <View
                   style={{
@@ -968,7 +968,7 @@ export default function RequestedRideDetails({ navigation, route }) {
             ) : null}
           </Surface>
 
-          {userData[0]?.status.toLowerCase() == 'accepted' ? (
+          {userData[0]?.status.toLowerCase() == 'accepted' && userData[0]?.showAcceptRejectButton ? (
             <View
               style={{
                 width: '90%',
