@@ -43,6 +43,8 @@ import {pushNotificationPermission} from '../../Utils/RuntimePermission';
 import PushNotification from 'react-native-push-notification';
 import {CreateNotificationChannel} from '../../components/notifications/LocalNotification';
 import PayGateway from '../payment/PayGateway';
+import PaymentSuccess from '../../Screens/payment/PaymentSuccess';
+import PaymentFailure from '../../Screens/payment/PaymentFailure';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -144,6 +146,8 @@ export default function RootNav() {
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="SendFeedback" component={SendFeedback} />
         <Stack.Screen name="PayGateway" component={PayGateway} />
+        <Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
+        <Stack.Screen name="PaymentFailure" component={PaymentFailure} />
 
         <Stack.Screen
           name="RideDrawer"

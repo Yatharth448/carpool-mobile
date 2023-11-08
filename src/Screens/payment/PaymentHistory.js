@@ -1,23 +1,18 @@
 import React, { useEffect } from 'react'
-import { View, Text, Modal, Image, FlatList, Dimensions, Pressable, Alert } from 'react-native'
+import { View, Text, Image, FlatList, Dimensions, Pressable, Alert } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
-import { hitApiToGetRideList, hitApiToRequestARide } from './RideListModal';
 import { Header } from '../../components/commomheader/CommonHeader';
 import moment from 'moment';
 import { AppTexts } from '../../components/constants/AppTexts';
-import { convertToKms } from '../../components/commonfunction/CommonFunctions';
 import { AppFontFamily } from '../../components/constants/AppFonts';
-import { FindRideFilterView } from './FindRideComp';
 import { Surface } from 'react-native-paper';
-import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import CommonLoaders from '../../components/loader/Loader';
-import { showNotification } from '../../components/notifications/LocalNotification';
-import { hitApiToGetNotifications } from './NotificationModal';
 import { hitApiToAddMoneyToWallet, hitApiToGetPaymentHistory, hitApiToGetPaymentURL } from './PaymentModal';
 import Wallet from '../wallet/Wallet';
+import { useIsFocused } from '@react-navigation/native';
 export default function PaymentHistory({ navigation, route }) {
 
-
+    const isFocused = useIsFocused();
     const [paymentData, setPaymentData] = React.useState([])
     const [data, setData] = React.useState([])
     // const { data, seat } = route.params;
@@ -43,7 +38,7 @@ export default function PaymentHistory({ navigation, route }) {
             // clear/remove event listener
 
         }
-    }, []);
+    }, [isFocused]);
 
 
 
@@ -130,7 +125,7 @@ export default function PaymentHistory({ navigation, route }) {
                     </View>
 
                     <Pressable onPress={() => setOpenWallet(true)} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
-                    {/* <Pressable onPress={getPaymentUrl()} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}> */}
+                    {/* <Pressable onPress={()=> navigation.navigate('PaymentSuccess')} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}> */}
                         <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                             <Text style={{ paddingTop: 5, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themesWhiteColor }}>{"Top Up The Balance"}</Text>
                         </View>
@@ -270,6 +265,7 @@ export default function PaymentHistory({ navigation, route }) {
         console.log(result)
         if (result.status) {
             console.log(result.data.payLink)
+            setOpenWallet(false)
             navigation.navigate('PayGateway',{ payURL: result.data.payLink})
         }
         else {
