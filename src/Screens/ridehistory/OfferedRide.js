@@ -73,7 +73,7 @@ export default function OfferedRides({ selectedData }) {
                                 </View>
                                 <View style={{ justifyContent: 'center', alignItems: 'flex-end', width: '50%'  }}>
 
-                                    <Text style={{ padding: 5, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themePrimaryColor }}>{item.status}</Text>
+                                    <Text style={{ padding: 5, fontFamily: AppFontFamily.PopinsBold, fontSize: 13, color: AppColors.themePrimaryColor }}>{item.status.toUpperCase()}</Text>
 
                                 </View>
                             </View>

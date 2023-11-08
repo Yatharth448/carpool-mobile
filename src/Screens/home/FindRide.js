@@ -55,7 +55,7 @@ import {decode} from '@mapbox/polyline';
 import {hitApiToSetSeenNotifications} from '../notification/NotificationModal';
 import {HomeHeader} from '../../components/commomheader/HomeHeader';
 import Wallet from '../wallet/Wallet';
-import {hitApiToAddMoneyToWallet} from '../payment/PaymentModal';
+import {hitApiToAddMoneyToWallet, hitApiToGetPaymentURL} from '../payment/PaymentModal';
 import {showNotification} from '../../components/notifications/LocalNotification';
 import {Surface} from 'react-native-paper';
 class FindRide extends Component {
@@ -210,7 +210,12 @@ class FindRide extends Component {
           });
         }
       } else {
-        await locationAlert();
+        try {
+          
+          await locationAlert();
+        } catch (error) {
+          
+        }
       }
 
       await this.getRideNotificationData();
@@ -1270,18 +1275,26 @@ class FindRide extends Component {
     if (amount == '') {
       Alert.alert('enter amount');
     } else {
-      this.setState({walletLoader: true});
-      const result = await hitApiToAddMoneyToWallet(amount);
+      // this.setState({walletLoader: true});
+      // const result = await hitApiToAddMoneyToWallet(amount);
+      // if (result.status) {
+      //   this.getWalletNotification();
+      //   this.setState({openWallet: false});
+      //   showNotification({
+      //     title: 'Wallet recharge successful',
+      //     message: 'Your wallet has been recharged successfully',
+      //   });
+      // }
+      const result = await hitApiToGetPaymentURL(amount)
+      console.log(result)
       if (result.status) {
-        this.getWalletNotification();
-        this.setState({openWallet: false});
-        showNotification({
-          title: 'Wallet recharge successful',
-          message: 'Your wallet has been recharged successfully',
-        });
+          console.log(result.data.payLink)
+          this.setState({openWallet: false});
+          this.props.navigation.navigate('PayGateway',{ payURL: result.data.payLink})
       }
-      this.setState({walletLoader: false});
-      console.log(result);
+      else {
+
+      }
     }
   }
 

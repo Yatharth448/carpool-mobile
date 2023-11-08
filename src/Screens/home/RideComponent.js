@@ -341,6 +341,7 @@ export const HomeFooterScreen = () => {
               <Image
                 source={require('../../assets/fbfooter.png')}
                 style={{
+                  tintColor: AppColors.themePrimaryColor,
                   width: 32,
                   height: 32,
                   resizeMode: 'contain',
@@ -363,6 +364,7 @@ export const HomeFooterScreen = () => {
               <Image
                 source={require('../../assets/linkedin.png')}
                 style={{
+                  tintColor: AppColors.themePrimaryColor,
                   width: 32,
                   height: 32,
                   resizeMode: 'contain',
@@ -374,6 +376,7 @@ export const HomeFooterScreen = () => {
               <Image
                 source={require('../../assets/instagram.png')}
                 style={{
+                  tintColor: AppColors.themePrimaryColor,
                   width: 32,
                   height: 32,
                   resizeMode: 'contain',
@@ -382,7 +385,7 @@ export const HomeFooterScreen = () => {
             </Pressable>
 
           </View>
-          <View style={{ width: '100%' }}>
+          {/* <View style={{ width: '100%' }}>
           <Image
                 source={require('../../assets/footer.png')}
                 style={{
@@ -391,7 +394,7 @@ export const HomeFooterScreen = () => {
                   resizeMode: 'contain',
                 }}
               />
-          </View>
+          </View> */}
 
         </View>
 

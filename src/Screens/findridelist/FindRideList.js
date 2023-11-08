@@ -14,7 +14,7 @@ import CommonLoaders from '../../components/loader/Loader';
 import Toast from 'react-native-simple-toast'
 import { showNotification } from '../../components/notifications/LocalNotification';
 import Wallet from '../wallet/Wallet';
-import { hitApiToAddMoneyToWallet } from '../payment/PaymentModal';
+import { hitApiToAddMoneyToWallet, hitApiToGetPaymentURL } from '../payment/PaymentModal';
 import { createOpenLink } from 'react-native-open-maps';
 import { GetCurrentLocation } from '../../components/location/GetCurrentLocation';
 export default function FindRideList({ navigation, route }) {
@@ -308,15 +308,17 @@ export default function FindRideList({ navigation, route }) {
 
         }
         else {
-            setWalletLoader(true)
-            const result = await hitApiToAddMoneyToWallet(amount)
-            if (result.status) {
 
-                setOpenWallet(false)
-                Alert.alert('amount added successfully')
-            }
-            setWalletLoader(false)
+            const result = await hitApiToGetPaymentURL(amount)
             console.log(result)
+            if (result.status) {
+                console.log(result.data.payLink)
+                setOpenWallet(false)
+                navigation.navigate('PayGateway', { payURL: result.data.payLink })
+            }
+            else {
+
+            }
         }
 
     }
@@ -324,8 +326,8 @@ export default function FindRideList({ navigation, route }) {
     return (
         <View style={{ flex: 1, width: '100%', backgroundColor: AppColors.themePickupDropSearchBg, alignItems: 'center' }}>
             <Header close={() => { navigation.navigate('RideDrawer', { screen: 'FindRide', params: { from: 'reset' } }) }} text='Ride options' />
-            <View style={{width: '100%', alignItems: 'center'}}>
-            <Text style={{ width: '94%', fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themePrimaryColor }}>{`${pick}  ->  ${drop}`}</Text>
+            <View style={{ width: '100%', alignItems: 'center' }}>
+                <Text style={{ width: '94%', fontFamily: AppFontFamily.PopinsMedium, fontSize: 12, color: AppColors.themePrimaryColor }}>{`${pick}  ->  ${drop}`}</Text>
             </View>
 
 
