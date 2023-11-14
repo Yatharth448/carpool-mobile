@@ -21,7 +21,7 @@ export default function AddBank({ navigation, route }) {
         console.log(result, 'add bank result')
         if (result.status) {
            
-           setBank
+            Toast.show(result.message);
         }
     }
 

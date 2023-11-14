@@ -10,9 +10,10 @@ import { AppTexts } from '../../components/constants/AppTexts'
 import { hitApiToGetAllBanks, hitApiToWithdrawFromWallet } from './BankModal'
 import { Surface } from 'react-native-paper'
 import { hitApiToGetPaymentHistory } from '../payment/PaymentModal'
-
+import { useIsFocused } from '@react-navigation/native';
 export default function Withdraw({ navigation, route }) {
 
+    const isFocused = useIsFocused();
     const [walletAmount, setWalletAmount] = React.useState(0)
     const [amount, setAmount] = React.useState('')
     const [bankData, setBankData] = React.useState([])
@@ -34,7 +35,7 @@ export default function Withdraw({ navigation, route }) {
             // clear/remove event listener
 
         }
-    }, []);
+    }, [isFocused]);
 
     const getBankList = async () => {
 
@@ -67,7 +68,10 @@ export default function Withdraw({ navigation, route }) {
 
     const withDrawBtnClick = async() => {
 
-        if (amount < 10) {
+        if (bankData.length < 1) {
+            Alert.alert('Please add Bank to withdraw')
+        }
+        else if (amount < 10) {
             Alert.alert('Enter amount greater than 10')
         }
         else {

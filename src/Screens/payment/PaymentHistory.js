@@ -46,7 +46,7 @@ export default function PaymentHistory({ navigation, route }) {
         setIsLoading(false)
         //Put your logic here
         const result = await hitApiToGetPaymentHistory();
-        console.log("notification", result);
+        console.log("notification", result.data.debit, result.data.cred);
         if (result.status) {
             setPaymentData(result.data)
             setData(result.data.walletHistory)
@@ -63,14 +63,14 @@ export default function PaymentHistory({ navigation, route }) {
         setTab(tab)
         if (tab == 'all') {
 
-            setData(paymentData.walletHistory)
+            setData(paymentData.walletHistory.reverse())
         }
         else if (tab == 'spent') {
 
-            setData(paymentData.debit)
+            setData(paymentData.debit.reverse())
         }
         else {
-            setData(paymentData.cred)
+            setData(paymentData.cred.reverse())
         }
 
     }
@@ -124,7 +124,7 @@ export default function PaymentHistory({ navigation, route }) {
 
                     </View>
 
-                    <View style={{width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
 
                         <Pressable onPress={() => setOpenWallet(true)} style={{ marginTop: 20, width: '48%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
                             {/* <Pressable onPress={()=> navigation.navigate('PaymentSuccess')} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}> */}
@@ -216,14 +216,17 @@ export default function PaymentHistory({ navigation, route }) {
 
                                         </View>
 
-                                        <View style={{ marginLeft: 20, width: '47%', justifyContent: 'flex-start' }}>
+                                        <View style={{ marginLeft: 20, width: '57%', justifyContent: 'flex-start' }}>
 
-                                            <Text style={{ fontSize: 14, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeBlackColor }}>{item.transaction_type}</Text>
+                                            <Text style={{ fontSize: 14, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeBlackColor }}>{item.transaction_type}
+                                                {item.status ?? '' ?
+                                                    <Text style={{ fontSize: 14, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeBlackColor }}>{` ( ${item.status} )`}</Text> : null}
+                                            </Text>
                                             <Text style={{ fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor }}>{moment(item.created).format('HH:mm | DD MMM YYYY')}</Text>
                                             <Text style={{ fontSize: 8, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor }}>{item.transaction_id}</Text>
                                         </View>
 
-                                        <View style={{ marginLeft: 20, width: '40%', alignItems: 'flex-end' }}>
+                                        <View style={{ marginLeft: 20, width: '30%', alignItems: 'flex-end' }}>
 
                                             <Text style={{ fontSize: 16, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themeBlackColor }}>{debitCredit(item.type) + item.amount}</Text>
 
