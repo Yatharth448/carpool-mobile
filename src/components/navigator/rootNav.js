@@ -45,6 +45,8 @@ import {CreateNotificationChannel} from '../../components/notifications/LocalNot
 import PayGateway from '../payment/PayGateway';
 import PaymentSuccess from '../../Screens/payment/PaymentSuccess';
 import PaymentFailure from '../../Screens/payment/PaymentFailure';
+import AddBank from '../../Screens/bank/AddBank';
+import Withdraw from '../../Screens/bank/Withdraw';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -148,6 +150,8 @@ export default function RootNav() {
         <Stack.Screen name="PayGateway" component={PayGateway} />
         <Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
         <Stack.Screen name="PaymentFailure" component={PaymentFailure} />
+        <Stack.Screen name="AddBank" component={AddBank} />
+        <Stack.Screen name="Withdraw" component={Withdraw} />
 
         <Stack.Screen
           name="RideDrawer"

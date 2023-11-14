@@ -98,7 +98,7 @@ export default function PaymentHistory({ navigation, route }) {
 
     // }
 
-   
+
 
     const HistoryTopView = () => {
         return (
@@ -112,25 +112,36 @@ export default function PaymentHistory({ navigation, route }) {
                     <View style={{ width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
 
                         <View style={{ width: '50%', alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ paddingTop: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themesWhiteColor }}>{"Spent: " + AppTexts.Rupee_Symbol + " " + paymentData.debitAmount}</Text>
+                            <Text style={{ paddingTop: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themesWhiteColor }}>{"Debit: " + AppTexts.Rupee_Symbol + " " + paymentData.debitAmount}</Text>
                         </View>
 
                         <View style={{ width: 1, height: 20, backgroundColor: AppColors.themesWhiteColor }}>
                         </View>
 
                         <View style={{ width: '50%', alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ paddingTop: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themesWhiteColor }}>{"Received: " + AppTexts.Rupee_Symbol + " " + paymentData.creditAmount}</Text>
+                            <Text style={{ paddingTop: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themesWhiteColor }}>{"Credit: " + AppTexts.Rupee_Symbol + " " + paymentData.creditAmount}</Text>
                         </View>
 
                     </View>
 
-                    <Pressable onPress={() => setOpenWallet(true)} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
-                    {/* <Pressable onPress={()=> navigation.navigate('PaymentSuccess')} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}> */}
-                        <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ paddingTop: 5, fontSize: 16, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themesWhiteColor }}>{"Top Up The Balance"}</Text>
-                        </View>
+                    <View style={{width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
 
-                    </Pressable>
+                        <Pressable onPress={() => setOpenWallet(true)} style={{ marginTop: 20, width: '48%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
+                            {/* <Pressable onPress={()=> navigation.navigate('PaymentSuccess')} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}> */}
+                            <View style={{ width: '48%', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{ paddingTop: 5, fontSize: 14, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themesWhiteColor }}>{"Top Up"}</Text>
+                            </View>
+
+                        </Pressable>
+
+                        <Pressable onPress={() => navigation.navigate('Withdraw')} style={{ marginTop: 20, width: '48%', backgroundColor: AppColors.themesWhiteColor, borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
+                            {/* <Pressable onPress={()=> navigation.navigate('PaymentSuccess')} style={{ marginTop: 20, width: '90%', backgroundColor: '#3972FF', borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}> */}
+                            <View style={{ width: '48%', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{ paddingTop: 5, fontSize: 14, fontFamily: AppFontFamily.PopinsMedium, color: AppColors.themePrimaryColor }}>{"Withdraw"}</Text>
+                            </View>
+
+                        </Pressable>
+                    </View>
 
 
                 </View>
@@ -143,11 +154,11 @@ export default function PaymentHistory({ navigation, route }) {
                         </Pressable>
 
                         <Pressable onPress={() => TabPressed('spent')} style={{ width: '32%', backgroundColor: tab == 'spent' ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, alignItems: 'center', justifyContent: 'center', borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 10, }}>
-                            <Text style={{ paddingTop: 8, paddingBottom: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: tab == 'spent' ? AppColors.themesWhiteColor : AppColors.themePrimaryColor }}>{`Spent (${paymentData.debit.length})`}</Text>
+                            <Text style={{ paddingTop: 8, paddingBottom: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: tab == 'spent' ? AppColors.themesWhiteColor : AppColors.themePrimaryColor }}>{`Debit (${paymentData.debit.length})`}</Text>
                         </Pressable>
 
                         <Pressable onPress={() => TabPressed('received')} style={{ width: '34%', backgroundColor: tab == 'received' ? AppColors.themePrimaryColor : AppColors.themesWhiteColor, alignItems: 'center', justifyContent: 'center', borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 10, }}>
-                            <Text style={{ paddingTop: 8, paddingBottom: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: tab == 'received' ? AppColors.themesWhiteColor : AppColors.themePrimaryColor }}>{`Received (${paymentData.cred.length})`}</Text>
+                            <Text style={{ paddingTop: 8, paddingBottom: 5, fontSize: 12, fontFamily: AppFontFamily.PopinsRegular, color: tab == 'received' ? AppColors.themesWhiteColor : AppColors.themePrimaryColor }}>{`Credit (${paymentData.cred.length})`}</Text>
                         </Pressable>
 
                     </View> : null}
@@ -252,21 +263,21 @@ export default function PaymentHistory({ navigation, route }) {
             //     Alert.alert('amount added successfully')
             // }
             // console.log(result)
-           
-           getPaymentUrl(amount)
+
+            getPaymentUrl(amount)
 
         }
 
     }
 
     const getPaymentUrl = async (amount) => {
-       
+
         const result = await hitApiToGetPaymentURL(amount)
         console.log(result)
         if (result.status) {
             console.log(result.data.payLink)
             setOpenWallet(false)
-            navigation.navigate('PayGateway',{ payURL: result.data.payLink})
+            navigation.navigate('PayGateway', { payURL: result.data.payLink })
         }
         else {
 

@@ -13,6 +13,8 @@ import {LogBox} from 'react-native';
 import Storage from '../../components/localStorage/storage';
 import {AppKeys} from '../../components/constants/AppKeys';
 import {AppColors} from '../../components/constants/AppColor';
+import {connect} from 'react-redux';
+import {getProfileDataRequest} from '../../redux/actions/actions';
 import {getToken, configureNotification} from '../../Utils/PushNotification';
 import {pushNotificationPermission} from '../../Utils/RuntimePermission';
 import PushNotification from 'react-native-push-notification';
@@ -22,7 +24,7 @@ import {
   locationAlert,
 } from '../../components/location/GetCurrentLocation';
 
-export default class SplashScreen extends Component {
+ class SplashScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -131,3 +133,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+const mapStateToProps = state => ({
+  data: state.data,
+  loading: state.loading,
+  error: state.error,
+});
+
+const mapDispatchToProps = {
+  getProfileDataRequest,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SplashScreen);
