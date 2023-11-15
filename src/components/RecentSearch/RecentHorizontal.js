@@ -1,9 +1,9 @@
 import React from 'react';
 import moment from 'moment';
-import { Text, Image, View, FlatList, Pressable, Dimensions } from 'react-native';
-import { AppColors } from '../../components/constants/AppColor';
+import {Text, Image, View, FlatList, Pressable, Dimensions} from 'react-native';
+import {AppColors} from '../../components/constants/AppColor';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { AppFontFamily } from '../../components/constants/AppFonts';
+import {AppFontFamily} from '../../components/constants/AppFonts';
 
 export const RecentHorizontal = ({
   title = 'Recent Searches',
@@ -12,7 +12,7 @@ export const RecentHorizontal = ({
 }) => {
   return (
     <>
-      <View style={{ with: '100%', marginTop: 0 }}>
+      <View style={{with: '100%', marginTop: 0}}>
         <View
           style={{
             width: '100%',
@@ -33,7 +33,7 @@ export const RecentHorizontal = ({
                 </Text> */}
         </View>
 
-        <View style={{ width: '100%', justifyContent: 'center', marginTop: 10 }}>
+        <View style={{width: '100%', justifyContent: 'center', marginTop: 10}}>
           <FlatList
             data={recentArray}
             // columnWrapperStyle={{ flexWrap: 'wrap' }}
@@ -41,9 +41,9 @@ export const RecentHorizontal = ({
             keyExtractor={(item, index) => index}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
-            renderItem={({ item, index }) => (
+            renderItem={({item, index}) => (
               <>
-                <View style={{ padding: 0 }}>
+                <View style={{padding: 0}}>
                   <Pressable
                     onPress={() => onPress(item)}
                     style={{
@@ -94,7 +94,7 @@ export const RecentHorizontal = ({
                         />
                       </View>
 
-                      <View style={{ width: '80%', justifyContent: 'center' }}>
+                      <View style={{width: '80%', justifyContent: 'center'}}>
                         <Text
                           style={{
                             fontSize: 12,
@@ -148,12 +148,12 @@ export const RecentHorizontal = ({
                             }}>
                             {item.journey_start_at
                               ? moment(new Date(item?.journey_start_at)).format(
-                                'HH:mm',
-                              )
+                                  'HH:mm',
+                                )
                               : item.time}
                           </Text>
                         </View>
-                        <View style={{ width: '33.3%', padding: 10 }}>
+                        <View style={{width: '33.3%', padding: 10}}>
                           <Text
                             style={{
                               fontSize: 10,
@@ -172,7 +172,7 @@ export const RecentHorizontal = ({
                             {item?.seat_available || item.seat}
                           </Text>
                         </View>
-                        <View style={{ width: '33.3%', padding: 10 }}>
+                        <View style={{width: '33.3%', padding: 10}}>
                           <Text
                             style={{
                               fontSize: 10,
@@ -214,7 +214,7 @@ export const RecentHorizontal = ({
                               color: AppColors.themeText2Color,
                               fontFamily: AppFontFamily.PopinsRegular,
                             }}>
-                            {'Time'}
+                            {item.journey_start_at ? 'Time' : 'Date'}
                           </Text>
                           <Text
                             style={{
@@ -225,12 +225,12 @@ export const RecentHorizontal = ({
                             }}>
                             {item.journey_start_at
                               ? moment(new Date(item?.journey_start_at)).format(
-                                'HH:mm',
-                              )
+                                  'HH:mm',
+                                )
                               : item.time}
                           </Text>
                         </View>
-                        <View style={{ width: '50%', padding: 10 }}>
+                        <View style={{width: '50%', padding: 10}}>
                           <Text
                             style={{
                               fontSize: 10,
@@ -261,7 +261,14 @@ export const RecentHorizontal = ({
           />
         </View>
       </View>
-      <View style={{ width: Dimensions.get('screen').width - 30, marginBottom: 10, marginTop: 30, height: 2, backgroundColor: AppColors.themePickupDropSearchBg }}></View>
+      <View
+        style={{
+          width: Dimensions.get('screen').width - 30,
+          marginBottom: 10,
+          marginTop: 30,
+          height: 2,
+          backgroundColor: AppColors.themePickupDropSearchBg,
+        }}></View>
     </>
   );
 };

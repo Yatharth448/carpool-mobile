@@ -55,7 +55,10 @@ import {decode} from '@mapbox/polyline';
 import {hitApiToSetSeenNotifications} from '../notification/NotificationModal';
 import {HomeHeader} from '../../components/commomheader/HomeHeader';
 import Wallet from '../wallet/Wallet';
-import {hitApiToAddMoneyToWallet, hitApiToGetPaymentURL} from '../payment/PaymentModal';
+import {
+  hitApiToAddMoneyToWallet,
+  hitApiToGetPaymentURL,
+} from '../payment/PaymentModal';
 import {showNotification} from '../../components/notifications/LocalNotification';
 import {Surface} from 'react-native-paper';
 class FindRide extends Component {
@@ -211,11 +214,8 @@ class FindRide extends Component {
         }
       } else {
         try {
-          
           await locationAlert();
-        } catch (error) {
-          
-        }
+        } catch (error) {}
       }
 
       await this.getRideNotificationData();
@@ -290,7 +290,7 @@ class FindRide extends Component {
             destination:
               result.data.myride[i].drop_main_text ||
               result.data.myride[i].journey_destination_address,
-            time: `${rideDate.toLocaleDateString()}`,
+            time: `${rideDate.toLocaleDateString()} ${rideDate.getHours()}:${rideDate.getMinutes()}`,
             seat: result.data.myride[i].seat_available,
             id: result.data.myride[i]._id,
             type: 'offer',
@@ -304,7 +304,7 @@ class FindRide extends Component {
           tempArray.push({
             origin: result.data.requestRide[i].origin_address,
             destination: result.data.requestRide[i].destination_address,
-            time: `${rideDate.toLocaleDateString()}`,
+            time: `${rideDate.toLocaleDateString()} ${rideDate.getHours()}:${rideDate.getMinutes()}`,
             seat: result.data.requestRide[i].seat,
             // pay: price,
             type: 'request',
@@ -312,6 +312,7 @@ class FindRide extends Component {
           });
         }
       }
+      console.log('upcoming array ', tempArray);
       this.setState({upcomingRideArray: tempArray});
     }
   }
@@ -1285,15 +1286,15 @@ class FindRide extends Component {
       //     message: 'Your wallet has been recharged successfully',
       //   });
       // }
-      const result = await hitApiToGetPaymentURL(amount)
-      console.log(result)
+      const result = await hitApiToGetPaymentURL(amount);
+      console.log(result);
       if (result.status) {
-          console.log(result.data.payLink)
-          this.setState({openWallet: false});
-          this.props.navigation.navigate('PayGateway',{ payURL: result.data.payLink})
-      }
-      else {
-
+        console.log(result.data.payLink);
+        this.setState({openWallet: false});
+        this.props.navigation.navigate('PayGateway', {
+          payURL: result.data.payLink,
+        });
+      } else {
       }
     }
   }
