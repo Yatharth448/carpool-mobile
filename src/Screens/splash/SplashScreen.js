@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
@@ -9,22 +9,22 @@ import {
   Alert,
 } from 'react-native';
 
-import {LogBox} from 'react-native';
+import { LogBox } from 'react-native';
 import Storage from '../../components/localStorage/storage';
-import {AppKeys} from '../../components/constants/AppKeys';
-import {AppColors} from '../../components/constants/AppColor';
-import {connect} from 'react-redux';
-import {getProfileDataRequest} from '../../redux/actions/actions';
-import {getToken, configureNotification} from '../../Utils/PushNotification';
-import {pushNotificationPermission} from '../../Utils/RuntimePermission';
+import { AppKeys } from '../../components/constants/AppKeys';
+import { AppColors } from '../../components/constants/AppColor';
+import { connect } from 'react-redux';
+import { getProfileDataRequest } from '../../redux/actions/actions';
+import { getToken, configureNotification } from '../../Utils/PushNotification';
+import { pushNotificationPermission } from '../../Utils/RuntimePermission';
 import PushNotification from 'react-native-push-notification';
-import {CreateNotificationChannel} from '../../components/notifications/LocalNotification';
+import { CreateNotificationChannel } from '../../components/notifications/LocalNotification';
 import {
   checkLocationPermission,
   locationAlert,
 } from '../../components/location/GetCurrentLocation';
 
- class SplashScreen extends Component {
+class SplashScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -73,9 +73,9 @@ import {
           onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
         },
-        {text: 'ALLOW', onPress: async () => await checkLocationPermission()},
+        { text: 'ALLOW', onPress: async () => await checkLocationPermission() },
       ],
-      {cancelable: false},
+      { cancelable: false },
     );
   }
 
@@ -84,7 +84,7 @@ import {
     LogBox.ignoreAllLogs(); //Ignore all log notifications
     // SplashScreen.hide();
     //
-
+    getProfileDataRequest()
     await this.startTimer();
   }
   async startTimer() {
@@ -102,7 +102,7 @@ import {
         }
 
         // this.setState({ showSplash: 2 })
-      }, 2000);
+      }, 4000);
     });
   }
 

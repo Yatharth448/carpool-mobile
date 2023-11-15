@@ -12,16 +12,32 @@ export default function AddBank({ navigation, route }) {
 
     const [bankName, setBankName] = React.useState('')
     const [accountNumber, setAccountNumber] = React.useState('')
+    const [confirmAccountNumber, setConfirmAccountNumber] = React.useState('')
     const [ifscNumber, setIFSCNumber] = React.useState('')
 
 
     const AddBank = async () => {
 
-        const result = await hitApiToAddBank( accountNumber, ifscNumber, bankName)
-        console.log(result, 'add bank result')
-        if (result.status) {
-           
-            Toast.show(result.message);
+        if (bankName == '') {
+            Toast.show('Enter bank name');
+        }
+        else if (accountNumber == '') {
+            Toast.show('Enter account number');
+        }
+        else if (accountNumber !== confirmAccountNumber) {
+            Toast.show('Account number and confirm account number are not same');
+        }
+        else if (ifscNumber == '') {
+            Toast.show('Enter ifsc code');
+        }
+        else {
+
+            const result = await hitApiToAddBank(accountNumber, ifscNumber, bankName)
+            console.log(result, 'add bank result')
+            if (result.status) {
+
+                Toast.show(result.message);
+            }
         }
     }
 
@@ -61,8 +77,21 @@ export default function AddBank({ navigation, route }) {
                     />
                 </View>
 
+                <View style={{ backgroundColor: AppColors.themePickupDropSearchBg, width: '95%', borderRadius: 10, marginTop: 10, marginBottom: 10 }}>
+                    <TextInput
+                        onChangeText={text => setConfirmAccountNumber(text)}
+                        value={confirmAccountNumber}
+                        placeholder={"Confirm Account Number"}
+                        placeholderTextColor={AppColors.themeTextGrayColor}
+                        style={{ fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themeBlackColor, padding: 10, width: '95%', fontSize: 14, textAlign: 'left' }}
+                    // keyboardType={
+                    //     Platform.OS === 'android' ? 'numeric' : 'number-pad'
+                    // }
+                    />
+                </View>
 
-                <View style={{ backgroundColor: AppColors.themePickupDropSearchBg, width: '95%', borderRadius: 10, marginTop: 20, marginBottom: 10 }}>
+
+                <View style={{ backgroundColor: AppColors.themePickupDropSearchBg, width: '95%', borderRadius: 10, marginTop: 10, marginBottom: 10 }}>
                     <TextInput
                         onChangeText={text => setIFSCNumber(text)}
                         value={ifscNumber}

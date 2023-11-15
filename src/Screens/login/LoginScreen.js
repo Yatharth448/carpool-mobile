@@ -54,7 +54,7 @@ export default function LoginScreen({ navigation }) {
         else {
             console.log(userInfo, 'google error')
         }
-        setIsLoadingGoogle(false)
+       
     }
 
 
@@ -65,7 +65,6 @@ export default function LoginScreen({ navigation }) {
         console.log(result, 'login Respnse')
         if (result.status) {
             Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
-
             if (result?.kyc_status == 1 || result?.kyc_status == 2) {
                 navigation.reset({
                     index: 0,

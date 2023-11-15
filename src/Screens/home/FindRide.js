@@ -174,7 +174,6 @@ class FindRide extends Component {
     });
     this._unsubscribe = this.props.navigation.addListener('focus', async () => {
       BackHandler.addEventListener('hardwareBackPress', this.backActionHandler);
-
       // if (this.props?.data?.kyc_status != 1)
       // {
 
@@ -226,6 +225,7 @@ class FindRide extends Component {
 
     await this.getSavedVehicles();
     this.props.getProfileDataRequest();
+   
   }
 
   // onOkPress() {
