@@ -81,6 +81,7 @@ export default function Withdraw({ navigation, route }) {
             if (result){
                 Toast.show(result.message);
                 await getPaymentHistory()
+                navigation.goBack()
             }
 
         }
@@ -90,7 +91,7 @@ export default function Withdraw({ navigation, route }) {
     const BankList = () => {
         return (
 
-            <>
+            <View style={{height: '60%'}}>
                 <View style={{ width: '95%', marginTop: 50 }}>
                     <Text style={{ color: AppColors.themeBlackColor, fontSize: 14, fontFamily: AppFontFamily.PopinsMedium }}> {'Withdraw to'}</Text>
                 </View>
@@ -141,7 +142,7 @@ export default function Withdraw({ navigation, route }) {
                         </Pressable>
                     )}
                 />
-            </>
+            </View>
         )
     }
 

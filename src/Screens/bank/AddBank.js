@@ -37,6 +37,7 @@ export default function AddBank({ navigation, route }) {
             if (result.status) {
 
                 Toast.show(result.message);
+                navigation.goBack()
             }
         }
     }
