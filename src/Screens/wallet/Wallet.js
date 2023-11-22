@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, FlatList, Image, Text, Modal, Pressable, Dimensions, TextInput, Alert } from 'react-native'
+import { View, FlatList, Image, Text, Modal, Pressable, Dimensions, TextInput, Alert, Platform } from 'react-native'
 import { Surface } from 'react-native-paper'
 import { AppColors } from '../../components/constants/AppColor'
 import { AppFontFamily } from '../../components/constants/AppFonts'
@@ -29,7 +29,7 @@ export default function Wallet({ isLoading, closePopup, onPaymentPress, loader=f
 
                     {/* <View style={{ width: Dimensions.get('screen').width, height: Dimensions.get('window').height * .6, alignItems: 'center', justifyContent: 'center', paddingBottom: 10, marginTop: 50, borderRadius: 10 }}> */}
                     {/* <ImageBackground source={require('../../assets/paymentcardbg.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover', alignItems: 'center' }}> */}
-                    <Pressable onPress={closePopup} style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', position: 'absolute', right: 10, top: 5 }}>
+                    <Pressable onPress={closePopup} style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', position: 'absolute', right: 10, top: Platform.OS == 'ios' ? 40 : 5 }}>
                         <Image source={require('../../assets/close.png')} style={{ marginLeft: 0, width: 20, height: 20, resizeMode: 'contain' }} />
                     </Pressable>
                     <Surface elevation={4} style={{ padding: 0, width: '90%', height: 550, alignItems: 'center', borderRadius: 10, backgroundColor: AppColors.themesWhiteColor }}>

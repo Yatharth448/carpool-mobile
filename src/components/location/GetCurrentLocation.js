@@ -38,13 +38,13 @@ export const checkLocationPermission = async () => {
   try {
     const granted = await request(
       Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+        ? PERMISSIONS.IOS.LOCATION_ALWAYS
         : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
     );
 
+    console.log('Location permission = '+ granted);
     if (granted === 'granted') {
       Storage.saveItem(AppKeys.LOCATION_PERMISSION_KEY, 'yes')
-      console.log('Location permission granted');
       return true;
     } else {
       console.log('Location permission denied');

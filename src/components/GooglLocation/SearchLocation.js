@@ -11,6 +11,7 @@ import {
   Pressable,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Platform,
 } from 'react-native';
 import {AppKeys} from '../constants/AppKeys';
 import {AppColors} from '../constants/AppColor';
@@ -184,6 +185,7 @@ export default function SearchLocation({navigation, route}) {
       <View style={styles.container}>
         <View
           style={{
+            marginTop: Platform.OS == 'ios' ? 40: 0,
             height: 70,
             backgroundColor: AppColors.themesWhiteColor,
             width: '100%',

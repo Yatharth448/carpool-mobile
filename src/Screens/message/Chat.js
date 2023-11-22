@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Image, FlatList, Dimensions, TextInput, Pressable, StyleSheet, Linking } from 'react-native'
+import { View, Text, Image, FlatList, Dimensions, TextInput, Pressable, StyleSheet, Linking, Platform } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import moment from 'moment';
 import Toast from 'react-native-simple-toast'
@@ -104,7 +104,7 @@ export default class Chat extends Component {
 
     TopHeader() {
         return (
-            <View style={{ backgroundColor: AppColors.themesWhiteColor, height: 70, width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+            <View style={{ marginTop: Platform.OS == 'ios' ? 40 : 0, backgroundColor: AppColors.themesWhiteColor, height: 70, width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
                 <Pressable onPress={() => this.props.navigation.goBack()} style={{ width: '25%', height: 70, alignItems: 'flex-start', paddingLeft: 10, justifyContent: 'center' }}>
 
                     <Surface style={{ backgroundColor: AppColors.themesWhiteColor, width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }} elevation={4}>

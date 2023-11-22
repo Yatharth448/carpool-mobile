@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Pressable, Image } from "react-native";
+import { View, Text, Pressable, Image, Platform } from "react-native";
 import { AppColors } from "../constants/AppColor";
 import { Surface } from "react-native-paper";
 import { AppFontFamily } from "../constants/AppFonts";
@@ -9,7 +9,7 @@ export const HomeHeader = ({ isBack = true, close, text = '', isRight = false, r
     return (
 
 
-        <View style={{ marginTop: 10, height: 70, width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+        <View style={{ marginTop: Platform.OS == 'ios' ? 50 : 10, height: 70, width: '100%', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
             <Pressable onPress={close} style={{ width: '25%', height: 70, alignItems: 'flex-start', paddingLeft: 10, justifyContent: 'center' }}>
                 {
                     isBack ?
