@@ -11,6 +11,7 @@ import {
   ScrollView,
   TextInput,
   Linking,
+  Platform,
 } from 'react-native';
 import {Surface} from 'react-native-paper';
 import {AppColors} from '../../components/constants/AppColor';
@@ -37,6 +38,7 @@ import {ButtonPrimary} from '../../components/button/buttonPrimary';
 import {
   GetCurrentLocation,
   checkLocationPermission,
+  checkLocationPermissionIOS,
 } from '../../components/location/GetCurrentLocation';
 import MapComponent from '../../components/map/MapComponent';
 import {ButtonDanger} from '../../components/button/buttonDanger';
@@ -344,7 +346,7 @@ export default function StartRideCarpooler({navigation, route}) {
   };
 
   const startLocationWatch = () => {
-    checkLocationPermission();
+    Platform.OS == 'android' ?  checkLocationPermission() : checkLocationPermissionIOS();
     let watchId = Geolocation.watchPosition(
       data => {
         console.log('Sucess ', data);

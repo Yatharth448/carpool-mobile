@@ -15,12 +15,13 @@ import { AppKeys } from '../../components/constants/AppKeys';
 import { AppColors } from '../../components/constants/AppColor';
 import { connect } from 'react-redux';
 import { getProfileDataRequest } from '../../redux/actions/actions';
-import { getToken, configureNotification } from '../../Utils/PushNotification';
+import { getToken, configureNotification, requestUserPermission } from '../../Utils/PushNotification';
 import { pushNotificationPermission } from '../../Utils/RuntimePermission';
 import PushNotification from 'react-native-push-notification';
 import { CreateNotificationChannel } from '../../components/notifications/LocalNotification';
 import {
   checkLocationPermission,
+  checkLocationPermissionIOS,
   locationAlert,
 } from '../../components/location/GetCurrentLocation';
 
@@ -47,6 +48,21 @@ class SplashScreen extends Component {
     }
   }
   getSavedToken = async () => {
+
+
+
+    
+      console.log('request permission')
+      await requestUserPermission();
+      await getToken()
+ 
+
+    if (Platform.OS == 'android') {
+      pushNotificationPermission();
+      CreateNotificationChannel();
+    }
+
+
     let locationPermission;
     locationPermission = await Storage.getSavedItem(
       AppKeys.LOCATION_PERMISSION_KEY,
@@ -73,7 +89,7 @@ class SplashScreen extends Component {
           onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
         },
-        { text: 'ALLOW', onPress: async () => await checkLocationPermission() },
+        { text: 'ALLOW', onPress: async () => Platform.OS == 'android' ?  await checkLocationPermission() : await checkLocationPermissionIOS() },
       ],
       { cancelable: false },
     );
@@ -84,7 +100,7 @@ class SplashScreen extends Component {
     LogBox.ignoreAllLogs(); //Ignore all log notifications
     // SplashScreen.hide();
     //
-    getProfileDataRequest()
+    this.props.getProfileDataRequest()
     await this.startTimer();
   }
   async startTimer() {

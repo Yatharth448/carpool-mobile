@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, TextInput, Text, Dimensions} from 'react-native';
+import {View, TextInput, Text, Dimensions, Platform} from 'react-native';
 import {AppColors} from '../../components/constants/AppColor';
 import {Header} from '../../components/commomheader/CommonHeader';
 import MapComponent from '../../components/map/MapComponent';
@@ -14,6 +14,7 @@ import Toast from 'react-native-simple-toast';
 import {
   GetCurrentLocation,
   checkLocationPermission,
+  checkLocationPermissionIOS,
 } from '../../components/location/GetCurrentLocation';
 const ratingText = {
   1: 'Poor',
@@ -38,7 +39,7 @@ function SendFeedback({
   const {userId, userName, userImage} = route.params;
   console.log('data ', userId, userName, userImage);
   const reloadMap = async () => {
-    const perm = await checkLocationPermission();
+    const perm = Platform.OS == 'android' ?  await checkLocationPermission() : await checkLocationPermissionIOS();
 
     if (perm) {
       const loc = await GetCurrentLocation();

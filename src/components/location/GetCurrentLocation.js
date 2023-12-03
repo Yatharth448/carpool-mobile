@@ -36,11 +36,26 @@ export const GetCurrentLocation = async () => {
 
 export const checkLocationPermission = async () => {
   try {
-    const granted = await request(
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.LOCATION_ALWAYS
-        : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-    );
+    const granted = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+
+    console.log('Location permission = '+ granted);
+    if (granted === 'granted') {
+      Storage.saveItem(AppKeys.LOCATION_PERMISSION_KEY, 'yes')
+      return true;
+    } else {
+      console.log('Location permission denied');
+      return false;
+    }
+  } catch (error) {
+    console.error('Error requesting location permission:', error);
+    return false;
+  }
+};
+
+
+export const checkLocationPermissionIOS = async () => {
+  try {
+    const granted = await Geolocation.requestAuthorization('always');
 
     console.log('Location permission = '+ granted);
     if (granted === 'granted') {

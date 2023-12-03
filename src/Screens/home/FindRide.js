@@ -32,6 +32,7 @@ import {
 import {
   GetCurrentLocation,
   checkLocationPermission,
+  checkLocationPermissionIOS,
   getCurrentLocationFromLatLong,
 } from '../../components/location/GetCurrentLocation';
 import {
@@ -197,8 +198,8 @@ class FindRide extends Component {
         await this.getSavedVehicles();
       }
 
-      console.log(await checkLocationPermission(), 'location permission');
-      if (await checkLocationPermission()) {
+      console.log(Platform.OS == 'android' ?  await checkLocationPermission() : await checkLocationPermissionIOS(), 'location permission');
+      if (Platform.OS == 'android' ?  await checkLocationPermission() : await checkLocationPermissionIOS()) {
         if (this.state.pickupLocation == '') {
           this.setState({
             pickupLocation: await getCurrentLocationFromLatLong(
@@ -325,7 +326,7 @@ class FindRide extends Component {
   }
 
   reloadMap = async () => {
-    const perm = await checkLocationPermission();
+    const perm = Platform.OS == 'android' ?  await checkLocationPermission() : await checkLocationPermissionIOS();
 
     if (perm) {
       const loc = await GetCurrentLocation();

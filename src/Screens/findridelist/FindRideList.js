@@ -17,12 +17,14 @@ import Wallet from '../wallet/Wallet';
 import { hitApiToAddMoneyToWallet, hitApiToGetPaymentURL } from '../payment/PaymentModal';
 import { createOpenLink } from 'react-native-open-maps';
 import { GetCurrentLocation } from '../../components/location/GetCurrentLocation';
+import CouponPopup from '../../components/couponPopup/CouponPopup';
+import { hitApiToGetWalletAndNotification } from '../home/RideModal';
 export default function FindRideList({ navigation, route }) {
 
 
     const [rideList, setRideList] = React.useState([])
     const { data, seat, pick, drop } = route.params;
-    const [selectedIndex, setIndex] = React.useState('')
+    const [walletBal, setWalletBal] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(false)
     const [startLoader, setStartLoader] = React.useState(false)
     const [openWallet, setOpenWallet] = React.useState(false)
@@ -32,7 +34,7 @@ export default function FindRideList({ navigation, route }) {
 
         (async () => {
             console.log(data, 'find ride')
-
+            await getWalletBalance()
             //Put your logic here
             // const result = await hitApiToGetRideList(pick, drop, date, seat);
             // console.log("ride list", result);
@@ -58,6 +60,16 @@ export default function FindRideList({ navigation, route }) {
     }, []);
 
 
+    const getWalletBalance = async () => {
+        const result = await hitApiToGetWalletAndNotification()
+        if (result.status) {
+            setWalletBal(result.data?.wallet ?? 0)
+        }
+        else {
+
+        }
+    }
+
     const setSelectedIndex = (i) => {
         setIndex(i)
 
@@ -65,7 +77,7 @@ export default function FindRideList({ navigation, route }) {
 
 
     const requestRide = async (item, itemIndex) => {
-        // setStartLoader(true)
+
         const updatedArray = rideList.map((obj, index) =>
             index === itemIndex ? { ...obj, loader: true } : obj
         );
@@ -90,7 +102,7 @@ export default function FindRideList({ navigation, route }) {
             );
             updatedArra.reverse()
             setRideList(updatedArra);
-            // setStartLoader(false)
+
 
             showNotification(
                 {
@@ -107,9 +119,9 @@ export default function FindRideList({ navigation, route }) {
             updatedArra.reverse()
             setRideList(updatedArra);
             setStartLoader(false)
-            // Toast.show(result.message ?? result.error ?? 'Something went wrong');
+
             if (result.message == "Please add money to wallet") {
-                // Alert.alert(result.message)
+
                 setOpenWallet(true)
             }
 
@@ -286,6 +298,7 @@ export default function FindRideList({ navigation, route }) {
                                                     textStyle={{ fontFamily: AppFontFamily.PopinsRegular, fontSize: 12 }}
                                                     text={'Request Ride'}
                                                     onPress={() => startLoader ? console.log('empty') : requestRide(item, index)}
+                                                    // onPress={() => setOpenWallet(true)}
                                                     loader={item.loader}
                                                 />
                                             </View>
@@ -341,6 +354,15 @@ export default function FindRideList({ navigation, route }) {
                 loader={walletLoader}
 
             />
+
+            {/* <CouponPopup
+                walletBal={walletBal}
+                isLoading={openWallet}
+                closePopup={() => setOpenWallet(false)}
+                onPaymentPress={payPressed}
+                loader={walletLoader}
+
+            /> */}
 
 
         </View>

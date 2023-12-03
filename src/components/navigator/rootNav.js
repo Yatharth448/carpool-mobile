@@ -1,19 +1,19 @@
-import React, {useEffect} from 'react';
-import {StatusBar, View, Image, BlurView, StyleSheet} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import React, { useEffect } from 'react';
+import { StatusBar, View, Image, BlurView, StyleSheet, Platform } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../../Screens/login/LoginScreen';
 import KycScreen from '../../Screens/kyc/KycScreen';
 import AcccountSetupScreen from '../../Screens/account/AcccountSetupScreen';
 import OTPScreen from '../../Screens/otp/OTPScreen';
 import FindRideList from '../../Screens/findridelist/FindRideList';
-import {AppColors} from '../constants/AppColor';
+import { AppColors } from '../constants/AppColor';
 import MyRide from '../../Screens/myRide/MyRide';
 import MapRoutes from '../../Screens/routes/MapRoutes';
 import MessageRoom from '../../Screens/message/MessageRoom';
 import FindRide from '../../Screens/home/FindRide';
 import ProfileScreen from '../../Screens/profile/ProfileScreen';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import SplashScreen from '../../Screens/splash/SplashScreen';
 import Chat from '../../Screens/message/Chat';
 import SignupScreen from '../../Screens/signup/signup';
@@ -38,10 +38,10 @@ import Wallet from '../../Screens/wallet/Wallet';
 import RideCotravaller from '../../Screens/ridecotravaller/RideCotravaller';
 import PaymentHistory from '../../Screens/payment/PaymentHistory';
 import SendFeedback from '../../Screens/feeddback/SendFeedback';
-import {getToken, configureNotification} from '../../Utils/PushNotification';
-import {pushNotificationPermission} from '../../Utils/RuntimePermission';
+import { configureNotification, getToken, requestUserPermission } from '../../Utils/PushNotification';
+import { pushNotificationPermission } from '../../Utils/RuntimePermission';
 import PushNotification from 'react-native-push-notification';
-import {CreateNotificationChannel} from '../../components/notifications/LocalNotification';
+import { CreateNotificationChannel } from '../../components/notifications/LocalNotification';
 import PayGateway from '../payment/PayGateway';
 import PaymentSuccess from '../../Screens/payment/PaymentSuccess';
 import PaymentFailure from '../../Screens/payment/PaymentFailure';
@@ -57,11 +57,11 @@ function RideDrawer() {
     <Drawer.Navigator
       drawerContent={props => <DrawerScreen {...props} />}
       initialRouteName="FindRide"
-      screenOptions={{headerShown: false, swipeEnabled: false}}>
+      screenOptions={{ headerShown: false, swipeEnabled: false }}>
       <Drawer.Screen
         name="FindRide"
         component={FindRide}
-        options={{swipeEnabled: false}}
+        options={{ swipeEnabled: false }}
       />
 
       <Drawer.Screen
@@ -83,14 +83,21 @@ function RideDrawer() {
 
 export default function RootNav() {
   useEffect(() => {
-    getToken();
-    let tempVar = configureNotification();
+    
+    // let tempVar
+    (async () => {
+      console.log('request permission')
+      await requestUserPermission();
+      await getToken()
+    })
 
-    pushNotificationPermission();
-    CreateNotificationChannel();
-    console.log('listn variable ', tempVar, typeof tempVar);
+    if (Platform.OS == 'android') {
+      pushNotificationPermission();
+      CreateNotificationChannel();
+    }
+    // console.log('listn variable ', tempVar, typeof tempVar);
     return () => {
-      tempVar();
+      // tempVar();
     };
   }, []);
   return (
@@ -102,16 +109,16 @@ export default function RootNav() {
 
       <Stack.Navigator
         initialRouteName="SplashScreen"
-        screenOptions={{headerShown: false}}>
+        screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
-          options={{animationEnabled: false}}
+          options={{ animationEnabled: false }}
         />
         <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
-          options={{animationEnabled: false}}
+          options={{ animationEnabled: false }}
         />
         <Stack.Screen name="OTPScreen" component={OTPScreen} />
         <Stack.Screen
@@ -156,7 +163,7 @@ export default function RootNav() {
         <Stack.Screen
           name="RideDrawer"
           component={RideDrawer}
-          options={{animationEnabled: false, swipeEnabled: false}}
+          options={{ animationEnabled: false, swipeEnabled: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

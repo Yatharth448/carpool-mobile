@@ -81,7 +81,7 @@ export default function Wallet({ isLoading, closePopup, onPaymentPress, loader=f
                             {/* <Pressable> */}
 
                             <TextInput
-                                style={{ paddingLeft: 10, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themePrimaryColor }}
+                                style={{ paddingLeft: 10, height: 40, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themePrimaryColor }}
                                 placeholder={'Enter amount'}
                                 placeholderTextColor={AppColors.themeTextGrayColor}
                                 value={price}

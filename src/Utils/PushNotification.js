@@ -24,6 +24,7 @@ export const getToken = async () => {
 export const requestUserPermission = async () => {
   const permission = await messaging().requestPermission();
   if (permission) {
+    // await getToken()
     console.log('Permission granted');
   } else {
     console.log('Permission denied');

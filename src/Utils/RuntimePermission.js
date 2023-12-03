@@ -72,15 +72,7 @@ export const pushNotificationPermission = async () => {
 
       // Alert.alert("Notification Permission Granted.");
     }
-    else {
-
-      const permission = await request(Platform.OS == 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
-      console.log(permission, 'push permission')
-      if (permission == 'blocked' || permission == 'unavailable' || permission == 'denied') {
-        return false
-      }
-      else return true
-    }
+    
   } catch (err) {
     console.warn(err)
   }
