@@ -43,7 +43,7 @@ export const configureNotification = () => {
       if (notification.title != undefined && notification.message != undefined)
         PushNotification.localNotification(notification);
 
-      // notification.finish(PushNotificationIOS.FetchResult.NoData);
+      notification.finish(PushNotificationIOS.FetchResult.NoData);
     },
 
     // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)

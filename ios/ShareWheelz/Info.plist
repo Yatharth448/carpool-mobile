@@ -42,15 +42,13 @@
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires acess to camera for updating profile picture</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Description</string>
-	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Will you allow this app to always know your location?</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Do you allow this app to know your current location?</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires access to the photo library.</string>
-	<key>NSUserNotificationsUsageDescription</key>
-	<string>ShareWheelz would like to send you notification</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Play when notifications received</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
