@@ -452,6 +452,7 @@ export default function FindRideList({navigation, route}) {
                       style={{
                         paddingTop: 8,
                         paddingRight: 10,
+                        paddingBottom: 0,
                         fontFamily: AppFontFamily.PopinsBold,
                         fontSize: 16,
                         color: AppColors.themeText2Color,
@@ -459,26 +460,12 @@ export default function FindRideList({navigation, route}) {
                       {AppTexts.Rupee_Symbol +
                         Number(item.request_charge).toFixed(0)}
                     </Text>
-                    {item.coupon_name ? (
-                      <Text
-                        style={{
-                          paddingTop: 0,
-                          paddingRight: 10,
-                          fontFamily: AppFontFamily.PopinsSemiBold,
-                          fontSize: 12,
-                          color: AppColors.themeGreenColor,
-                        }}>
-                        {AppTexts.Rupee_Symbol +
-                          Number(item.coupon_value).toFixed(0)}{' '}
-                        off with {item.coupon_name}
-                      </Text>
-                    ) : (
-                      ''
-                    )}
+
                     <Text
                       style={{
                         padding: 10,
                         paddingTop: 5,
+                        paddingLeft: 0,
                         paddingBottom: 0,
                         fontFamily: AppFontFamily.PopinsRegular,
                         fontSize: 13,
@@ -488,7 +475,24 @@ export default function FindRideList({navigation, route}) {
                     </Text>
                   </View>
                 </View>
-
+                {item.coupon_name ? (
+                  <Text
+                    style={{
+                      textAlign: 'right',
+                      paddingTop: 0,
+                      paddingRight: 10,
+                      fontFamily: AppFontFamily.PopinsSemiBold,
+                      fontSize: 12,
+                      color: AppColors.themeGreenColor,
+                    }}>
+                    Get{' '}
+                    {AppTexts.Rupee_Symbol +
+                      Number(item.coupon_value).toFixed(0)}{' '}
+                    off with {item.coupon_name}
+                  </Text>
+                ) : (
+                  ''
+                )}
                 <View
                   style={{
                     width: '100%',
