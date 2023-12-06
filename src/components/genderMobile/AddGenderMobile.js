@@ -10,7 +10,7 @@ import { AppFontFamily } from '../../components/constants/AppFonts'
 import { FindRideFilterView } from '../../Screens/findridelist/FindRideComp'
 import { CommonActions } from '@react-navigation/native'
 import { ButtonPrimary } from '../button/buttonPrimary'
-import { hitApiForGoogleSignUp } from '../../Screens/signup/SignupModal'
+import { hitApiForAppleSignUp, hitApiForGoogleSignUp } from '../../Screens/signup/SignupModal'
 
 
 export default function AddGenderMobile({ navigation, route }) {
@@ -20,7 +20,7 @@ export default function AddGenderMobile({ navigation, route }) {
     const [mobile, setMobile] = React.useState("");
     const [selectedIndex, setIndex] = React.useState(0)
     const [isLoading, setIsLoading] = React.useState(false)
-    const { email, familyName, givenName, id, photo } = route.params;
+    const { email, familyName, givenName, id, photo, type } = route.params;
 
     useEffect(() => {
 
@@ -55,9 +55,15 @@ export default function AddGenderMobile({ navigation, route }) {
         }
         else {
 
-            console.log(email, familyName, givenName, id, photo, deviceToken, mobile, gender, 'google sign up')
+            console.log(email, familyName, givenName, id, photo, deviceToken, mobile, gender, type, 'sign up data')
             const deviceToken = await Storage.getSavedItem('fcmToken')
-            const result = await hitApiForGoogleSignUp(email, familyName, givenName, id, photo, deviceToken, mobile, gender)
+            let result;
+            if (type == 'google') {
+                result = await hitApiForGoogleSignUp(email, familyName, givenName, id, photo, deviceToken, mobile, gender)
+            }
+            else{
+                result = await hitApiForAppleSignUp(email, familyName, givenName, id, photo, deviceToken, mobile, gender)
+            }
             console.log(result, 'google signup Respnse')
 
             if (result.status) {

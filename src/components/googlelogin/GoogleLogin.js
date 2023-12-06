@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { BackHandler, Image, Pressable, Text, View } from 'react-native'
+import { BackHandler, Image, Platform, Pressable, Text, View } from 'react-native'
 import {
     GoogleSignin,
     statusCodes,
@@ -15,7 +15,7 @@ export function GoogleLogin({ userData, startLoader, isLogin }) {
         GoogleSignin.configure({
             scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
             webClientId:
-                '330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+                Platform.OS == 'android' ? '330513389777-567cdgj32v08pt2ojmoa9iogn416kh40.apps.googleusercontent.com' : '330513389777-aducc5b5g09b5ftttsa2s760a85u9lcc.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
             offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
         });
 

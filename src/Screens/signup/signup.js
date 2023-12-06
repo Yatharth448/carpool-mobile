@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Image, TouchableOpacity } from 'react-native'
+import { Text, View, Image, TouchableOpacity, Platform } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import Toast from 'react-native-simple-toast'
 import { InputView } from '../../components/Input/InputView'
@@ -10,6 +10,7 @@ import { hitApiForSignUp } from './SignupModal'
 import { FindRideFilterView } from '../findridelist/FindRideComp'
 import CommonLoaders from '../../components/loader/Loader'
 import { GoogleLogin } from '../../components/googlelogin/GoogleLogin'
+import AppleLogin from '../../components/applelogin/AppleLogin'
 
 
 export default function SignupScreen({ navigation }) {
@@ -28,6 +29,42 @@ export default function SignupScreen({ navigation }) {
 
     const startLoader = (start) => {
         setIsLoadingGoogle(start)
+    }
+
+    const appleData = (userInfo) => {
+        console.log(userInfo, 'apple')
+        setIsLoadingGoogle(true)
+        if (userInfo) {
+            userAppleSignup(userInfo)
+
+        }
+        else {
+            console.log(userInfo, 'apple error')
+        }
+        setIsLoadingGoogle(false)
+    }
+
+
+    const userAppleSignup = async (userInfo) => {
+
+        if (userInfo) {
+
+            if (!userInfo?.gender || !userInfo?.mobile) {
+                navigation.navigate('AddGenderMobile', { "email": userInfo?.email, 'familyName': userInfo?.familyName, 'givenName': userInfo?.givenName, 'id': userInfo?.id, 'photo': userInfo?.photo, "type": 'apple' })
+            }
+            else {
+
+                navigation.navigate('KycScreen')
+            }
+
+
+        }
+        else {
+
+            Toast.show(result.message);
+        }
+        setIsLoadingGoogle(false)
+
     }
 
     const googleData = (userInfo) => {
@@ -49,7 +86,7 @@ export default function SignupScreen({ navigation }) {
         if (userInfo) {
 
             if (!userInfo?.gender || !userInfo?.mobile) {
-                navigation.navigate('AddGenderMobile', { "email": userInfo?.email, 'familyName': userInfo?.familyName, 'givenName': userInfo?.givenName, 'id': userInfo?.id, 'photo': userInfo?.photo })
+                navigation.navigate('AddGenderMobile', { "email": userInfo?.email, 'familyName': userInfo?.familyName, 'givenName': userInfo?.givenName, 'id': userInfo?.id, 'photo': userInfo?.photo, "type": 'google' })
             }
             else {
 
@@ -149,7 +186,7 @@ export default function SignupScreen({ navigation }) {
                 <View style={{ width: '100%', height: 80, marginTop: 30 }}>
                     <Image source={require('../../assets/logo.jpg')} style={{ marginLeft: 10, width: 200, height: 100, resizeMode: 'contain' }} />
                 </View>
-
+                {Platform.OS == 'ios' ? <AppleLogin userData={appleData} startLoader={startLoader} isLogin={false} /> : null}
                 <GoogleLogin userData={googleData} startLoader={startLoader} isLogin={false} />
 
                 <View style={{ width: '100%', marginTop: 20 }}>

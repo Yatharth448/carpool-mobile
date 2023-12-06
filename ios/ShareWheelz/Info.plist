@@ -39,16 +39,27 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>This app requires acess to camera for updating profile picture</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Will you allow this app to always know your location?</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Do you allow this app to know your current location?</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.330513389777-aducc5b5g09b5ftttsa2s760a85u9lcc</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Play when notifications received</string>
+	<key>NSCameraUsageDescription</key>
+	<string>ShareWheelz requires acess to camera for updating profile picture</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>ShareWheelz app collects location data to track carpooler location even when the app is closed or not in use, to help better route allocation for nearby pickup points.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>ShareWheelz app collects location data to track carpooler location even when the app is closed or not in use, to help better route allocation for nearby pickup points.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>ShareWheelz app collects location data to track carpooler location even when the app is closed or not in use, to help better route allocation for nearby pickup points.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>ShareWheelz requires acess to photos for updating profile picture</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -91,6 +102,7 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

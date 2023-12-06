@@ -85,16 +85,16 @@ export default function RootNav() {
   useEffect(() => {
     
     // let tempVar
-    (async () => {
-      console.log('request permission')
-      await requestUserPermission();
-      await getToken()
-    })
+    // (async () => {
+    //   console.log('request permission')
+    //   await requestUserPermission();
+    //   await getToken()
+    // })
 
-    if (Platform.OS == 'android') {
-      pushNotificationPermission();
-      CreateNotificationChannel();
-    }
+    // if (Platform.OS == 'android') {
+    //   pushNotificationPermission();
+    //   CreateNotificationChannel();
+    // }
     // console.log('listn variable ', tempVar, typeof tempVar);
     return () => {
       // tempVar();

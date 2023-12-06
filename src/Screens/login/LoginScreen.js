@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import { Text, View, Image, TouchableOpacity, Pressable, BackHandler } from 'react-native'
+import { Text, View, Image, TouchableOpacity, Pressable, BackHandler, Platform } from 'react-native'
 import { AppColors } from '../../components/constants/AppColor'
 import Toast from 'react-native-simple-toast'
-import { hitApiForGoogleLogin, hitApiForLogin } from './loginModal'
+import { hitApiForAppleLogin, hitApiForGoogleLogin, hitApiForLogin } from './loginModal'
 import Storage from '../../components/localStorage/storage'
 import { AppKeys } from '../../components/constants/AppKeys'
 import { InputView } from '../../components/Input/InputView'
@@ -11,7 +11,9 @@ import { AppFontFamily } from '../../components/constants/AppFonts'
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import CommonLoaders from '../../components/loader/Loader'
 import { GoogleLogin } from '../../components/googlelogin/GoogleLogin'
-
+import { AppleButton } from '@invertase/react-native-apple-authentication';
+import { appleAuth } from '@invertase/react-native-apple-authentication';
+import AppleLogin from '../../components/applelogin/AppleLogin'
 
 export default function LoginScreen({ navigation }) {
 
@@ -31,6 +33,10 @@ export default function LoginScreen({ navigation }) {
         return () => {
             // clear/remove event listener
             BackHandler.removeEventListener("hardwareBackPress", backActionHandler);
+            appleAuth.Operation.LOGOUT
+            appleAuth.onCredentialRevoked(async () => {
+                console.warn('If this function executes, User Credentials have been Revoked');
+            })
         }
 
     }, [backActionHandler]);
@@ -49,15 +55,16 @@ export default function LoginScreen({ navigation }) {
         setIsLoadingGoogle(true)
         if (userInfo?.user) {
             userGoogleLogin(userInfo)
-           
+
         }
         else {
             console.log(userInfo, 'google error')
+            setIsLoadingGoogle(false)
         }
-       
+
     }
 
-
+    
     const userGoogleLogin = async (userInfo) => {
 
         const deviceToken = await Storage.getSavedItem('fcmToken')
@@ -93,9 +100,9 @@ export default function LoginScreen({ navigation }) {
     const userGoogleSignup = async (userInfo) => {
 
         if (userInfo) {
-          
+
             if (!userInfo?.gender || !userInfo?.mobile) {
-                navigation.navigate('AddGenderMobile', { "email": userInfo?.email, 'familyName': userInfo?.familyName, 'givenName': userInfo?.givenName, 'id': userInfo?.id, 'photo': userInfo?.photo })
+                navigation.navigate('AddGenderMobile', { "email": userInfo?.email, 'familyName': userInfo?.familyName, 'givenName': userInfo?.givenName, 'id': userInfo?.id, 'photo': userInfo?.photo, type: 'google' })
             }
             else {
 
@@ -109,6 +116,75 @@ export default function LoginScreen({ navigation }) {
         setIsLoadingGoogle(false)
 
     }
+
+
+    const appleData = (userInfo) => {
+        console.log(userInfo, 'apple')
+        setIsLoadingGoogle(true)
+        if (userInfo) {
+            userAppleLogin(userInfo)
+
+        }
+        else {
+            console.log(userInfo, 'apple error')
+            setIsLoadingGoogle(false)
+        }
+
+    }
+
+
+    const userAppleLogin = async (userInfo) => {
+
+        const deviceToken = await Storage.getSavedItem('fcmToken')
+        const result = await hitApiForAppleLogin(userInfo.email, userInfo.id, deviceToken)
+        console.log(result, 'login Respnse')
+        if (result.status) {
+            Storage.saveItem(AppKeys.SECRET_KEY, result.secret)
+            if (result?.kyc_status == 1 || result?.kyc_status == 2) {
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'RideDrawer' }],
+                })
+            }
+            else {
+                navigation.navigate('KycScreen')
+
+            }
+
+        }
+        else {
+            if (result.message == 'User Doest not exist with the given email') {
+                userAppleSignup(userInfo)
+            }
+            else {
+
+                Toast.show(result.message ?? "");
+            }
+        }
+        setIsLoadingGoogle(false)
+    }
+
+
+    const userAppleSignup = async (userInfo) => {
+
+        if (userInfo) {
+
+            if (!userInfo?.gender || !userInfo?.mobile) {
+                navigation.navigate('AddGenderMobile', { "email": userInfo?.email, 'familyName': userInfo?.familyName, 'givenName': userInfo?.givenName, 'id': userInfo?.id, 'photo': userInfo?.photo, type: 'apple' })
+            }
+            else {
+
+                navigation.navigate('KycScreen')
+            }
+        }
+        else {
+
+            Toast.show(result.message ?? "");
+        }
+        setIsLoadingGoogle(false)
+
+    }
+
 
     const userLogin = async () => {
         setIsLoading(true)
@@ -175,8 +251,11 @@ export default function LoginScreen({ navigation }) {
             </View>
 
             <View style={{ width: '100%', alignItems: 'center' }}>
+                {Platform.OS == 'ios' ?
+                    <AppleLogin userData={appleData} startLoader={startLoader} isLogin={true} /> : null
+                }
 
-                <GoogleLogin userData={googleData} startLoader={startLoader} isLogin={true}/>
+                <GoogleLogin userData={googleData} startLoader={startLoader} isLogin={true} />
 
                 <View style={{ width: '100%', marginTop: 40 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>

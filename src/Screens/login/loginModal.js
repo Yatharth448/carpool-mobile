@@ -39,3 +39,23 @@ export const hitApiForGoogleLogin = async (email, id, token) => {
     }
 
 }
+
+export const hitApiForAppleLogin = async (email, id, token) => {
+
+    try {
+        const loginData = await connection.postAPI('/api/auth/login/apple', { 'email': email, 'id': id, 'device_token': token })
+
+        if (loginData.success) {
+            return loginData
+        }
+        else {
+            return loginData
+        }
+
+    } catch (error) {
+
+        console.error('login modal', error);
+        throw error
+    }
+
+}

@@ -4,6 +4,7 @@ import { SetupKeyboard } from './src/components/commonfunction/CommonFunctions'
 // import FlashMessage from "react-native-flash-message";
 
 export default function App() {
+
   return (
     <>
     <SetupKeyboard/>
