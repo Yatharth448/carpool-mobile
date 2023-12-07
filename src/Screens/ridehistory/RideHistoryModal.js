@@ -122,10 +122,10 @@ export const hitApiToRejectOfferedRide = async (rideId, userId, action) => {
 
 
 
-export const hitApiToAcceptRequestedRide = async (rideId, userId, riderId) => {
+export const hitApiToAcceptRequestedRide = async (rideId, userId, riderId, coupon) => {
 
     try {
-        const result = await connection.postAPI('/api/ride/traveller/request/action', {'rideId': rideId, 'userRequestId': userId, 'riderId': riderId})
+        const result = await connection.postAPI('/api/ride/traveller/request/action', {'rideId': rideId, 'userRequestId': userId, 'riderId': riderId, 'coupon': coupon})
 
         if (result.success) {
             return result
@@ -186,6 +186,26 @@ export const hitApiToCancelRideForCustomer = async (rideId) => {
 
     try {
         const result = await connection.postAPI('/api/ride/cotraveller/cancel', {'rideId': rideId})
+
+        if (result.success) {
+            return result
+        }
+        else {
+            return result
+        }
+
+    } catch (error) {
+
+        console.error('request ride list', error);
+        throw error
+    }
+
+}
+
+export const hitApiToApplyCoupon = async (coupon, rideId, seat) => {
+
+    try {
+        const result = await connection.postAPI('/api/ride/coupon/check', { 'coupon': coupon,'rideId': rideId, 'seat': seat})
 
         if (result.success) {
             return result

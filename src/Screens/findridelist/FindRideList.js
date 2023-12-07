@@ -39,7 +39,7 @@ import {hitApiToGetWalletAndNotification} from '../home/RideModal';
 export default function FindRideList({navigation, route}) {
   const [rideList, setRideList] = React.useState([]);
   const {data, seat, pick, drop} = route.params;
-  const [walletBal, setWalletBal] = React.useState('');
+
   const [isLoading, setIsLoading] = React.useState(false);
   const [startLoader, setStartLoader] = React.useState(false);
   const [openWallet, setOpenWallet] = React.useState(false);
@@ -48,7 +48,6 @@ export default function FindRideList({navigation, route}) {
   useEffect(() => {
     (async () => {
       console.log(data, 'find ride');
-      await getWalletBalance();
       //Put your logic here
       // const result = await hitApiToGetRideList(pick, drop, date, seat);
       // console.log("ride list", result);
@@ -71,13 +70,6 @@ export default function FindRideList({navigation, route}) {
     };
   }, []);
 
-  const getWalletBalance = async () => {
-    const result = await hitApiToGetWalletAndNotification();
-    if (result.status) {
-      setWalletBal(result.data?.wallet ?? 0);
-    } else {
-    }
-  };
 
   const setSelectedIndex = i => {
     setIndex(i);
@@ -643,13 +635,7 @@ export default function FindRideList({navigation, route}) {
         loader={walletLoader}
       />
 
-      <CouponPopup
-        walletBal={walletBal}
-        isLoading={openWallet}
-        closePopup={() => setOpenWallet(false)}
-        onPaymentPress={payPressed}
-        loader={walletLoader}
-      />
+     
     </View>
   );
 }

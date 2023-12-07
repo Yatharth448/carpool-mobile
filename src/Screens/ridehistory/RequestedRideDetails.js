@@ -12,6 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import {
+  hitApiToApplyCoupon,
   hitApiToCancelRideForCustomer,
   hitApiToGetOfferedRideDetails,
   hitApiToGetRequestedRideDetails,
@@ -33,6 +34,8 @@ import { RideCostView } from './RideHistoryComponent';
 import { CalculateTimeFromMilies } from '../../components/commonfunction/CommonFunctions';
 import { ImageLoader } from '../../components/imageloader/ImageLoader';
 import Toast from 'react-native-simple-toast';
+import CouponPopup from '../../components/couponPopup/CouponPopup';
+import { hitApiToGetWalletAndNotification } from '../home/RideModal';
 
 export default function RequestedRideDetails({ navigation, route }) {
   const flatListRef = useRef(null);
@@ -40,10 +43,19 @@ export default function RequestedRideDetails({ navigation, route }) {
   const [acceptLoader, setAcceptLoader] = React.useState(false);
   const [rejectLoader, setRejectLoader] = React.useState(false);
   const [cancelLoader, setCancelLoader] = React.useState(false);
+  const [applyCoupon, setApplyCoupon] = React.useState(false);
   const [userData, setUserData] = React.useState({});
   const [cotravellerArray, setCotravellerArray] = React.useState([]);
   const [rideData, setRideData] = React.useState('');
   const [isCancel, setIsCancel] = React.useState('');
+  const [walletBal, setWalletBal] = React.useState('');
+  const [openWallet, setOpenWallet] = React.useState(false);
+  const [walletLoader, setWalletLoader] = React.useState(false);
+  const [applyLoader, setApplyLoader] = React.useState(false);
+  const [couponAmount, setCouponAmount] = React.useState(0);
+  const [coupon, setCoupon] = React.useState('');
+  const [couponError, setCouponError] = React.useState('');
+  const [showDel, setShowdel] = React.useState(false);
   const { id, from } = route.params;
 
   useEffect(() => {
@@ -52,6 +64,7 @@ export default function RequestedRideDetails({ navigation, route }) {
 
       _unsubscribe = navigation.addListener('focus', async () => {
         getRideDetail();
+        await getWalletBalance()
       });
     })();
 
@@ -76,6 +89,17 @@ export default function RequestedRideDetails({ navigation, route }) {
       console.log(result.data, 'data');
     }
   };
+
+  const code = (text) => {
+    // console.log(text?.length, 'text')
+    if (text?.length > 1) {
+      setShowdel(true)
+    }
+    else {
+      setShowdel(false)
+    }
+    setCoupon(text)
+  }
 
   const CustomerInfoView = ({ item }) => {
     return (
@@ -109,13 +133,53 @@ export default function RequestedRideDetails({ navigation, route }) {
     );
   };
 
-  const acceptRide = async ind => {
+  const removeCoupon = () => {
+    setCouponAmount(0)
+    setCoupon('')
+    setShowdel(false)
+    setCouponError('')
+
+  }
+
+  const confirmRide = async () => {
+    acceptRide()
+  }
+
+  const getWalletBalance = async () => {
+    const result = await hitApiToGetWalletAndNotification();
+    if (result.status) {
+      setWalletBal(result.data?.wallet ?? 0);
+    } else {
+    }
+  };
+
+  const closePopupBtn = () => {
+    setOpenWallet(false)
+    setCouponAmount(0)
+  }
+
+  const applyCouponBtnTap = async () => {
+    setApplyLoader(true)
+    const result = await hitApiToApplyCoupon(coupon, userData[0].ride_id, userData[0].seat)
+    console.log(result, 'coupon res')
+    if (result.status) {
+      setCouponAmount(result.data)
+    }
+    else {
+      setCouponError(result.message ?? '')
+    }
+    setApplyLoader(false)
+  }
+
+  const acceptRide = async () => {
     console.log(userData[0], 'userData');
+    setWalletLoader(true)
     setAcceptLoader(true);
     const result = await hitApiToAcceptRequestedRide(
       userData[0].ride_id,
       userData[0].user_id,
       rideData[0].journey_published_by,
+      coupon
     );
     // console.log(result, 'vvv')
     if (result.status) {
@@ -125,6 +189,7 @@ export default function RequestedRideDetails({ navigation, route }) {
 
       // console.log(updatedArray, 'arr')
       setCotravellerArray(updatedArray);
+      setOpenWallet(false)
 
       // navigation.goBack()
     } else {
@@ -134,6 +199,7 @@ export default function RequestedRideDetails({ navigation, route }) {
     }
     await getRideDetail();
     setAcceptLoader(false);
+    setWalletLoader(false)
     // getRideDetail()
   };
 
@@ -165,6 +231,7 @@ export default function RequestedRideDetails({ navigation, route }) {
 
     // getRideDetail()
   };
+
 
   const ViewRideRequestBtn = ({ }) => {
     return (
@@ -998,7 +1065,7 @@ export default function RequestedRideDetails({ navigation, route }) {
                 }}
                 text={'Accept'}
                 onPress={() =>
-                  acceptLoader ? console.log('already clicked') : acceptRide()
+                  acceptLoader ? console.log('already clicked') : setOpenWallet(true)
                 }
                 loader={acceptLoader}
               />
@@ -1035,7 +1102,22 @@ export default function RequestedRideDetails({ navigation, route }) {
       ) : (
         CommonLoaders.RideDetailLoader()
       )}
-      {/* </ScrollView> */}
+      <CouponPopup
+        walletBal={walletBal}
+        isLoading={openWallet}
+        closePopup={() => closePopupBtn()}
+        onPaymentPress={confirmRide}
+        applyCoupon={applyCouponBtnTap}
+        couponCode={(text) => code(text)}
+        loader={walletLoader}
+        rideCost={rideData[0]?.price ?? 0}
+        couponAmount={couponAmount}
+        removeCoupon={removeCoupon}
+        showDel={showDel}
+        coupon={coupon}
+        couponError={couponError}
+        applyLoader={applyLoader}
+      />
     </View>
   );
 }

@@ -6,15 +6,14 @@ import { AppFontFamily } from '../../components/constants/AppFonts'
 import { ButtonPrimary } from '../../components/button/buttonPrimary'
 import { AppTexts } from '../constants/AppTexts'
 
-export default function CouponPopup({ walletBal, isLoading, closePopup, onPaymentPress, loader = false }) {
+export default function CouponPopup({ walletBal, isLoading, closePopup, onPaymentPress, applyCoupon, applyLoader = false, loader = false, rideCost, couponCode, couponAmount, showDel, removeCoupon, coupon, couponError }) {
 
-    const [couponCode, setCouponCode] = React.useState('')
+    const amountPayable = (rideCost, discountAmt) => {
 
-    const pay = (amount) => {
-
-        onPaymentPress(amount)
-
+        const amt = Number(rideCost) - Number(discountAmt)
+        return amt
     }
+
 
     return (
         <Modal visible={isLoading} animationType="slide"
@@ -39,54 +38,74 @@ export default function CouponPopup({ walletBal, isLoading, closePopup, onPaymen
                             </Text>
                         </View>
 
-                        <View style={{ width: '95%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <View style={{ width: '95%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 }}>
 
 
-                            <View style={{ width: '75%', justifyContent: 'center', marginTop: 20, backgroundColor: AppColors.themePickupDropSearchBg, borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 5 }}>
-                                {/* <Pressable> */}
+                            <View style={{ flexDirection: 'row', width: '72%', justifyContent: 'space-between', backgroundColor: AppColors.themePickupDropSearchBg, borderColor: AppColors.themePrimaryColor, borderWidth: 1, borderRadius: 5 , alignItems: 'center'}}>
 
-                                <TextInput
-                                    style={{ paddingLeft: 10, height: 40, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themePrimaryColor }}
-                                    placeholder={'Enter coupon code'}
-                                    placeholderTextColor={AppColors.themeTextGrayColor}
-                                    value={couponCode}
-                                    // keyboardType='numeric'
-                                    onChangeText={(text) => setCouponCode(text)}
-                                />
-                                {/* </Pressable> */}
+                                <View style={{ width: '75%' }}>
+                                    <TextInput
+                                        style={{ width: '100%', paddingLeft: 10, height: 40, fontSize: 14, fontFamily: AppFontFamily.PopinsRegular, color: AppColors.themePrimaryColor }}
+                                        placeholder={'Enter coupon code'}
+                                        placeholderTextColor={AppColors.themeTextGrayColor}
+                                        value={coupon}
+                                        // keyboardType='numeric'
+                                        onChangeText={couponCode}
+                                    />
+                                    {couponError == '' ? null : 
+                                    <Text style={{ marginLeft: 5, fontSize: 12, color: AppColors.themeButtonRed, fontFamily: AppFontFamily.PopinsMedium }}>
+                                        {couponError}
+                                    </Text>}
+                                </View>
+                                {showDel ?
+                                    <Pressable onPress={removeCoupon} style={{ width: 60, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+                                        <Text style={{ fontSize: 12, color: AppColors.themePrimaryColor, fontFamily: AppFontFamily.PopinsMedium }}>
+                                            {'Remove'}
+                                        </Text>
+                                    </Pressable> : null}
+
                             </View>
-                            <Pressable style={{ backgroundColor: AppColors.themePrimaryColor, width: '22%', marginTop: 20, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 5 }}>
+
+                            <ButtonPrimary
+                                style={{ width: '25%', height: 30, }}
+                                text={'Apply'}
+                                onPress={applyCoupon}
+                                loader={applyLoader}
+                            />
+
+                            {/* <Pressable onPress={applyCoupon} style={{ backgroundColor: couponAmount > 0 ? AppColors.themeBtnDisableColor : AppColors.themePrimaryColor, width: '22%', marginTop: 20, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 5 }}>
                                 <Text style={{ fontSize: 14, color: AppColors.themesWhiteColor, fontFamily: AppFontFamily.PopinsMedium }}>
                                     {'Apply'}
                                 </Text>
-                            </Pressable>
+                            </Pressable> */}
                         </View>
 
 
                         <View style={{ width: '95%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{ marginTop: 20, fontSize: 18, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
+                            <Text style={{ marginTop: 20, fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
                                 {'Ride Cost'}
                             </Text>
-                            <Text style={{ marginTop: 20, fontSize: 18, color: AppColors.themePrimaryColor, fontFamily: AppFontFamily.PopinsMedium }}>
-                                {AppTexts.Rupee_Symbol + walletBal}
+                            <Text style={{ marginTop: 20, fontSize: 16, color: AppColors.themePrimaryColor, fontFamily: AppFontFamily.PopinsMedium }}>
+                                {AppTexts.Rupee_Symbol + rideCost}
                             </Text>
                         </View>
 
-                        <View style={{ width: '95%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{ marginTop: 10, fontSize: 18, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
-                                {'Coupon discount'}
-                            </Text>
-                            <Text style={{ marginTop: 10, fontSize: 18, color: AppColors.themePrimaryColor, fontFamily: AppFontFamily.PopinsMedium }}>
-                                {AppTexts.Rupee_Symbol + walletBal}
-                            </Text>
-                        </View>
+                        {couponAmount > 0 ?
+                            <View style={{ width: '95%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text style={{ marginTop: 5, fontSize: 16, color: AppColors.themeGreenColor, fontFamily: AppFontFamily.PopinsMedium }}>
+                                    {'Coupon discount'}
+                                </Text>
+                                <Text style={{ marginTop: 5, fontSize: 16, color: AppColors.themeGreenColor, fontFamily: AppFontFamily.PopinsMedium }}>
+                                    {"- " + AppTexts.Rupee_Symbol + couponAmount}
+                                </Text>
+                            </View> : null}
 
                         <View style={{ width: '95%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{ marginTop: 10, fontSize: 18, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
+                            <Text style={{ marginTop: 5, fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsMedium }}>
                                 {'Amount Payable'}
                             </Text>
-                            <Text style={{ marginTop: 10, fontSize: 18, color: AppColors.themePrimaryColor, fontFamily: AppFontFamily.PopinsMedium }}>
-                                {AppTexts.Rupee_Symbol + walletBal}
+                            <Text style={{ marginTop: 5, fontSize: 16, color: AppColors.themePrimaryColor, fontFamily: AppFontFamily.PopinsMedium }}>
+                                {AppTexts.Rupee_Symbol + amountPayable(rideCost, couponAmount)}
                             </Text>
                         </View>
 
@@ -97,7 +116,7 @@ export default function CouponPopup({ walletBal, isLoading, closePopup, onPaymen
                             <ButtonPrimary
                                 style={{ width: '94%' }}
                                 text={'Pay'}
-                                onPress={() => pay(couponCode)}
+                                onPress={onPaymentPress}
                                 loader={loader}
                             />
 
