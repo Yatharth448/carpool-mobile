@@ -47,6 +47,8 @@ import PaymentSuccess from '../../Screens/payment/PaymentSuccess';
 import PaymentFailure from '../../Screens/payment/PaymentFailure';
 import AddBank from '../../Screens/bank/AddBank';
 import Withdraw from '../../Screens/bank/Withdraw';
+import ForgotPassword from '../../Screens/forgotpassword/ForgotPassword';
+import ResetPassword from '../../Screens/forgotpassword/ResetPassword';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -159,6 +161,8 @@ export default function RootNav() {
         <Stack.Screen name="PaymentFailure" component={PaymentFailure} />
         <Stack.Screen name="AddBank" component={AddBank} />
         <Stack.Screen name="Withdraw" component={Withdraw} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <Stack.Screen name="ResetPassword" component={ResetPassword} />
 
         <Stack.Screen
           name="RideDrawer"

@@ -20,6 +20,15 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.330513389777-aducc5b5g09b5ftttsa2s760a85u9lcc</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -39,27 +48,18 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.330513389777-aducc5b5g09b5ftttsa2s760a85u9lcc</string>
-			</array>
-		</dict>
-	</array>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Play when notifications received</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>ShareWheelz requires acess to photo library for updating profile picture</string>
 	<key>NSCameraUsageDescription</key>
 	<string>ShareWheelz requires acess to camera for updating profile picture</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>ShareWheelz app collects location data to track carpooler location even when the app is closed or not in use, to help better route allocation for nearby pickup points.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>ShareWheelz app collects location data to track carpooler location even when the app is closed or not in use, to help better route allocation for nearby pickup points.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>ShareWheelz app collects location data to track carpooler location even when the app is closed or not in use, to help better route allocation for nearby pickup points.</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>ShareWheelz requires acess to photos for updating profile picture</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>ShareWheelz app collects location data to track carpooler location even when the app is closed or not in use, to help better route allocation for nearby pickup points.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -102,7 +102,6 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

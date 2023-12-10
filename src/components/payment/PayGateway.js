@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Alert, Dimensions} from 'react-native';
+import {View, Alert, Dimensions, Platform} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
 import base64 from 'react-native-base64'
@@ -35,14 +35,36 @@ const PayGateway = ({navigation, route}) => {
       <WebView
         source={{uri: payURL}}
         ref={webView}
+        // onLoadEnd={event => {
+        //   console.log('Event ', event.nativeEvent);
+        //   // console.log('Event ', event.nativeEvent.url);
+        //   let actualEvent = event.nativeEvent;
+        //   if (
+        //     actualEvent &&
+        //     actualEvent.title &&
+        //     actualEvent.title.indexOf('sharewheelz.in/api/auth/paysuccess') >= 0
+        //   ) {
+        //    console.log()
+        //     console.log(actualEvent.url);
+        //     navigation.navigate('PaymentSuccess', {data: actualEvent.url});
+        //   }
+        //   else if (
+        //     actualEvent &&
+        //     actualEvent.title &&
+        //     actualEvent.title.indexOf('sharewheelz.in/api/auth/payfailed') >= 0
+        //   ) {
+        //     console.log('success event');
+        //     navigation.navigate('PaymentFailure', {data: actualEvent.url});
+        //   }
+        // }}
         onLoadProgress={event => {
           console.log('Event ', event.nativeEvent);
           // console.log('Event ', event.nativeEvent.url);
           let actualEvent = event.nativeEvent;
           if (
             actualEvent &&
-            actualEvent.title &&
-            actualEvent.title.indexOf('sharewheelz.in/api/auth/paysuccess') >= 0
+            Platform.OS == 'android' ? actualEvent.title : actualEvent.url &&
+            Platform.OS == 'android' ? actualEvent.title.indexOf('sharewheelz.in/api/auth/paysuccess') >= 0 : actualEvent.url.indexOf('sharewheelz.in/api/auth/paysuccess') >= 0
           ) {
            console.log()
             console.log(actualEvent.url);
@@ -50,8 +72,8 @@ const PayGateway = ({navigation, route}) => {
           }
           else if (
             actualEvent &&
-            actualEvent.title &&
-            actualEvent.title.indexOf('sharewheelz.in/api/auth/payfailed') >= 0
+            Platform.OS == 'android' ? actualEvent.title : actualEvent.url &&
+            Platform.OS == 'android' ? actualEvent.title.indexOf('sharewheelz.in/api/auth/payfailed') >= 0 : actualEvent.url.indexOf('sharewheelz.in/api/auth/payfailed') >= 0
           ) {
             console.log('success event');
             navigation.navigate('PaymentFailure', {data: actualEvent.url});

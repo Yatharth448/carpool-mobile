@@ -572,6 +572,9 @@ export default function FindRideList({navigation, route}) {
                     )}
                   </View>
                 </View>
+                <View style={{width: '100%', backgroundColor: AppColors.themeGreenColor, height: 30, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style={{fontFamily: AppFontFamily.PopinsSemiBold, fontSize: 14, color: AppColors.themesWhiteColor}}>{'Guaranteed Ride Completion'}</Text>
+                </View>
               </Surface>
             </View>
           )}

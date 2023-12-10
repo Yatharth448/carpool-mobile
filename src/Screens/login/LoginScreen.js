@@ -64,7 +64,7 @@ export default function LoginScreen({ navigation }) {
 
     }
 
-    
+
     const userGoogleLogin = async (userInfo) => {
 
         const deviceToken = await Storage.getSavedItem('fcmToken')
@@ -272,12 +272,21 @@ export default function LoginScreen({ navigation }) {
                     <InputView left={require('../../assets/sms.png')} headText={'Email Id'} placeHolder={'Enter email id'} val={email} onChange={onChangeEmail} />
                     <InputView headText={'Password'} placeHolder={'Enter Password'} val={password} onChange={onChangePassword} right={showPassword ? 'eye-off-outline' : 'eye-outline'} rightClick={rightClick} secureText={showPassword} />
 
-                    <Pressable onPress={() => setChecked(!checked)} style={{ width: '100%', flexDirection: 'row', alignItems: 'center', height: 40, marginTop: 10 }}>
+                    <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
-                        <Icon name={checked ? 'checkbox-outline' : 'checkbox-blank-outline'} size={24} color={checked ? AppColors.themePrimaryColor : AppColors.themeCardBorderColor} />
-                        <Text style={{ marginLeft: 10, fontSize: 16, color: AppColors.themeTextGrayColor }}>Remember Me</Text>
+                        <Pressable onPress={() => setChecked(!checked)} style={{ width: '50%', flexDirection: 'row', alignItems: 'center', height: 40, marginTop: 10 }}>
 
-                    </Pressable>
+                            <Icon name={checked ? 'checkbox-outline' : 'checkbox-blank-outline'} size={24} color={checked ? AppColors.themePrimaryColor : AppColors.themeCardBorderColor} />
+                            <Text style={{ marginLeft: 10, fontSize: 16, color: AppColors.themeTextGrayColor }}>Remember Me</Text>
+
+                        </Pressable>
+
+                        <Pressable onPress={() => navigation.navigate('ForgotPassword')} style={{ width: '50%', alignItems: 'flex-end', justifyContent: 'center', height: 40, marginTop: 10 }}>
+
+                            <Text style={{ marginLeft: 10, fontSize: 16, color: AppColors.themeTextGrayColor }}>Forgot Password?</Text>
+
+                        </Pressable>
+                    </View>
 
                     <View style={{ alignItems: 'center', marginTop: 10 }}>
                         <ButtonPrimary

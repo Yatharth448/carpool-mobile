@@ -1316,6 +1316,7 @@ class FindRide extends Component {
 
         <FlatList
           data={['1']}
+          bounces={false}
           contentContainerStyle={{width: Dimensions.get('window').width}}
           ListHeaderComponent={
             <this.HeaderView
