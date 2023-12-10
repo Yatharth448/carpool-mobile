@@ -2,7 +2,7 @@ import connection from '../../network/connection';
 
 export const hitApiToForgotPassword = async (email) => {
   try {
-    const result = await connection.postAPI('/api/forgot/sendemail', {
+    const result = await connection.postAPI('/api/auth/forgot/sendemail', {
       'email': email,
     });
 
@@ -19,7 +19,7 @@ export const hitApiToForgotPassword = async (email) => {
 
 export const hitApiToForgotVerify = async (email, otp, password) => {
     try {
-      const result = await connection.postAPI('/api/forgot/verify', {
+      const result = await connection.postAPI('/api/auth/forgot/verify', {
         'email': email,
         'otp': otp,
         'password': password
