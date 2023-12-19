@@ -17,7 +17,7 @@ export default function PaymentSuccess({ navigation, route }) {
 
             let urlData = new URL(data)
             console.log(urlData, 'urlData')
-            console.log(urlData.searchParams, 'urlData searchParams')
+            console.log(urlData.searchParams, 'urlData searchParams success')
             let decodedData = base64.decode(urlData.searchParams.get("val"))
             try {
                 setTransData(JSON.parse(decodedData))
