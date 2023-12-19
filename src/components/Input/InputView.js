@@ -25,8 +25,8 @@ export const InputView = ({ left = '', headText, placeHolder, val, onChange, rig
                 </View>
                 {right ?
                     <Pressable onPress={rightClick} style={{ width: '10%', alignItems: 'center', justifyContent: 'center' }}>
-                        <Icon name={right} size={20} color={AppColors.themeCardBorderColor} />
-                        {/* <Image source={require('../../assets/login.png')} style={{ width: 24, height: 24, resizeMode: 'contain' }} /> */}
+                        {/* <Icon name={right} size={20} color={AppColors.themeCardBorderColor} /> */}
+                        <Image source={right} style={{ width: 20, height: 20, resizeMode: 'contain' }} />
                     </Pressable> : null}
             </View>
         </View>

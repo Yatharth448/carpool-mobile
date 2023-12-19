@@ -270,13 +270,13 @@ export default function LoginScreen({ navigation }) {
                 <View style={{ width: '90%', justifyContent: 'center' }}>
 
                     <InputView left={require('../../assets/sms.png')} headText={'Email Id'} placeHolder={'Enter email id'} val={email} onChange={onChangeEmail} />
-                    <InputView headText={'Password'} placeHolder={'Enter Password'} val={password} onChange={onChangePassword} right={showPassword ? 'eye-off-outline' : 'eye-outline'} rightClick={rightClick} secureText={showPassword} />
+                    <InputView headText={'Password'} placeHolder={'Enter Password'} val={password} onChange={onChangePassword} right={showPassword ? require('../../assets/hide.png') : require('../../assets/show.png')} rightClick={rightClick} secureText={showPassword} />
 
                     <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
                         <Pressable onPress={() => setChecked(!checked)} style={{ width: '50%', flexDirection: 'row', alignItems: 'center', height: 40, marginTop: 10 }}>
 
-                            <Icon name={checked ? 'checkbox-outline' : 'checkbox-blank-outline'} size={24} color={checked ? AppColors.themePrimaryColor : AppColors.themeCardBorderColor} />
+                            <Image source={checked ? require('../../assets/unchecked.png') : require('../../assets/checkbox.png')} style={{color: checked ? AppColors.themePrimaryColor : AppColors.themeCardBorderColor, width: 20, height: 20}}/>
                             <Text style={{ marginLeft: 10, fontSize: 16, color: AppColors.themeTextGrayColor }}>Remember Me</Text>
 
                         </Pressable>

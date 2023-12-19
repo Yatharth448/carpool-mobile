@@ -206,7 +206,7 @@ export default function SignupScreen({ navigation }) {
                         <InputView headText={'Full Name'} placeHolder={'Enter Full Name'} val={fullName} onChange={onChangeFullName} />
                         <InputView left={require('../../assets/call.png')} headText={'Mobile Number'} placeHolder={'Your Mobile Number'} val={mobile} onChange={onChangeMobile} />
                         <InputView left={require('../../assets/sms.png')} headText={'E-mail'} placeHolder={'Your email id'} val={email} onChange={onChangeEmail} />
-                        <InputView headText={'Password'} placeHolder={'Enter Password'} val={password} onChange={onChangePassword} right={showPassword ? 'eye-off-outline' : 'eye-outline'} rightClick={rightClick} secureText={showPassword} />
+                        <InputView headText={'Password'} placeHolder={'Enter Password'} val={password} onChange={onChangePassword} right={showPassword ? require('../../assets/hide.png') : require('../../assets/show.png')} rightClick={rightClick} secureText={showPassword} />
                         <View style={{ width: '98%', alignItems: 'flex-start', marginTop: 20, marginBottom: 10 }}>
                             <Text style={{ marginBottom: 10, fontSize: 16, color: AppColors.themeBlackColor, fontFamily: AppFontFamily.PopinsRegular }}>{'Select Gender'}</Text>
                             <FindRideFilterView

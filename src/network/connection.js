@@ -70,7 +70,7 @@ const apiCaller = async (method, url, params = {}, headerOptions = {}) => {
       }
 
       errorMsg.code = 401;
-      Toast.show('Session Expired');
+      // Toast.show('Session Expired');
     }
     return errorMsg;
   }
