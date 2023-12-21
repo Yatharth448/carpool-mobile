@@ -5,7 +5,6 @@ import Toast from 'react-native-simple-toast'
 import Storage from '../../components/localStorage/storage'
 import { AppKeys } from '../../components/constants/AppKeys'
 import { InputView } from '../../components/Input/InputView'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from '../../components/constants/AppFonts'
 import { FindRideFilterView } from '../../Screens/findridelist/FindRideComp'
 import { CommonActions } from '@react-navigation/native'

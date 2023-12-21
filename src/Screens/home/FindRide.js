@@ -932,8 +932,8 @@ class FindRide extends Component {
                     onCheck={this.onCheck}
                     image={
                       this.state.cotraveller
-                        ? 'checkbox-outline'
-                        : 'checkbox-blank-outline'
+                        ? require('../../assets/checkbox.png') 
+                        : require('../../assets/unchecked.png')
                     }
                   />
                 ) : null}

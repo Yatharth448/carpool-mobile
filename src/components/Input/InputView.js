@@ -1,7 +1,6 @@
 import { View, Image, TextInput, Text, Pressable } from 'react-native'
 import { AppColors } from '../constants/AppColor'
 import { AppFontFamily } from '../constants/AppFonts'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export const InputView = ({ left = '', headText, placeHolder, val, onChange, right = '', rightClick, secureText }) => {
     return (

@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import {AppKeys} from '../constants/AppKeys';
 import {AppColors} from '../constants/AppColor';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {AppFontFamily} from '../constants/AppFonts';
 import {Surface} from 'react-native-paper';
 import {getCurrentLocationFromLatLong} from '../location/GetCurrentLocation';
@@ -320,7 +319,7 @@ export default function SearchLocation({navigation, route}) {
                   <TouchableOpacity
                     onPress={pickClear}
                     style={{padding: 5, width: '20%', alignItems: 'center'}}>
-                    <AntDesign name="close" size={20} color="gray" />
+                    <Image source={require('../../assets/close.png')} style={{ width: 10, height: 10, tintColor: AppColors.themeBlackColor}} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -361,7 +360,7 @@ export default function SearchLocation({navigation, route}) {
                   <TouchableOpacity
                     onPress={dropClear}
                     style={{padding: 5, width: '20%', alignItems: 'center'}}>
-                    <AntDesign name="close" size={20} color="gray" />
+                    <Image source={require('../../assets/close.png')} style={{ width: 10, height: 10, tintColor: AppColors.themeBlackColor}} />
                   </TouchableOpacity>
                 </View>
               </View>

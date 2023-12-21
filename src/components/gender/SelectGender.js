@@ -1,7 +1,6 @@
 import React from 'react';
 import {Text, Image, View, FlatList, Pressable, Dimensions} from 'react-native';
 import {AppColors} from '../../components/constants/AppColor';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppFontFamily} from '../../components/constants/AppFonts';
 
 export const SelectGender = ({recentArray, onPress}) => {

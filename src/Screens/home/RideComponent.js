@@ -10,7 +10,6 @@ import {
   Linking,
 } from 'react-native';
 import { AppColors } from '../../components/constants/AppColor';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppFontFamily } from '../../components/constants/AppFonts';
 import { ButtonPrimary } from '../../components/button/buttonPrimary';
 import CommonLoaders from '../../components/loader/Loader';
@@ -184,7 +183,7 @@ export const CotravellerView = ({ onCheck, image }) => {
           alignItems: 'center',
           justifyContent: 'flex-end',
         }}>
-        <Icon name={image} size={24} color={AppColors.themePrimaryColor} />
+        <Image source={image} style={{width: 20, height: 20, tintColor: AppColors.themePrimaryColor}} />
       </Pressable>
     </View>
   );

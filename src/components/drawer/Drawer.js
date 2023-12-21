@@ -17,7 +17,6 @@ import {connect} from 'react-redux';
 import {getProfileDataRequest} from '../../redux/actions/actions';
 import reducer from '../../redux/reducers/reducers';
 import {ImageLoader} from '../imageloader/ImageLoader';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import Storage from '../localStorage/storage';
 import {AppKeys} from '../constants/AppKeys';
 

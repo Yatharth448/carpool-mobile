@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StatusBar, View, Image, BlurView, StyleSheet, Platform } from 'react-native';
+import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../../Screens/login/LoginScreen';
@@ -8,7 +8,6 @@ import AcccountSetupScreen from '../../Screens/account/AcccountSetupScreen';
 import OTPScreen from '../../Screens/otp/OTPScreen';
 import FindRideList from '../../Screens/findridelist/FindRideList';
 import { AppColors } from '../constants/AppColor';
-import MyRide from '../../Screens/myRide/MyRide';
 import MapRoutes from '../../Screens/routes/MapRoutes';
 import MessageRoom from '../../Screens/message/MessageRoom';
 import FindRide from '../../Screens/home/FindRide';
@@ -22,7 +21,6 @@ import DrawerScreen from '../drawer/Drawer';
 import RideHistory from '../../Screens/ridehistory/RideHistory';
 import UpdateProfile from '../../Screens/profile/UpdateProfile';
 import Payment from '../../Screens/payment/Payment';
-import RideDetails from '../../Screens/ridehistory/OfferedRideDetails';
 import Cotravellers from '../../Screens/ridehistory/Cotravellers';
 import Success from '../../Screens/success/Success';
 import OfferedRideDetails from '../../Screens/ridehistory/OfferedRideDetails';
@@ -34,14 +32,9 @@ import VerifyAadharOTP from '../../Screens/kyc/VerifyAadharOTP';
 import StartRideCarpooler from '../../Screens/startridecarpooler/StartRideCarpooler';
 import Notification from '../../Screens/notification/Notification';
 import AddGenderMobile from '../genderMobile/AddGenderMobile';
-import Wallet from '../../Screens/wallet/Wallet';
 import RideCotravaller from '../../Screens/ridecotravaller/RideCotravaller';
 import PaymentHistory from '../../Screens/payment/PaymentHistory';
 import SendFeedback from '../../Screens/feeddback/SendFeedback';
-import { configureNotification, getToken, requestUserPermission } from '../../Utils/PushNotification';
-import { pushNotificationPermission } from '../../Utils/RuntimePermission';
-import PushNotification from 'react-native-push-notification';
-import { CreateNotificationChannel } from '../../components/notifications/LocalNotification';
 import PayGateway from '../payment/PayGateway';
 import PaymentSuccess from '../../Screens/payment/PaymentSuccess';
 import PaymentFailure from '../../Screens/payment/PaymentFailure';
@@ -55,7 +48,6 @@ const Stack = createStackNavigator();
 
 function RideDrawer() {
   return (
-    // <NavigationContainer>
     <Drawer.Navigator
       drawerContent={props => <DrawerScreen {...props} />}
       initialRouteName="FindRide"
@@ -73,35 +65,11 @@ function RideDrawer() {
       <Drawer.Screen name="RideCotraveller" component={RideCotravaller} />
       <Drawer.Screen name="Payment" component={Payment} />
 
-      {/* <Drawer.Screen name='MapRoutes' component={MapRoutes} />
-                <Drawer.Screen name='ProfileScreen' component={ProfileScreen} /> */}
-      {/* <Drawer.Screen name='FindRideList' component={FindRideList} /> */}
-      {/* <Drawer.Screen name='Chat' component={Chat} /> */}
-      {/* Add more screens here */}
     </Drawer.Navigator>
-    // </NavigationContainer>
   );
 }
 
 export default function RootNav() {
-  useEffect(() => {
-    
-    // let tempVar
-    // (async () => {
-    //   console.log('request permission')
-    //   await requestUserPermission();
-    //   await getToken()
-    // })
-
-    // if (Platform.OS == 'android') {
-    //   pushNotificationPermission();
-    //   CreateNotificationChannel();
-    // }
-    // console.log('listn variable ', tempVar, typeof tempVar);
-    return () => {
-      // tempVar();
-    };
-  }, []);
   return (
     <NavigationContainer>
       <StatusBar
@@ -136,7 +104,6 @@ export default function RootNav() {
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         <Stack.Screen name="MapRoutes" component={MapRoutes} />
         <Stack.Screen name="Cotravellers" component={Cotravellers} />
-        {/* <Stack.Screen name="Wallet" component={Wallet} /> */}
         <Stack.Screen
           name="OfferedRideDetails"
           component={OfferedRideDetails}

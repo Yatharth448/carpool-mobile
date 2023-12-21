@@ -3,7 +3,6 @@ import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { AppColors } from '../../components/constants/AppColor';
 import { TextInput } from 'react-native-paper';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-simple-toast';
 import { useRoute } from '@react-navigation/native';
 import { hitApiForVerifyOTP } from './otpModal';

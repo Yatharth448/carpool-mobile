@@ -18,7 +18,6 @@ import {
 import Storage from '../../components/localStorage/storage';
 import {AppKeys} from '../../components/constants/AppKeys';
 import {InputView} from '../../components/Input/InputView';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppFontFamily} from '../../components/constants/AppFonts';
 import {ButtonPrimary} from '../../components/button/buttonPrimary';
 import CommonLoaders from '../../components/loader/Loader';
